@@ -1,0 +1,16 @@
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();  // 创建一个 HashMap 用于存储元素和它的索引
+        for (int i = 0; i < nums.length; i++) {  // 遍历数组 nums
+            int complement = target - nums[i];  // 计算 target 和当前元素的补数
+            if (map.containsKey(complement)) {  // 如果补数存在于 HashMap 中
+                return new int[] { map.get(complement), i };  // 返回补数的索引和当前元素的索引
+            }
+            map.put(nums[i], i);  // 将当前元素和它的索引存储在 HashMap 中
+        }
+        throw new IllegalArgumentException("No two sum solution");  // 如果没有找到答案，抛出异常
+    }
+}
+
+它利用一个 HashMap 来存储数组 nums 中的每一个数字及其下标。然后，对于每一个数字，它都会计算一个补数，即 target 
+减去该数字，如果补数已经存在于 HashMap 中，那么我们就找到了答案，可以返回一个数组，其中包含补数的索引和该数字的索引。
