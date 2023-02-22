@@ -1,0 +1,72 @@
+You are given two non-empty linked lists representing two non-negative integers. The digits are stored in 
+reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as 
+a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+给定两个非空链表，它们代表两个非负整数。数字以相反的顺序存储，每个节点包含一个数字。将两个数字相加并作为链表返回。
+
+您可以假设两个数字除了数字 0 本身外不包含任何前导零。
+Input: l1 = [2,4,3], l2 = [5,6,4]
+Output: [7,0,8]
+Explanation: 342 + 465 = 807.
+Example 2:
+
+Input: l1 = [0], l2 = [0]
+Output: [0]
+Example 3:
+
+Input: l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
+Output: [8,9,9,9,0,0,0,1]
+ 
+
+Constraints:
+
+The number of nodes in each linked list is in the range [1, 100].
+0 <= Node.val <= 9
+It is guaranteed that the list represents a number that does not have leading zeros.
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);  // 创建一个虚拟节点
+        ListNode curr = dummy;  // 创建一个指针指向虚拟节点
+        int carry = 0;  // 创建一个 carry 变量来存储进位
+        while (l1 != null || l2 != null) {  // 当 l1 和 l2 任意一个链表还有元素时
+            int x = (l1 != null) ? l1.val : 0;  // 获取 l1 当前节点的值，如果 l1 已经遍历完，则将 x 赋值为 0
+            int y = (l2 != null) ? l2.val : 0;  // 获取 l2 当前节点的值，如果 l2 已经遍历完，则将 y 赋值为 0
+            int sum = carry + x + y;  // 计算当前位置的和
+            carry = sum / 10;  // 计算新的进位
+            curr.next = new ListNode(sum % 10);  // 创建一个新节点，存储当前位置的和，并将该节点链接到虚拟节点的后面
+            curr = curr.next;  // 将指针指向该节点
+            if (l1 != null) l1 = l1.next;  // 如果 l1 还有元素，将 l1 指针指向下一个元素
+            if (l2 != null) l2 = l2.next;  // 如果 l2 还有元素，将 l2 指针指向下一个元素
+        }
+        if (carry > 0) {
+            curr.next = new ListNode(carry);
+        }
+        return dummy.next;  // 返回虚拟节点的下一个节点，即返回真正的链表
+    }
+}
+
+定义了一个 ListNode 类，该类用于存储链表中的每个节点。该类包含三个字段：val，存储该节点的数字；next，
+指向该节点的下一个节点；以及三个构造函数，分别用于创建空节点、带有值的节点和带有值和链接的节点。
+
+定义了一个 Solution 类，该类包含一个方法 addTwoNumbers，该方法实现了两个链表的求和。
+
+在方法 addTwoNumbers 中，首先创建了一个虚拟节点，并使用一个指针 curr 指向该节点。虚拟节点的作用是作
+为新链表的起点，避免在构造新链表时处理额外的特殊情况。
+
+定义了一个 carry 变量，该变量用于存储进位。
+
+使用一个 while 循环，当 l1 和 l2 任意一个链表还有元素时，继续循环。
+
+在循环内部，通过使用三目运算符获取 l1 和 l2 的当前节点的值，如果 l1 和 l2 已经遍历完，则使用 0 替代。
