@@ -1,0 +1,75 @@
+You are given an array prices where prices[i] is the price of a given stock on the ith day.
+
+You want to maximize your profit by choosing a single day to buy one stock and choosing a 
+different day in the future to sell that stock.
+
+Return the maximum profit you can achieve from this transaction. If you cannot achieve any 
+profit, return 0.
+
+ 
+
+Example 1:
+
+Input: prices = [7,1,5,3,6,4]
+Output: 5
+Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
+Note that buying on day 2 and selling on day 1 is not allowed because you must buy 
+before you sell.
+Example 2:
+
+Input: prices = [7,6,4,3,1]
+Output: 0
+Explanation: In this case, no transactions are done and the max profit = 0.
+ 
+
+Constraints:
+
+1 <= prices.length <= 105
+0 <= prices[i] <= 104
+
+class Solution {
+    public int maxProfit(int[] prices) {
+        // 定义变量 minPrice 记录当前看到的最低价格
+        int minPrice = Integer.MAX_VALUE;
+        // 定义变量 maxProfit 记录当前可以获得的最大利润
+        int maxProfit = 0;
+        // 遍历数组 prices
+        for (int i = 0; i < prices.length; i++) {
+            // 如果当前价格比 minPrice 更低，更新 minPrice 的值
+            if (prices[i] < minPrice) {
+                minPrice = prices[i];
+            }
+            // 否则，如果当前价格与 minPrice 的差值比 maxProfit 大，更新 maxProfit 的值
+            else if (prices[i] - minPrice > maxProfit) {
+                maxProfit = prices[i] - minPrice;
+            }
+        }
+        // 返回 maxProfit 的值，表示最大可获得的利润
+        return maxProfit;
+    }
+}
+
+这段代码是一个用于求解股票最大利润问题的 Java 程序。
+
+首先，定义了一个 Solution 类，并在其中定义了一个名为 maxProfit 的方法。这个方法的输入是一个整数数
+组 prices，表示每天的股票价格。
+
+方法内部定义了两个变量：minPrice 和 maxProfit。其中，minPrice 表示到目前为止看到的最低股票价格，
+maxProfit 表示能够获得的最大利润。
+
+然后，程序使用一个循环来遍历 prices 数组。在每次循环中，如果当前的股票价格比 minPrice 更低，则更新 
+minPrice 的值；否则，如果当前的股票价格与 minPrice 的差值比 maxProfit 大，则更新 maxProfit 的值。
+
+最后，方法返回 maxProfit 的值，表示最大可获得的利润。
+
+代码注意事项：
+
+Integer.MAX_VALUE 是 Java 中整数类型的最大值。
+如果 prices 数组中的价格都是不下降的，则 minPrice 的值将不变，而 maxProfit 的值将是所有价格的差的最大值。
+如果所有价格都是不升的，则 maxProfit 的值将为 0。
+代码中使用了一种贪心算法，即在每一次循环中找到当前看到的最低价格，并维护当前可以获得的最大利润。
+这样做是合理的，因为如果后面出现了更高的价格，则可以获得更多的利润。
+
+该算法的时间复杂度为 O(n)，其中 n 是股票价格的数量，因此该算法在大多数情况下都是高效的。
+
+总的来说，这段代码是一个简单易懂的解决股票最大利润问题的程序，非常适合初学者学习。
