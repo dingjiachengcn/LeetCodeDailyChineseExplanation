@@ -1,0 +1,88 @@
+Create table If Not Exists Employee (id int, salary int)
+Truncate table Employee
+insert into Employee (id, salary) values ('1', '100')
+insert into Employee (id, salary) values ('2', '200')
+insert into Employee (id, salary) values ('3', '300')
+Table: Employee
+
++-------------+------+
+| Column Name | Type |
++-------------+------+
+| id          | int  |
+| salary      | int  |
++-------------+------+
+id is the primary key column for this table.
+Each row of this table contains information about the salary of an employee.
+ 
+
+Write an SQL query to report the second highest salary from the Employee table. 
+If there is no second highest salary, the query should report null.
+
+The query result format is in the following example.
+
+explain this question in chinese and write sql code, and explain it by notes 
+line by line
+
+Example 1:
+
+Input: 
+Employee table:
++----+--------+
+| id | salary |
++----+--------+
+| 1  | 100    |
+| 2  | 200    |
+| 3  | 300    |
++----+--------+
+Output: 
++---------------------+
+| SecondHighestSalary |
++---------------------+
+| 200                 |
++---------------------+
+Example 2:
+
+Input: 
+Employee table:
++----+--------+
+| id | salary |
++----+--------+
+| 1  | 100    |
++----+--------+
+Output: 
++---------------------+
+| SecondHighestSalary |
++---------------------+
+| null                |
++---------------------+
+
+题目要求查询员工表中第二高的工资。如果没有第二高的工资，查询结果应为 null。
+
+下面是 SQL 查询代码：
+
+sql
+Copy code
+SELECT (
+  SELECT DISTINCT salary
+  FROM Employee
+  ORDER BY salary DESC
+  LIMIT 1 OFFSET 1
+) AS SecondHighestSalary
+FROM Employee
+LIMIT 1;
+该代码的注释如下：
+
+SELECT DISTINCT salary：查询员工表中不同的工资值。
+FROM Employee：从员工表中查询数据。
+ORDER BY salary DESC：按工资值降序排列。
+LIMIT 1 OFFSET 1：从排序后的结果中选择第二个数据（从零开始计数）。
+AS SecondHighestSalary：将查询结果命名为 SecondHighestSalary。
+FROM Employee：从员工表中查询数据。
+LIMIT 1：仅返回查询结果的第一行。
+该代码通过使用内部查询和排序，从员工表中查询第二高的工资。如果第二高的工资不存在，
+则查询结果为 null。
+
+best code
+select max(salary) as SecondHighestSalary from Employee where salary != (
+    select max(salary) from Employee
+)
