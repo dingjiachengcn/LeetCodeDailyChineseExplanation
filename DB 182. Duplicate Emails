@@ -2,8 +2,9 @@ Create table If Not Exists Person (id int, email varchar(255))
 Truncate table Person
 insert into Person (id, email) values ('1', 'a@b.com')
 insert into Person (id, email) values ('2', 'c@d.com')
-insert into Person (id, email) values ('3', 'a@b.com')Table: Person
+insert into Person (id, email) values ('3', 'a@b.com')
 
+Table: Person
 +-------------+---------+
 | Column Name | Type    |
 +-------------+---------+
@@ -12,15 +13,13 @@ insert into Person (id, email) values ('3', 'a@b.com')Table: Person
 +-------------+---------+
 id is the primary key column for this table.
 Each row of this table contains an email. The emails will not contain uppercase letters.
- 
 
-Write an SQL query to report all the duplicate emails. Note that it's guaranteed that the email field is not NULL.
+Write an SQL query to report all the duplicate emails. 
+Note that it's guaranteed that the email field is not NULL.
 
 Return the result table in any order.
 
 The query result format is in the following example.
-
- 
 
 Example 1:
 
@@ -44,9 +43,7 @@ Explanation: a@b.com is repeated two times.
 创建一个名为 Person 的表，如果该表不存在，则创建。表格有两列：id（整数类型）和 email（字符串类型，最大长度为 255）。
 在该表中插入三行数据，然后编写一个 SQL 查询，查找所有重复的电子邮件地址，并返回结果。注意，电子邮件地址中不会包含大写字母。
 
-答案：
-
-你可以使用 GROUP BY 子句对电子邮件地址进行分组，然后使用 HAVING 子句仅选择出现超过一次的电子邮件地址。
+答案：你可以使用 GROUP BY 子句对电子邮件地址进行分组，然后使用 HAVING 子句仅选择出现超过一次的电子邮件地址。
 
 以下是 SQL 查询：
 
@@ -55,8 +52,7 @@ FROM Person
 GROUP BY email
 HAVING COUNT(*) > 1;
 
-there is also on solution,
-
+there is also one solution:
 
 SELECT email
 FROM Person
