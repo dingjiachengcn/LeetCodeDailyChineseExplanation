@@ -1,0 +1,81 @@
+Create table If Not Exists Person (id int, email varchar(255))
+Truncate table Person
+insert into Person (id, email) values ('1', 'a@b.com')
+insert into Person (id, email) values ('2', 'c@d.com')
+insert into Person (id, email) values ('3', 'a@b.com')Table: Person
+
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| id          | int     |
+| email       | varchar |
++-------------+---------+
+id is the primary key column for this table.
+Each row of this table contains an email. The emails will not contain uppercase letters.
+ 
+
+Write an SQL query to report all the duplicate emails. Note that it's guaranteed that the email field is not NULL.
+
+Return the result table in any order.
+
+The query result format is in the following example.
+
+ 
+
+Example 1:
+
+Input: 
+Person table:
++----+---------+
+| id | email   |
++----+---------+
+| 1  | a@b.com |
+| 2  | c@d.com |
+| 3  | a@b.com |
++----+---------+
+Output: 
++---------+
+| Email   |
++---------+
+| a@b.com |
++---------+
+Explanation: a@b.com is repeated two times.
+
+创建一个名为 Person 的表，如果该表不存在，则创建。表格有两列：id（整数类型）和 email（字符串类型，最大长度为 255）。
+在该表中插入三行数据，然后编写一个 SQL 查询，查找所有重复的电子邮件地址，并返回结果。注意，电子邮件地址中不会包含大写字母。
+
+答案：
+
+你可以使用 GROUP BY 子句对电子邮件地址进行分组，然后使用 HAVING 子句仅选择出现超过一次的电子邮件地址。
+
+以下是 SQL 查询：
+
+SELECT email
+FROM Person
+GROUP BY email
+HAVING COUNT(*) > 1;
+
+there is also on solution,
+
+
+SELECT email
+FROM Person
+GROUP BY email
+HAVING COUNT(DISTINCT id)>1
+
+给定的 SQL 查询的时间复杂度取决于底层数据库管理系统（DBMS）的实现。
+
+通常，GROUP BY 操作需要对输入行进行排序，其时间复杂度在最坏情况下为 O(n log n)。然后，HAVING 子句过滤掉只出现一
+次的电子邮件地址，其时间复杂度为 O(n)，其中 n 是 Person 表中的行数。
+
+因此，查询的总时间复杂度可以估计为 O(n log n) + O(n) = O(n log n)，假设 DBMS 使用高效的排序算法。
+
+值得注意的是，查询的时间复杂度可能会受到各种因素的影响，例如 Person 表的大小、可用的硬件资源以及 DBMS 的具体实现。
+
+要降低给定 SQL 查询的时间复杂度，我们需要优化 GROUP BY 操作和 HAVING 子句。
+
+优化 GROUP BY 操作的一种方法是在 Person 表的 email 列上创建索引。这将允许 DBMS 执行基于哈希或基于树的分组，
+这可能比对输入行进行排序更快。根据表的大小和电子邮件地址的分布，这种优化可以显着提高查询的性能。
+
+优化 HAVING 子句的另一种方法是使用子查询首先选择重复的电子邮件地址，然后将结果与 Person 表连接以检索关联的 ID。
+这可以减少需要分组和计数的行数，从而可以提高查询的性能。
