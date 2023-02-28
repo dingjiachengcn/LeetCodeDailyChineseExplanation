@@ -1,0 +1,152 @@
+Create table If Not Exists Activity (player_id int, device_id int, event_date date, games_played int)
+Truncate table Activity
+insert into Activity (player_id, device_id, event_date, games_played) values ('1', '2', '2016-03-01', '5')
+insert into Activity (player_id, device_id, event_date, games_played) values ('1', '2', '2016-05-02', '6')
+insert into Activity (player_id, device_id, event_date, games_played) values ('1', '3', '2017-06-25', '1')
+insert into Activity (player_id, device_id, event_date, games_played) values ('3', '1', '2016-03-02', '0')
+insert into Activity (player_id, device_id, event_date, games_played) values ('3', '4', '2018-07-03', '5')Table: Activity
+
++--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| player_id    | int     |
+| device_id    | int     |
+| event_date   | date    |
+| games_played | int     |
++--------------+---------+
+(player_id, event_date) is the primary key of this table.
+This table shows the activity of players of some games.
+Each row is a record of a player who logged in and played a number of games (possibly 0) before logging out on someday using some device.
+ 
+
+Write an SQL query to report for each player and date, how many games played so far by the player. That is, the total number of games played by the player until that date. Check the example for clarity.
+
+Return the result table in any order.
+
+The query result format is in the following example.
+
+ 
+
+Example 1:
+
+Input: 
+Activity table:
++-----------+-----------+------------+--------------+
+| player_id | device_id | event_date | games_played |
++-----------+-----------+------------+--------------+
+| 1         | 2         | 2016-03-01 | 5            |
+| 1         | 2         | 2016-05-02 | 6            |
+| 1         | 3         | 2017-06-25 | 1            |
+| 3         | 1         | 2016-03-02 | 0            |
+| 3         | 4         | 2018-07-03 | 5            |
++-----------+-----------+------------+--------------+
+Output: 
++-----------+------------+---------------------+
+| player_id | event_date | games_played_so_far |
++-----------+------------+---------------------+
+| 1         | 2016-03-01 | 5                   |
+| 1         | 2016-05-02 | 11                  |
+| 1         | 2017-06-25 | 12                  |
+| 3         | 2016-03-02 | 0                   |
+| 3         | 2018-07-03 | 5                   |
++-----------+------------+---------------------+
+Explanation: 
+For the player with id 1, 5 + 6 = 11 games played by 2016-05-02, and 5 + 6 + 1 = 12 games played by 2017-06-25.
+For the player with id 3, 0 + 5 = 5 games played by 2018-07-03.
+Note that for each player we only care about the days when the player logged in.
+
+
+ANSWER:
+WITH CTE AS (
+    SELECT player_id, event_date, games_played, SUM(games_played) OVER (PARTITION BY player_id ORDER BY event_date) as games_played_so_far
+    FROM Activity
+)
+SELECT player_id, event_date, games_played_so_far
+FROM CTE
+ORDER BY player_id, event_date;
+
+
+该查询使用公共表达式（CTE）来计算每个玩家的games_played的累计和，并按照player_id和event_date的顺序对结果进行排序。最终结果仅包括SELECT语句中指定的列。
+
+编写一个 SQL 查询，报告每个玩家和日期的游戏数量，即玩家目前玩过的游戏数量。请查看示例以获得更清晰的说明。
+
+表格 Activity：
+
++-----------+-----------+------------+--------------+
+| player_id | device_id | event_date | games_played |
++-----------+-----------+------------+--------------+
+| 1 | 2 | 2016-03-01 | 5 |
+| 1 | 2 | 2016-05-02 | 6 |
+| 1 | 3 | 2017-06-25 | 1 |
+| 3 | 1 | 2016-03-02 | 0 |
+| 3 | 4 | 2018-07-03 | 5 |
++-----------+-----------+------------+--------------+
+
+(player_id, event_date) 是该表的主键。
+
+这个表显示了某些游戏的玩家活动。
+
+每一行是一个玩家在某天登录并玩了一些游戏（可能是 0）之后退出的记录，使用某个设备。
+
+结果表格顺序不限。
+
+示例：
+
+输入：
+
+Activity 表：
+
++-----------+-----------+------------+--------------+
+| player_id | device_id | event_date | games_played |
++-----------+-----------+------------+--------------+
+| 1 | 2 | 2016-03-01 | 5 |
+| 1 | 2 | 2016-05-02 | 6 |
+| 1 | 3 | 2017-06-25 | 1 |
+| 3 | 1 | 2016-03-02 | 0 |
+| 3 | 4 | 2018-07-03 | 5 |
++-----------+-----------+------------+--------------+
+
+输出：
+
++-----------+------------+---------------------+
+| player_id | event_date | games_played_so_far |
++-----------+------------+---------------------+
+| 1 | 2016-03-01 | 5 |
+| 1 | 2016-05-02 | 11 |
+| 1 | 2017-06-25 | 12 |
+| 3 | 2016-03-02 | 0 |
+| 3 | 2018-07-03 | 5 |
++-----------+------------+---------------------+
+
+说明：
+
+对于 id 为 1 的玩家，在 2016-05-02 前玩了 5 + 6 = 11 场游戏，在 2017-06-25 前玩了 5 + 6 + 1 = 12 场游戏。
+
+对于 id 为 3 的玩家，在 2018-07-03 前玩了 0 + 5 = 5 场游戏。
+
+请注意，对于每个玩家，我们只关心玩家登录的日期。
+
+该查询使用公共表达式（CTE）来计算每个玩家的games_played的累计和，并按照player_id和event_date的顺序对结果进行排序。最终结果仅包括SELECT语句中指定的列。
+
+answer 2
+
+# Write your MySQL query statement below
+
+select player_id, event_date, sum(games_played)over(partition by player_id order by event_date asc) as games_played_so_far
+from Activity
+
+answer 3
+# Write your MySQL query statement below
+SELECT player_id,event_date,
+SUM(games_played) over(partition by player_id order by event_date ASC) games_played_so_far
+FROM Activity
+
+
+answer4
+
+# Write your MySQL query statement below
+select player_id, event_date, sum(games_played) over (partition by player_id order by event_date asc) as games_played_so_far from activity
+order by player_id
+
+
+
