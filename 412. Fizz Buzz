@@ -1,0 +1,149 @@
+Given an integer n, return a string array answer (1-indexed) where:
+
+answer[i] == "FizzBuzz" if i is divisible by 3 and 5.
+answer[i] == "Fizz" if i is divisible by 3.
+answer[i] == "Buzz" if i is divisible by 5.
+answer[i] == i (as a string) if none of the above conditions are true.
+ 
+
+Example 1:
+
+Input: n = 3
+Output: ["1","2","Fizz"]
+Example 2:
+
+Input: n = 5
+Output: ["1","2","Fizz","4","Buzz"]
+Example 3:
+
+Input: n = 15
+Output: ["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"]
+ 
+
+Constraints:
+
+1 <= n <= 104 
+
+给定一个整数 n，返回一个字符串数组 answer（从1开始索引），满足以下条件：
+
+answer[i] == "FizzBuzz" 如果 i 可以同时被 3 和 5 整除。
+answer[i] == "Fizz" 如果 i 可以被 3 整除。
+answer[i] == "Buzz" 如果 i 可以被 5 整除。
+answer[i] == i（作为字符串）如果上述条件均不成立。
+
+例如：
+
+输入: n = 3
+输出: ["1","2","Fizz"]
+
+输入: n = 5
+输出: ["1","2","Fizz","4","Buzz"]
+
+输入: n = 15
+输出: ["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"]
+
+限制：
+
+1 <= n <= 104
+
+以下是 Java 代码实现：
+
+这段代码实现了给定数字 n 后，将从 1 到 n 的每个数字转化为相应的字符串，满足以下条件：
+
+如果数字能同时被 3 和 5 整除，将该数字转化为字符串 "FizzBuzz"。
+如果数字只能被 3 整除，将该数字转化为字符串 "Fizz"。
+如果数字只能被 5 整除，将该数字转化为字符串 "Buzz"。
+如果数字既不能被 3 整除也不能被 5 整除，将该数字转化为字符串。
+具体实现如下：
+
+定义一个字符串类型的 List ans。
+
+使用 for 循环遍历从 1 到 n 的每个数字。
+
+判断当前数字是否能同时被 3 和 5 整除，如果能，将字符串 "FizzBuzz" 添加到 List 中。
+
+如果数字只能被 3 整除，将字符串 "Fizz" 添加到 List 中。
+
+如果数字只能被 5 整除，将字符串 "Buzz" 添加到 List 中。
+
+如果数字既不能被 3 整除也不能被 5 整除，将数字转换为字符串并添加到 List 中。
+
+返回 List ans。
+
+该代码的时间复杂度为 O(n)，空间复杂度为 O(1)。因为代码中只用了一个 List 来存储结果，不需要额外的空间。
+
+以下是 Java 代码实现，增加了中文注释：
+
+class Solution {
+    public List<String> fizzBuzz(int n) {
+        // 创建一个字符串类型的 List，用于存储结果
+        List<String> ans = new ArrayList<>();
+
+        // 遍历从 1 到 n 的每个数字
+        for (int i = 1; i <= n; i++) {
+            // 判断当前数字是否能同时被 3 和 5 整除，如果能，将字符串 "FizzBuzz" 添加到 List 中
+            if (i % 15 == 0) {
+                ans.add("FizzBuzz");
+            } 
+            // 如果数字只能被 3 整除，将字符串 "Fizz" 添加到 List 中
+            else if (i % 3 == 0) {
+                ans.add("Fizz");
+            } 
+            // 如果数字只能被 5 整除，将字符串 "Buzz" 添加到 List 中
+            else if (i % 5 == 0) {
+                ans.add("Buzz");
+            } 
+            // 如果数字既不能被 3 整除也不能被 5 整除，将数字转换为字符串并添加到 List 中
+            else {
+                ans.add(String.valueOf(i));
+            }
+        }
+                         
+        // 返回结果 List
+        return ans;                 
+    }
+}
+
+best answer:
+
+import java.util.*;
+
+class Solution {
+    public List<String> fizzBuzz(int n) {
+        // 调用 FizzBuzzer 的构造函数创建一个新的实例并返回
+        return new FizzBuzzer(n);
+    }
+
+    // 声明一个内部类 FizzBuzzer，继承自 AbstractList 并实现 RandomAccess 接口
+    private static final class FizzBuzzer extends AbstractList<String> implements RandomAccess {
+        // FizzBuzzer 内部变量 size，表示 FizzBuzz 序列的长度
+        private final int size;
+
+        // FizzBuzzer 的构造函数，接收一个 int 类型的参数 n，表示 FizzBuzz 序列的长度
+        FizzBuzzer(int n) {
+            this.size = n;
+        }
+
+        // 实现 AbstractList 的 get() 方法，返回序列中第 i 个元素
+        public String get(int i) {
+            int n = i+1;
+            if( n%3 == 0) {
+                if( n%5 == 0) {
+                    return "FizzBuzz";
+                }
+                return "Fizz";
+            }
+            if( n%5 == 0) {
+                return "Buzz";
+            }
+            return Integer.toString(n);
+        }
+
+        // 实现 AbstractList 的 size() 方法，返回序列的长度
+        public int size() {
+            return this.size;
+        }
+    }
+}
+
+
