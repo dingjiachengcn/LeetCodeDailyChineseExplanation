@@ -1,0 +1,116 @@
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+
+Open brackets must be closed by the same type of brackets.
+Open brackets must be closed in the correct order.
+Every close bracket has a corresponding open bracket of the same type.
+ 
+
+Example 1:
+
+Input: s = "()"
+Output: true
+Example 2:
+
+Input: s = "()[]{}"
+Output: true
+Example 3:
+
+Input: s = "(]"
+Output: false
+ 
+
+Constraints:
+
+1 <= s.length <= 104
+s consists of parentheses only '()[]{}'.
+给定一个只包含字符 '(', ')', '{', '}', '[' 和 ']' 的字符串 s，判断该字符串是否是一个有效的括号字符串。
+
+一个有效的括号字符串需要满足以下条件：
+
+左括号必须用相同类型的右括号闭合。
+左括号必须以正确的顺序闭合。
+每个关闭的右括号都必须与前面的相应打开括号匹配。
+示例 1：
+
+输入：s = "()"
+输出：true
+
+示例 2：
+
+输入：s = "()[]{}"
+输出：true
+
+示例 3：
+
+输入：s = "(]"
+输出：false
+
+提示：
+
+1 <= s.length <= 104
+s 仅由括号 '()[]{}' 组成
+以下是 Java 代码实现：
+
+class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> stack = new Stack<>(); // 定义一个栈用于存放左括号
+        for(char c : s.toCharArray()) {
+            if(c == '(' || c == '{' || c == '[') { // 如果是左括号，就将其压入栈中
+                stack.push(c);
+            }
+            else { // 如果是右括号，就需要与栈顶的左括号进行匹配
+                if(stack.isEmpty()) { // 如果栈为空，说明没有匹配的左括号，返回false
+                    return false;
+                }
+                char left = stack.pop(); // 取出栈顶的左括号
+                if((c == ')' && left != '(') || (c == '}' && left != '{') || (c == ']' && left != '[')) { // 如果当前右括号与栈顶的左括号不匹配，返回false
+                    return false;
+                }
+            }
+        }
+        return stack.isEmpty(); // 如果栈为空，说明所有的左括号都有相应的右括号与之匹配，返回true；否则，返回false
+    }
+}
+
+
+这个代码使用了栈来存放左括号，遍历输入字符串中的每个字符，如果是左括号，就将其压入栈中；如果是右括号，就需要与栈顶的左括号进行匹配，如果当前右括号与栈顶的左括号不匹配，返回false；最后，如果栈为空，说明所有的左括号都有相应的右括号与之匹配，返回true；否则，返回false。代码中增加了中文注释，以便于理解代码中各个部分的功能。
+
+best answer
+
+这段代码的作用是判断一个只包含括号字符 '(', ')', '{', '}', '[' 和 ']' 的字符串 s 是否是一个有效的括号字符串。
+
+该代码采用了数组模拟栈的方式，遍历输入字符串中的每个字符，如果是左括号，就将其压入栈中；如果是右括号，就需要与栈顶的左括号进行匹配，如果当前右括号与栈顶的左括号不匹配，返回false；最后，如果栈为空，说明所有的左括号都有相应的右括号与之匹配，返回true；否则，返回false。
+
+以下是代码中各部分的详细解释：
+
+int n = s.length(); // 获取输入字符串的长度
+int[] index = new int[n + 1]; // 定义一个数组来模拟栈，存放左括号
+int top = 0; // 栈顶指针，指向数组中最后一个元素
+
+for (int i = 0; i < n; i++) { // 遍历输入字符串中的每个字符
+    char c = s.charAt(i);
+    if (c == '(' || c == '[' || c == '{') { // 如果是左括号，就将其压入栈中
+        index[++top] = c;
+    } else if (c == ')') { // 如果是右括号 ')'，就需要与栈顶的左括号 '(' 进行匹配
+        if (top == 0 || index[top] != '(') { // 如果当前右括号与栈顶的左括号不匹配，返回false
+            return false;
+        }
+        top--; // 匹配成功，弹出栈顶元素
+    } else if (c == ']') { // 如果是右括号 ']'，就需要与栈顶的左括号 '[' 进行匹配
+        if (top == 0 || index[top] != '[') { // 如果当前右括号与栈顶的左括号不匹配，返回false
+            return false;
+        }
+        top--; // 匹配成功，弹出栈顶元素
+    } else if (c == '}') { // 如果是右括号 '}'，就需要与栈顶的左括号 '{' 进行匹配
+        if (top == 0 || index[top] != '{') { // 如果当前右括号与栈顶的左括号不匹配，返回false
+            return false;
+        }
+        top--; // 匹配成功，弹出栈顶元素
+    }
+}
+return top == 0; // 如果栈为空，说明所有的左括号都有相应的右括号与之匹配，返回true；否则，返回false
+
+因为这段代码使用了数组模拟栈的方式，所以代码比较简洁，适合在空间有限的情况下使用。但是，在实际编程中，使用栈的效率可能更高一些。
+
