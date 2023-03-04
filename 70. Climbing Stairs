@@ -1,0 +1,119 @@
+You are climbing a staircase. It takes n steps to reach the top.
+
+Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+
+ 
+
+Example 1:
+
+Input: n = 2
+Output: 2
+Explanation: There are two ways to climb to the top.
+1. 1 step + 1 step
+2. 2 steps
+Example 2:
+
+Input: n = 3
+Output: 3
+Explanation: There are three ways to climb to the top.
+1. 1 step + 1 step + 1 step
+2. 1 step + 2 steps
+3. 2 steps + 1 step
+ 
+
+Constraints:
+
+1 <= n <= 45
+This problem can be solved using dynamic programming. The idea is to use an array dp to store the number of distinct ways to reach each step. Initially, dp[0] is set to 1, representing that there is only 1 way to reach step 0, which is not to take any steps.
+
+For each step i from 1 to n, we can either take 1 step from step i-1, or take 2 steps from step i-2. Therefore, the number of distinct ways to reach step i is the sum of the number of distinct ways to reach step i-1 and step i-2.
+
+Here is the Java code to implement this solution:
+
+scss
+Copy code
+class Solution {
+    public int climbStairs(int n) {
+        if (n == 1) return 1;
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n];
+    }
+}
+Line 5: If n is 1, there is only 1 way to reach the top, which is to take 1 step.
+
+Line 7: Declare an array dp to store the number of distinct ways to reach each step.
+
+Line 8: Set dp[0] to 1, representing that there is only 1 way to reach step 0, which is not to take any steps.
+
+Line 9: Set dp[1] to 1, representing that there is only 1 way to reach step 1, which is to take 1 step.
+
+Line 11-14: For each step i from 2 to n, calculate the number of distinct ways to reach step i by adding the number of distinct ways to reach step i-1 and step i-2.
+
+Line 16: Return the number of distinct ways to reach the top step n.
+
+
+
+give me the java code and all explanation in chinese
+下面是一种使用动态规划的方法，来解决这个问题：
+
+scss
+Copy code
+class Solution {
+    public int climbStairs(int n) {
+        if (n == 1) return 1;
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n];
+    }
+}
+第 5 行：如果 n 等于 1，则只有一种方法到达顶部，那就是走一步。
+
+第 7 行：声明一个数组 dp 来存储到达每一步的不同方法的数量。
+
+第 8 行：将 dp[0] 设置为 1，表示到达第 0 步只有一种方法，那就是不走。
+
+第 9 行：将 dp[1] 设置为 1，表示到达第 1 步只有一种方法，那就是走一步。
+
+第 11-14 行：对于每一步从 2 到 n，通过将到达第 i-1 步和第 i-2 步的不同方法数量相加，计算到达第 i 步的不同方法数量。
+
+第 16 行：返回到达顶部第 n 步的不同方法数量。
+
+transfer the question to chinese
+你正在爬楼梯。到达顶部需要 n 步。
+
+每次，你可以爬 1 或 2 步。你有多少种不同的方法可以到达顶部？
+
+示例 1：
+
+输入：n = 2
+输出：2
+说明：有两种方法可以到达顶部。
+
+1 步 + 1 步
+2 步
+示例 2：
+
+输入：n = 3
+输出：3
+说明：有三种方法可以到达顶部。
+
+1 步 + 1 步 + 1 步
+1 步 + 2 步
+2 步 + 1 步
+限制：
+
+1 <= n <= 45
+
+
+
+
+
