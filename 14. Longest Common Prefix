@@ -1,0 +1,62 @@
+Write a function to find the longest common prefix string amongst an array of strings.
+
+If there is no common prefix, return an empty string "".
+
+ 
+
+Example 1:
+
+Input: strs = ["flower","flow","flight"]
+Output: "fl"
+Example 2:
+
+Input: strs = ["dog","racecar","car"]
+Output: ""
+Explanation: There is no common prefix among the input strings.
+请编写一个函数，在一个字符串数组中找到最长的公共前缀字符串。
+
+如果没有公共前缀，请返回空字符串 ""。
+
+示例 1：
+
+输入：strs = ["flower","flow","flight"]
+输出："fl"
+
+示例 2：
+
+输入：strs = ["dog","racecar","car"]
+输出：""
+说明：在输入字符串中没有公共前缀。
+
+限制：
+
+1 <= strs.length <= 200
+0 <= strs[i].length <= 200
+strs[i] 仅由小写英文字母组成。
+
+Constraints:
+
+1 <= strs.length <= 200
+0 <= strs[i].length <= 200
+strs[i] consists of only lowercase English letters.
+
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        // 如果字符串数组为空，返回空字符串
+        if (strs.length == 0) return "";
+        // 将前缀初始化为数组中的第一个字符串
+        String prefix = strs[0];
+        // 遍历数组中的其他字符串
+        for (int i = 1; i < strs.length; i++) {
+            // 使用 indexOf 方法找到前缀在当前字符串中的起始索引
+            while (strs[i].indexOf(prefix) != 0) {
+                // 如果前缀不是当前字符串的前缀，则删除前缀的最后一个字符
+                prefix = prefix.substring(0, prefix.length() - 1);
+                // 如果前缀已经为空，说明没有公共前缀，返回空字符串
+                if (prefix.isEmpty()) return "";
+            }
+        }
+        // 如果所有字符串都有相同的前缀，返回该前缀
+        return prefix;
+    }
+}
