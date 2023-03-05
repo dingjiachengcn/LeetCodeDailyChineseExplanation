@@ -1,0 +1,49 @@
+Given a non-negative integer x, return the square root of x rounded down to the nearest integer. The returned integer should be non-negative as well.
+
+You must not use any built-in exponent function or operator.
+
+For example, do not use pow(x, 0.5) in c++ or x ** 0.5 in python.
+ 
+
+Example 1:
+
+Input: x = 4
+Output: 2
+Explanation: The square root of 4 is 2, so we return 2.
+Example 2:
+
+Input: x = 8
+Output: 2
+Explanation: The square root of 8 is 2.82842..., and since we round it down to the nearest integer, 2 is returned.
+
+给定一个非负整数x，返回其平方根向下取整到最近整数的值。返回值也应该为非负整数。
+
+您不得使用任何内置指数函数或运算符。
+
+例如，请不要在c ++中使用pow（x，0.5）或在python中使用x ** 0.5。
+
+class Solution {
+    // 定义方法，返回一个整数的平方根的整数部分
+    public int mySqrt(int x) {
+        // 如果x为0或1，直接返回x
+        if (x == 0 || x == 1) {
+            return x;
+        }
+        // 初始化左右边界和答案
+        int left = 0, right = x, ans = 0;
+        // 二分查找平方根的整数部分
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            // 如果mid小于等于x除以mid，说明平方根在mid的右侧，更新左边界和答案
+            if (mid <= x / mid) {
+                left = mid + 1;
+                ans = mid;
+            } else {
+                // 否则，平方根在mid的左侧，更新右边界
+                right = mid - 1;
+            }
+        }
+        // 返回答案
+        return ans;
+    }
+}
