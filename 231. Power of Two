@@ -1,0 +1,44 @@
+Given an integer n, return true if it is a power of two. Otherwise, return false.
+
+An integer n is a power of two, if there exists an integer x such that n == 2x.
+
+ 
+
+Example 1:
+
+Input: n = 1
+Output: true
+Explanation: 20 = 1
+Example 2:
+
+Input: n = 16
+Output: true
+Explanation: 24 = 16
+Example 3:
+
+Input: n = 3
+Output: false
+ 
+
+Constraints:
+
+-231 <= n <= 231 - 1
+ 
+
+Follow up: Could you solve it without loops/recursion?
+
+题目翻译：
+
+给定一个整数n，如果它是2的幂，则返回true。否则，返回false。
+
+如果存在整数x使得n == 2x，则整数n是2的幂。
+
+
+
+class Solution {
+    // 定义方法，判断一个整数是否是2的幂
+    public boolean isPowerOfTwo(int n) {
+        // 如果n大于0且n与n-1的与运算结果为0，则说明n是2的幂
+        return n > 0 && (n & (n - 1)) == 0;
+    }
+}
