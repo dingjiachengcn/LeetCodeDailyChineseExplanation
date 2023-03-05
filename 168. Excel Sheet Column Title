@@ -1,0 +1,66 @@
+Given an integer columnNumber, return its corresponding column title as it appears in an Excel sheet.
+
+For example:
+
+A -> 1
+B -> 2
+C -> 3
+...
+Z -> 26
+AA -> 27
+AB -> 28 
+...
+ 
+
+Example 1:
+
+Input: columnNumber = 1
+Output: "A"
+Example 2:
+
+Input: columnNumber = 28
+Output: "AB"
+Example 3:
+
+Input: columnNumber = 701
+Output: "ZY"
+ 
+
+Constraints:
+
+1 <= columnNumber <= 231 - 1
+
+题目翻译：
+
+给定一个整数columnNumber，返回它在Excel表中出现的相应列标题。
+
+例如：
+
+A -> 1
+B -> 2
+C -> 3
+...
+Z -> 26
+AA -> 27
+AB -> 28
+...
+
+
+class Solution {
+    // 定义方法，将整数转换为对应的Excel列标题
+    public String convertToTitle(int columnNumber) {
+        // 创建一个StringBuilder存储结果
+        StringBuilder sb = new StringBuilder();
+        // 当columnNumber大于0时，继续循环
+        while (columnNumber > 0) {
+            // 计算余数，注意需要先减一
+            int remainder = (columnNumber - 1) % 26;
+            // 将余数转换为字母，并加入结果字符串
+            sb.append((char)('A' + remainder));
+            // 计算商，注意需要先减一
+            columnNumber = (columnNumber - 1) / 26;
+        }
+        // 返回结果字符串，需要先反转再转化为字符串
+        return sb.reverse().toString();
+    }
+}
