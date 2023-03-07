@@ -1,0 +1,62 @@
+A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+
+Given a string s, return true if it is a palindrome, or false otherwise.
+
+ 
+
+Example 1:
+
+Input: s = "A man, a plan, a canal: Panama"
+Output: true
+Explanation: "amanaplanacanalpanama" is a palindrome.
+Example 2:
+
+Input: s = "race a car"
+Output: false
+Explanation: "raceacar" is not a palindrome.
+Example 3:
+
+Input: s = " "
+Output: true
+Explanation: s is an empty string "" after removing non-alphanumeric characters.
+Since an empty string reads the same forward and backward, it is a palindrome.
+ 
+
+Constraints:
+
+1 <= s.length <= 2 * 105
+s consists only of printable ASCII characters.
+
+
+class Solution {
+    public boolean isPalindrome(String s) {
+        // 判断字符串是否为空，为空则返回 true
+        if (s == null || s.length() == 0) {
+            return true;
+        }
+
+        // 将字符串转换为小写字母并去除非字母数字字符
+        String lowerCase = s.toLowerCase().replaceAll("[^a-z0-9]", "");
+        int left = 0, right = lowerCase.length() - 1;
+
+        // 使用双指针，从两端向中间比较字符是否相同
+        while (left < right) {
+            if (lowerCase.charAt(left) != lowerCase.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+
+        return true;
+    }
+}
+
+注释：
+
+判断字符串是否为空，如果为空则返回 true，因为空字符串是回文串。
+将字符串转换为小写字母并去除非字母数字字符。
+使用双指针，从两端向中间比较字符是否相同。如果有任意一个字符不同，则返回 false。
+如果所有字符都相同，则返回 true。
+
+
