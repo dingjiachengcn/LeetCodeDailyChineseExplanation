@@ -1,0 +1,137 @@
+Given two strings s and t, determine if they are isomorphic.
+
+Two strings s and t are isomorphic if the characters in s can be replaced to get t.
+
+All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character, but a character may map to itself.
+
+ 
+
+Example 1:
+
+Input: s = "egg", t = "add"
+Output: true
+Example 2:
+
+Input: s = "foo", t = "bar"
+Output: false
+Example 3:
+
+Input: s = "paper", t = "title"
+Output: true
+ 
+
+Constraints:
+
+1 <= s.length <= 5 * 104
+t.length == s.length
+s and t consist of any valid ascii character.
+
+题目：给定两个字符串s和t，判断它们是否是同构的。
+
+如果s中的字符可以被替换为t，则两个字符串s和t是同构的。
+
+必须保留字符的顺序，同时保证每一个字符只能被映射到另一个不同的字符，但一个字符可以映射到自身。
+
+示例1：
+输入：s = "egg", t = "add"
+输出：true
+
+示例2：
+输入：s = "foo", t = "bar"
+输出：false
+
+示例3：
+输入：s = "paper", t = "title"
+输出：true
+
+限制：
+1 <= s.length <= 5 * 104
+t.length == s.length
+s和t由任意有效ASCII字符组成。
+
+
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+        // 创建两个HashMap存储字符映射关系
+        HashMap<Character, Character> map1 = new HashMap<>();
+        HashMap<Character, Character> map2 = new HashMap<>();
+        // 遍历字符串s和字符串t
+        for (int i = 0; i < s.length(); i++) {
+            char c1 = s.charAt(i);
+            char c2 = t.charAt(i);
+            // 如果map1中没有c1到c2的映射关系，则将其加入map1中
+            if (!map1.containsKey(c1)) {
+                map1.put(c1, c2);
+            }
+            // 如果map2中没有c2到c1的映射关系，则将其加入map2中
+            if (!map2.containsKey(c2)) {
+                map2.put(c2, c1);
+            }
+            // 如果c1到c2的映射关系与c2到c1的映射关系不一致，说明不是同构字符串
+            if (map1.get(c1) != c2 || map2.get(c2) != c1) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+best answer:
+
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        // 创建alpha数组，存储tt[i]到ss[i]的映射关系
+        char alpha[] = new char[256];
+        // 创建check数组，存储ss[i]是否被映射过
+        boolean check[] = new boolean[256];
+        // 将字符串s和字符串t分别转换为字符数组
+        char ss[] = s.toCharArray();
+        char tt[] = t.toCharArray();
+        // 遍历字符数组ss和tt
+        for(int i = 0; i < ss.length; i++) {
+            // 如果tt[i]没有映射过，并且ss[i]没有被映射过，则将tt[i]映射到ss[i]，并且标记ss[i]已被映射
+            if( alpha[tt[i]] == 0 && check[ss[i]] == false ) {
+                alpha[tt[i]] = ss[i];
+                check[ss[i]] = true;
+            }
+            // 如果tt[i]已经映射到了其他字符，或者tt[i]映射到的字符不是ss[i]，说明不是同构字符串，返回false
+            if( alpha[tt[i]] != ss[i]  ) return false;
+        }
+        return true;
+    }
+}
+
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        // 创建alpha数组，存储tt[i]到ss[i]的映射关系
+        char alpha[] = new char[256];
+        // 创建check数组，存储ss[i]是否被映射过
+        boolean check[] = new boolean[256];
+        // 将字符串s和字符串t分别转换为字符数组
+        char ss[] = s.toCharArray();
+        char tt[] = t.toCharArray();
+        // 遍历字符数组ss和tt
+        for(int i = 0; i < ss.length; i++) {
+            // 如果tt[i]没有映射过，并且ss[i]没有被映射过，则将tt[i]映射到ss[i]，并且标记ss[i]已被映射
+            if( alpha[tt[i]] == 0 && check[ss[i]] == false ) {
+                alpha[tt[i]] = ss[i];
+                check[ss[i]] = true;
+            }
+            // 如果tt[i]已经映射到了其他字符，或者tt[i]映射到的字符不是ss[i]，说明不是同构字符串，返回false
+            if( alpha[tt[i]] != ss[i]  ) return false;
+        }
+        return true;
+    }
+}
+
+注释：
+
+创建alpha数组，存储tt[i]到ss[i]的映射关系
+创建check数组，存储ss[i]是否被映射过
+将字符串s和字符串t分别转换为字符数组ss和tt
+遍历字符数组ss和tt，如果tt[i]没有映射过，并且ss[i]没有被映射过，则将tt[i]映射到ss[i]
+
+
