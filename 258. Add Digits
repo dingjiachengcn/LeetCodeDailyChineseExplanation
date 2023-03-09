@@ -1,0 +1,48 @@
+
+Given an integer num, repeatedly add all its digits until the result has only one digit, and return it.
+
+ 
+
+Example 1:
+
+Input: num = 38
+Output: 2
+Explanation: The process is
+38 --> 3 + 8 --> 11
+11 --> 1 + 1 --> 2 
+Since 2 has only one digit, return it.
+Example 2:
+
+Input: num = 0
+Output: 0
+ 
+
+Constraints:
+
+0 <= num <= 231 - 1
+ 
+
+Follow up: Could you do it without any loop/recursion in O(1) runtime?
+
+该代码实现了如题目所述的功能：给定一个整数 num，不断重复将其各位数字相加，直到结果只有一位数为止，并返回该结果。
+
+代码的思路是：如果输入的数字小于 10，则直接返回该数字。否则，通过循环计算数字的各位数字之和，再递归调用 addDigits() 方法，直到结果是一位数为止。
+
+
+class Solution {
+    public int addDigits(int num) {
+        // 如果数字小于10，则直接返回该数字
+        if (num < 10) {
+            return num;
+        }
+        // 计算数字的各位数字之和
+        int sum = 0;
+        while (num > 0) {
+            sum += num % 10;
+            num /= 10;
+        }
+        // 递归调用 addDigits() 方法，直到结果是一位数为止
+        return addDigits(sum);
+    }
+}
+
