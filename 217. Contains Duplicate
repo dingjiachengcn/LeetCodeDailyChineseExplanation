@@ -1,0 +1,109 @@
+Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.
+
+ 
+
+Example 1:
+
+Input: nums = [1,2,3,1]
+Output: true
+Example 2:
+
+Input: nums = [1,2,3,4]
+Output: false
+Example 3:
+
+Input: nums = [1,1,1,3,3,4,3,2,4,2]
+Output: true
+ 
+
+Constraints:
+
+1 <= nums.length <= 105
+-109 <= nums[i] <= 109 
+
+给定一个整数数组 nums，如果数组中任意一个数字出现至少两次，则返回 true，否则返回 false。
+
+例 1：
+
+输入：nums = [1,2,3,1]
+输出：true
+
+例 2：
+
+输入：nums = [1,2,3,4]
+输出：false
+
+例 3：
+
+输入：nums = [1,1,1,3,3,4,3,2,4,2]
+输出：true
+
+限制：
+
+1 <= nums.length <= 105
+-109 <= nums[i] <= 109
+
+import java.util.HashSet;
+
+public class Solution {
+    public boolean containsDuplicate(int[] nums) {
+        // 创建一个 HashSet，用于存储数组中的元素
+        HashSet<Integer> set = new HashSet<>();
+        // 遍历数组
+        for (int num : nums) {
+            // 如果 set 中已经存在该元素，说明该元素出现过至少两次
+            if (set.contains(num)) {
+                return true;
+            }
+            // 如果 set 中不存在该元素，将该元素加入 set
+            set.add(num);
+        }
+        // 如果数组中的每个元素都在 set 中唯一出现，说明数组中没有重复元素
+        return false;
+    }
+}
+
+现在逐字逐句地翻译一下代码：
+
+导入 java.util.HashSet 包，用于创建哈希集合。
+
+声明一个名为 Solution 的类。
+
+实现一个名为 containsDuplicate 的方法，该方法接受一个整数数组 nums 作为参数，并返回一个布尔值。
+
+在方法中，创建一个类型为 HashSet<Integer> 的变量 set，用于存储数组中的元素。
+
+使用 for-each 循环，遍历数组中的每一个元素 num。
+
+在循环内部，使用 set.contains(num) 检查 set 中是否已经存在 num。
+
+如果 set 中已经存在 num，说明该元素出现过至少两次，因此返回 true。
+
+best answer
+
+class Solution {
+    public boolean containsDuplicate(int[] nums) {
+        if(Objects.isNull(nums) || nums.length==0) {
+            return false;
+        }
+        HashSet<Integer> set = new HashSet<Integer>();
+        for(int i: nums){
+            if(!set.add(i)){
+                return true;
+            }
+        }
+        return false;
+    }
+定义了一个名为 Solution 的类。
+
+实现了一个名为 containsDuplicate 的方法，该方法接收一个整数数组 nums 作为参数，并返回一个布尔值。
+
+在方法内部，首先使用 Objects.isNull(nums) || nums.length==0 检查数组是否为空，如果是，则返回 false。
+
+定义一个名为 set 的 HashSet，用于存储数组中的元素。
+
+使用 for-each 循环，遍历数组中的每一个元素 i。
+
+在循环内部，使用 set.add(i) 将元素添加到 set 中。如果元素不能添加到 set 中（即 set 中已经存在该元素），说明数组中已经出现过该元素，因此返回 true。
+
+如果循环结束后，没有返回 true，则说明数组中的每一个元素都是独特的，因此返回 false。
