@@ -1,0 +1,80 @@
+Given the roots of two binary trees p and q, write a function to check if they are the same or not.
+
+Two binary trees are considered the same if they are structurally identical, and the nodes have the same value.
+
+ 
+
+Example 1:
+
+
+Input: p = [1,2,3], q = [1,2,3]
+Output: true
+Example 2:
+
+
+Input: p = [1,2], q = [1,null,2]
+Output: false
+Example 3:
+
+
+Input: p = [1,2,1], q = [1,1,2]
+Output: false
+ 
+
+Constraints:
+
+The number of nodes in both trees is in the range [0, 100].
+-104 <= Node.val <= 104
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        // 如果两棵树都为空，返回 true
+        if (p == null && q == null) {
+            return true;
+        }
+        // 如果两棵树中任意一棵树为空，返回 false
+        if (p == null || q == null) {
+            return false;
+        }
+        // 如果两棵树的根节点的值不同，返回 false
+        if (p.val != q.val) {
+            return false;
+        }
+        // 递归比较两棵树的左子树和右子树是否相同
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    }
+}
+
+现在逐字逐句地翻译一下代码：
+
+定义了一个名为 TreeNode 的类，该类表示二叉树的节点。
+
+定义了一个名为 Solution 的类。
+
+实现了一个名为 isSameTree 的方法，该方法接受两个二叉树的根节点 p 和 q 作为参数，并返回一个布尔值。
+
+在方法内部，首先使用 if (p == null && q == null) 检查两棵树是否都为空，如果是，则返回 true。
+
+如果两棵树中任意一棵树为空，使用 if (p == null || q == null) 判断，并
+
+返回 false。
+
+如果两棵树的根节点的值不同，使用 if (p.val != q.val) 判断，并返回 false。
+
+递归地比较两棵树的左子树和右子树是否相同，并使用 && 运算符进行判断，如果左右子树都相同，则返回 true，否则返回 false。
