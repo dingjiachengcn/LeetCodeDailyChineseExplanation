@@ -1,0 +1,122 @@
+The variance of a string is defined as the largest difference between the number of occurrences of any 2 characters present in the string. Note the two characters may or may not be the same.
+
+Given a string s consisting of lowercase English letters only, return the largest variance possible among all substrings of s.
+
+A substring is a contiguous sequence of characters within a string.
+
+ 
+
+Example 1:
+
+Input: s = "aababbb"
+Output: 3
+Explanation:
+All possible variances along with their respective substrings are listed below:
+- Variance 0 for substrings "a", "aa", "ab", "abab", "aababb", "ba", "b", "bb", and "bbb".
+- Variance 1 for substrings "aab", "aba", "abb", "aabab", "ababb", "aababbb", and "bab".
+- Variance 2 for substrings "aaba", "ababbb", "abbb", and "babb".
+- Variance 3 for substring "babbb".
+Since the largest possible variance is 3, we return it.
+Example 2:
+
+Input: s = "abcde"
+Output: 0
+Explanation:
+No letter occurs more than once in s, so the variance of every substring is 0.
+ 
+
+Constraints:
+
+1 <= s.length <= 104
+s consists of lowercase English letters.
+
+字符串的方差定义为字符串中任意两个字符出现次数的最大差值。注意，这两个字符可能相同，也可能不同。
+
+给定一个只包含小写英文字母的字符串s，请返回s的所有子字符串中可能的最大方差。
+
+子字符串是字符串内的一个连续字符序列。
+
+示例1：
+
+输入：s = "aababbb"
+输出：3
+解释：
+所有可能的方差及其相应的子字符串如下：
+
+方差0对应子字符串"a", "aa", "ab", "abab", "aababb", "ba", "b", "bb" 和 "bbb"。
+方差1对应子字符串"aab", "aba", "abb", "aabab", "ababb", "aababbb" 和 "bab"。
+方差2对应子字符串"aaba", "ababbb", "abbb" 和 "babb"。
+方差3对应子字符串"babbb"。
+由于最大可能的方差是3，我们返回它。
+示例2：
+输入：s = "abcde"
+输出：0
+解释：
+在s中，没有字母出现超过一次，所以每个子字符串的方差都是0。
+
+约束：
+
+1 <= s.length <= 104
+s 由小写英文字母组成。
+
+以下是Java代码和中文注释：
+
+class Solution {
+    // 基于LeetCode社区解答：
+    // https://leetcode.com/problems/substring-with-largest-variance/solutions/2579146/%22Weird-Kadane%22-or-Intuition-+-Solution-Explained/
+    public int largestVariance(String s) {
+        // 创建一个HashSet，用于存储字符串s中的所有不同字符
+        Set<Character> set = new HashSet<>();
+        // 将字符串s转换为字符数组
+        char[] arr = s.toCharArray();
+        // 遍历字符数组，将每个字符添加到HashSet中
+        for (char c : arr) set.add(c);
+        // 将HashSet中的字符转换为一个ArrayList
+        List<Character> list = new ArrayList<>(set);
+        // 定义一个变量max，用于存储最大方差
+        int max = 0;
+        // 对于列表中的每一对不同字符（a和b），计算它们之间的最大方差
+        for (char a : list) {
+            for (char b : list) {
+                if (a == b) continue;
+                max = Math.max(max, getMaxVariance(arr, a, b));
+            }
+        }
+        // 返回最大方差
+        return max;
+    }
+
+    // 定义一个辅助方法，用于计算两个给定字符a和b之间的最大方差
+    private int getMaxVariance(char[] arr, char a, char b) {
+        int var = 0; // 用于存储当前方差
+        boolean has_b = false; // 标记字符b是否出现过
+        boolean first_b = false; // 标记是否是字符b首次出现
+        int max = 0; // 用于存储最大方差
+
+        // 遍历字符数组
+        for (char c : arr) {
+            if (c == a) { // 如果当前字符是a，则方差加1
+                var++;
+            } else if (c == b) { // 如果当前字符是b
+                has_b = true;
+                if (first_b && var >= 0) { // 如果是b首次出现且方差非负
+                    first_b = false;
+                } else if (var - 1 < 0) { // 如果方差减1后小于0
+                    first_b = true;
+                    var = -1;
+                } else { // 其他情况，方差减1
+                    var--;
+                }
+            }
+
+            // 如果字符b出现过且当前方差大于最大方差，则更新最大方差
+            if (has_b && var > max) {
+                max = var;
+            }
+        }
+        // 返回最大方差
+        return max;
+    }
+}
+
+这段代码定义了一个名为Solution的类，其中包含两个方法：largestVariance和getMaxVariance。largestVariance方法用于计算给定字符串中的最大方差，getMaxVariance方法是一个辅助方法，用于计算两个给定字符之间的最大方差。
