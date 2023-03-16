@@ -1,0 +1,262 @@
+Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
+
+Implement the LRUCache class:
+
+LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
+int get(int key) Return the value of the key if the key exists, otherwise return -1.
+void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.
+The functions get and put must each run in O(1) average time complexity.
+
+ 
+
+Example 1:
+
+Input
+["LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"]
+[[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]
+Output
+[null, null, null, 1, null, -1, null, -1, 3, 4]
+
+Explanation
+LRUCache lRUCache = new LRUCache(2);
+lRUCache.put(1, 1); // cache is {1=1}
+lRUCache.put(2, 2); // cache is {1=1, 2=2}
+lRUCache.get(1);    // return 1
+lRUCache.put(3, 3); // LRU key was 2, evicts key 2, cache is {1=1, 3=3}
+lRUCache.get(2);    // returns -1 (not found)
+lRUCache.put(4, 4); // LRU key was 1, evicts key 1, cache is {4=4, 3=3}
+lRUCache.get(1);    // return -1 (not found)
+lRUCache.get(3);    // return 3
+lRUCache.get(4);    // return 4
+ 
+
+Constraints:
+
+1 <= capacity <= 3000
+0 <= key <= 104
+0 <= value <= 105
+At most 2 * 105 calls will be made to get and put.
+
+题目翻译：
+
+设计一个数据结构，满足最近最少使用（LRU）缓存的约束。
+
+实现 LRUCache 类：
+
+LRUCache(int capacity) 使用正整数大小 capacity 初始化 LRU 缓存。
+int get(int key) 如果 key 存在，返回 key 的值，否则返回 -1。
+void put(int key, int value) 如果 key 存在，则更新 key 的值。否则，将键值对添加到缓存中。如果此操作导致键的数量超过容量，则逐出最近最少使用的键。
+函数 get 和 put 的平均时间复杂度必须为 O(1)。
+
+import java.util.HashMap;
+import java.util.Map;
+
+// 定义 LRUCache 类
+class LRUCache {
+
+    // 定义双向链表节点类
+    class Node {
+        int key; // 键
+        int value; // 值
+        Node prev; // 前驱节点
+        Node next; // 后继节点
+
+        // 构造函数，初始化键和值
+        Node(int key, int value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    private Map<Integer, Node> cache; // 存储键、值和链表节点的哈希映射
+    private int capacity; // 缓存容量
+    private Node head; // 双向链表头节点
+    private Node tail; // 双向链表尾节点
+
+    // 初始化 LRU 缓存
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        this.cache = new HashMap<>();
+
+        head = new Node(-1, -1); // 初始化头节点
+        tail = new Node(-1, -1); // 初始化尾节点
+        head.next = tail; // 头节点的下一个节点是尾节点
+        tail.prev = head; // 尾节点的前一个节点是头节点
+    }
+
+    // 获取 key 对应的值，如果 key 存在，返回值，否则返回 -1
+    public int get(int key) {
+        Node node = cache.get(key); // 从哈希映射中获取节点
+        if (node == null) {
+            return -1; // 如果节点不存在，返回 -1
+        }
+       // 将节点移到双向链表的头部，表示节点被访问过
+        moveToHead(node);
+        
+        return node.value; // 返回节点的值
+    }
+
+    // 更新键值对，如果键存在则更新值，否则添加键值对，如果超出容量则移除最近最少使用的键
+    public void put(int key, int value) {
+        Node node = cache.get(key); // 从哈希映射中获取节点
+
+        if (node != null) {
+            // 如果节点存在，更新节点的值
+            node.value = value;
+            // 将节点移到双向链表的头部，表示节点被访问过
+            moveToHead(node);
+        } else {
+            // 如果节点不存在，创建一个新节点
+            node = new Node(key, value);
+            // 将新节点添加到哈希映射中
+            cache.put(key, node);
+            // 将新节点添加到双向链表的头部
+            addToHead(node);
+
+            // 检查缓存容量是否已满
+            if (cache.size() > capacity) {
+                // 如果容量已满，从哈希映射和双向链表中移除最近最少使用的节点
+                Node tailNode = removeTail();
+                cache.remove(tailNode.key);
+            }
+        }
+    }
+
+    // 将节点移到双向链表的头部
+    private void moveToHead(Node node) {
+        removeNode(node);
+        addToHead(node);
+    }
+
+    // 从双向链表中移除节点
+    private void removeNode(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+
+    // 将节点添加到双向链表的头部
+    private void addToHead(Node node) {
+        node.next = head.next;
+        node.prev = head;
+        head.next.prev = node;
+        head.next = node;
+    }
+
+    // 移除双向链表尾部的节点，并返回被移除的节点
+    private Node removeTail() {
+        Node node = tail.prev;
+        removeNode(node);
+        return node;
+    }
+}
+
+best answer:
+
+import java.util.*;
+
+class LRUCache {
+
+    private Node start, end;
+    private Map<Integer, Node> hash;
+    private final int capacity;
+
+    // 空间复杂度：O(n)
+    public LRUCache(int capacity) {
+        start = end = null;
+        hash = new HashMap<>(capacity << 1);
+        this.capacity = capacity;
+    }
+    
+    // 时间复杂度：O(1)
+    public int get(int key) {
+        Node node = hash.get(key); // 从哈希表中获取节点
+        if (node == null) {
+            return -1; // 如果节点不存在，返回 -1
+        }
+        remove(node); // 从链表中移除节点
+        add(node); // 将节点添加到链表尾部
+        return node.value; // 返回节点的值
+    }
+    
+    // 时间复杂度：O(1)
+    public void put(int key, int value) {
+        Node node = hash.get(key); // 从哈希表中获取节点
+        if (node == null) {
+            node = new Node(key, value); // 创建新节点
+            hash.put(key, node); // 将新节点添加到哈希表中
+        } else {
+            node.value = value; // 更新节点的值
+            remove(node); // 从链表中移除节点
+        }
+        add(node); // 将节点添加到链表尾部
+        if (hash.size() > capacity) {
+            node = poll(); // 移除链表头部的节点
+            hash.remove(node.key); // 从哈希表中移除对应的节点
+        }
+    }
+
+    // 从链表中移除节点
+    private void remove(Node node) {
+        if (start == node && end == node) {
+            start = end = null;
+        } else if (start == node) {
+            start = start.next;
+            start.prev = null;
+            node.next = null;
+        } else if (end == node) {
+            end = end.prev;
+            end.next = null;
+            node.prev = null;
+        } else {
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
+            node.prev = node.next = null;
+        }
+    }
+    
+    // 将节点添加到链表尾部
+    private void add(Node node) {
+        if (isEmpty()) {
+            start = end = node;
+        } else {
+            end.next = node;
+            node.prev = end;
+            end = node;
+        }
+    }
+
+    // 移除链表头部的节点，并返回被移除的节点
+    private Node poll() {
+        Node node = start;
+        start = start.next;
+        node.next = null;
+        if (start == null) {
+            end = null;
+        } else {
+            start.prev = null;
+        }
+        return node;
+    }
+
+    // 判断链表是否为空
+    private boolean isEmpty() {
+        return start == null;
+    }
+
+    // 定义节点类
+    private class Node {
+        int key, value;
+        Node next, prev;
+        Node(int key, int value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+}
+
+/**
+ * 示例：
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
