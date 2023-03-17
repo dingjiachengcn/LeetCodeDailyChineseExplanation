@@ -1,0 +1,125 @@
+Given the root of a binary tree, check whether it is a mirror of itself (i.e., symmetric around its center).
+
+ 
+
+Example 1:
+
+
+Input: root = [1,2,2,3,4,4,3]
+Output: true
+Example 2:
+
+
+Input: root = [1,2,2,null,3,null,3]
+Output: false
+ 
+
+Constraints:
+
+The number of nodes in the tree is in the range [1, 1000].
+-100 <= Node.val <= 100
+ 
+
+Follow up: Could you solve it both recursively and iteratively?
+
+题目翻译：给定一个二叉树的根节点，检查它是否以中心为轴对称。
+
+示例1：
+
+输入：root = [1,2,2,3,4,4,3]
+输出：true
+示例2：
+
+输入：root = [1,2,2,null,3,null,3]
+输出：false
+
+限制条件：
+
+树中节点的数量在[1, 1000]范围内。
+-100 <= Node.val <= 100
+
+后续问题：你能否递归和迭代两种方法解决这个问题？请用Java代码实现，并对每一行代码用中文注释。
+
+以下是递归和迭代的Java代码实现：
+
+首先定义树节点类TreeNode：
+
+// 定义树节点类
+public class TreeNode {
+    int val;  // 节点的值
+    TreeNode left;  // 左子树
+    TreeNode right;  // 右子树
+
+    TreeNode() {
+    }
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
+
+递归解法：
+
+public class Solution {
+    // 主函数，判断二叉树是否对称
+    public boolean isSymmetric(TreeNode root) {
+        return isMirror(root, root); // 调用辅助函数
+    }
+
+    // 辅助函数，判断两个子树是否对称
+    public boolean isMirror(TreeNode t1, TreeNode t2) {
+        if (t1 == null && t2 == null) return true; // 两个子树都为空，对称
+        if (t1 == null || t2 == null) return false; // 其中一个子树为空，不对称
+        return (t1.val == t2.val) // 当前节点值相等
+                && isMirror(t1.right, t2.left) // 右子树和左子树对称
+                && isMirror(t1.left, t2.right); // 左子树和右子树对称
+    }
+}
+
+以下是迭代解法的Java代码实现：
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class Solution {
+    // 主函数，判断二叉树是否对称
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>(); // 使用队列辅助
+        queue.offer(root.left); // 将根节点的左子节点加入队列
+        queue.offer(root.right); // 将根节点的右子节点加入队列
+
+        while (!queue.isEmpty()) { // 当队列不为空时
+            TreeNode leftNode = queue.poll(); // 取出左侧节点
+            TreeNode rightNode = queue.poll(); // 取出右侧节点
+
+            if (leftNode == null && rightNode == null) {
+                continue; // 两个节点都为空，继续下一轮
+            }
+
+            if (leftNode == null || rightNode == null || leftNode.val != rightNode.val) {
+                return false; // 其中一个节点为空或两个节点的值不相等，不对称
+            }
+
+            // 将左侧节点的左子节点和右侧节点的右子节点加入队列
+            queue.offer(leftNode.left);
+            queue.offer(rightNode.right);
+
+            // 将左侧节点的右子节点和右侧节点的左子节点加入队列
+            queue.offer(leftNode.right);
+            queue.offer(rightNode.left);
+        }
+
+        return true; // 遍历完成，二叉树是对称的
+    }
+}
+
