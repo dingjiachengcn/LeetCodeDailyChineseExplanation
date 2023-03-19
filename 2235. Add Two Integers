@@ -1,0 +1,58 @@
+Given two integers num1 and num2, return the sum of the two integers.
+
+Example 1:
+Input: num1 = 12, num2 = 5
+Output: 17
+Explanation: num1 is 12, num2 is 5, and their sum is 12 + 5 = 17, so 17 is returned.
+
+Example 2:
+Input: num1 = -10, num2 = 4
+Output: -6
+Explanation: num1 + num2 = -6, so -6 is returned.
+
+Constraints:
+-100 <= num1, num2 <= 100
+
+题目给定两个整数 num1 和 num2，返回这两个整数的和。
+示例 1：
+输入：num1 = 12，num2 = 5
+输出：17
+解释：num1 是 12，num2 是 5，它们的和是 12 + 5 = 17，所以返回 17。
+
+示例 2：
+输入：num1 = -10，num2 = 4
+输出：-6
+解释：num1 + num2 = -6，所以返回 -6。
+
+约束条件：
+-100 <= num1, num2 <= 100
+
+// 定义一个名为 Solution 的类
+class Solution {
+    // 定义一个公共方法，接收两个整数参数 num1 和 num2，返回整数结果
+    public int sum(int num1, int num2) {
+        // 定义两个整数变量 l 和 r，分别赋值为 -200 和 200
+        int l = -200, r = 200;
+        // 当 l 小于 r 时，执行循环
+        while (l < r) {
+            // 计算 l 和 r 的中间值 mid
+            int mid = (l + r) >> 1;
+            // 如果 mid 等于 num1 和 num2 的和，返回 mid
+            if (mid == num1 + num2) { return mid; }
+            // 如果 mid 小于 num1 和 num2 的和，将 mid + 1 赋值给 l
+            if (mid <  num1 + num2) l = mid + 1;
+            // 如果 mid 大于 num1 和 num2 的和，将 mid - 1 赋值给 r
+            if (mid >  num1 + num2) r = mid - 1;
+        }
+        // 当循环结束后，返回 l
+        return l;
+    }
+}
+
+这个代码实现了一个名为 Solution 的类，并在其中定义了一个名为 sum 的方法。这个方法接收两个整数参数 num1 和 num2，并返回它们的和。
+为了计算两数之和，代码采用了二分查找的方法。在循环中，我们计算 l 和 r 的中间值 mid，判断 mid 是否等于 num1 和 num2 的和。
+如果等于，返回 mid；如果不等于，则根据 mid 与 num1 和 num2 之和的大小关系来更新 l 和 r 的值。最后当循环结束后，返回 l。
+
+best solution:
+https://leetcode.com/problems/add-two-integers/solutions/1968134/21-different-ways-to-solve-this-problem/
+
