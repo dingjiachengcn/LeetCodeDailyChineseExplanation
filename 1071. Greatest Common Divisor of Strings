@@ -1,0 +1,87 @@
+For two strings s and t, we say "t divides s" if and only if s = t + ... + t (i.e., t is concatenated with itself one or more times).
+
+Given two strings str1 and str2, return the largest string x such that x divides both str1 and str2.
+
+Example 1:
+
+Input: str1 = "ABCABC", str2 = "ABC"
+Output: "ABC"
+Example 2:
+
+Input: str1 = "ABABAB", str2 = "ABAB"
+Output: "AB"
+Example 3:
+
+Input: str1 = "LEET", str2 = "CODE"
+Output: ""
+ 
+
+Constraints:
+
+1 <= str1.length, str2.length <= 1000
+str1 and str2 consist of English uppercase letters.
+
+题目翻译：
+给定两个字符串str1和str2，找到一个最大的字符串x，使得x可以整除str1和str2。
+
+示例 1：
+
+输入：str1 = "ABCABC", str2 = "ABC"
+输出："ABC"
+示例 2：
+
+输入：str1 = "ABABAB", str2 = "ABAB"
+输出："AB"
+示例 3：
+
+输入：str1 = "LEET", str2 = "CODE"
+输出：""
+
+限制条件：
+
+1 <= str1.length, str2.length <= 1000
+str1和str2由英文大写字母组成。
+
+
+public class Solution {
+    // 主方法
+    public static void main(String[] args) {
+        String str1 = "ABCABC";
+        String str2 = "ABC";
+        System.out.println(gcdOfStrings(str1, str2)); // 输出结果
+    }
+
+    // 定义函数gcdOfStrings，接收两个字符串参数
+    public static String gcdOfStrings(String str1, String str2) {
+        // 如果str1和str2拼接后的字符串等于str2和str1拼接后的字符串
+        if (!(str1 + str2).equals(str2 + str1)) {
+            // 返回空字符串
+            return "";
+        }
+        // 返回最大公约数对应的字符串
+        return str1.substring(0, gcd(str1.length(), str2.length()));
+    }
+
+    // 辗转相除法求最大公约数
+    public static int gcd(int a, int b) {
+        // 如果b为0，返回a，否则递归调用gcd方法
+        return b == 0 ? a : gcd(b, a % b);
+    }
+}
+逐行注释：
+
+定义一个名为Solution的公共类。
+定义主方法。
+定义一个字符串str1，赋值为"ABCABC"。
+定义一个字符串str2，赋值为"ABC"。
+输出gcdOfStrings方法的返回结果。
+定义一个名为gcdOfStrings的公共静态方法，接收两个字符串参数str1和str2。
+判断str1和str2拼接后的字符串是否等于str2和str1拼接后的字符串，如果不等于。
+返回一个空字符串。
+返回最大公约数对应的字符串，通过substring方法截取从0开始到最大公约数长度的子串。
+定义一个名为gcd的公共静态方法，接收两个整数参数a和b。
+判断b是否为0，如果为0返回a，否则递归调用gcd方法。
+
+
+
+
