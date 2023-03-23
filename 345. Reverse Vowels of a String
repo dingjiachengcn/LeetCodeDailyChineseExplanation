@@ -1,0 +1,73 @@
+Given a string s, reverse only all the vowels in the string and return it.
+
+The vowels are 'a', 'e', 'i', 'o', and 'u', and they can appear in both lower and upper cases, more than once.
+
+ 
+
+Example 1:
+
+Input: s = "hello"
+Output: "holle"
+Example 2:
+
+Input: s = "leetcode"
+Output: "leotcede"
+ 
+
+Constraints:
+
+1 <= s.length <= 3 * 105
+s consist of printable ASCII characters.
+
+题目翻译：
+给定一个字符串s，仅反转字符串中的所有元音字母并返回。
+
+元音字母包括 'a'，'e'，'i'，'o' 和 'u'，它们可以以大写和小写形式出现，且可能出现多次。
+
+示例1：
+
+输入：s = "hello"
+输出："holle"
+示例2：
+
+输入：s = "leetcode"
+输出："leotcede"
+
+约束条件：
+
+字符串s的长度在1到3 * 10^5之间。
+字符串s由可打印的ASCII字符组成。
+
+best answer:
+class Solution {
+    public String reverseVowels(String s) {
+        int n = s.length(); // 获取字符串的长度
+        char[] c = s.toCharArray(); // 将字符串转换为字符数组
+        int ft = 0; // 定义一个从前向后的指针
+        int lt = c.length - 1; // 定义一个从后向前的指针
+        char temp; // 用于临时存储交换字符的变量
+
+        while (ft < lt) { // 当从前向后的指针小于从后向前的指针时，继续循环
+
+            // 如果从前向后的指针指向的字符不是元音字母，则将指针向后移动一位
+            if (!(c[ft] == 'a' || c[ft] == 'e' || c[ft] == 'i' || c[ft] == 'o' || c[ft] == 'u' || c[ft] == 'A' || c[ft] == 'E' || c[ft] == 'I' || c[ft] == 'O' || c[ft] == 'U')) {
+                ft += 1;
+            }
+            // 如果从后向前的指针指向的字符不是元音字母，则将指针向前移动一位
+            else if (!(c[lt] == 'a' || c[lt] == 'e' || c[lt] == 'i' || c[lt] == 'o' || c[lt] == 'u' || c[lt] == 'A' || c[lt] == 'E' || c[lt] == 'I' || c[lt] == 'O' || c[lt] == 'U')) {
+                lt -= 1;
+            }
+            // 当从前向后的指针和从后向前的指针都指向元音字母时，交换它们的位置
+            else {
+                temp = c[ft];
+                c[ft] = c[lt];
+                c[lt] = temp;
+                ft += 1; // 更新从前向后的指针
+                lt -= 1; // 更新从后向前的指针
+            }
+        }
+        return String.valueOf(c); // 将字符数组转换为字符串并返回
+    }
+}
+
+这段代码定义了一个reverseVowels函数，该函数接受一个字符串s作为参数。首先获取字符串的长度，然后将字符串转换为字符数组。接着定义两个指针，一个从前向后，另一个从后向前。在循环中，检查两个指针指向的字符是否为元音字母。如果两个指针都指向元音字母，则交换它们的位置。最后将字符数组转换为字符串并返回。
