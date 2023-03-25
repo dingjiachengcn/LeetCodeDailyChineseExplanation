@@ -1,0 +1,159 @@
+You are given a sorted unique integer array nums.
+
+A range [a,b] is the set of all integers from a to b (inclusive).
+
+Return the smallest sorted list of ranges that cover all the numbers in the array exactly. That is, each element of nums is covered by exactly one of the ranges, and there is no integer x such that x is in one of the ranges but not in nums.
+
+Each range [a,b] in the list should be output as:
+
+"a->b" if a != b
+"a" if a == b
+ 
+
+Example 1:
+
+Input: nums = [0,1,2,4,5,7]
+Output: ["0->2","4->5","7"]
+Explanation: The ranges are:
+[0,2] --> "0->2"
+[4,5] --> "4->5"
+[7,7] --> "7"
+Example 2:
+
+Input: nums = [0,2,3,4,6,8,9]
+Output: ["0","2->4","6","8->9"]
+Explanation: The ranges are:
+[0,0] --> "0"
+[2,4] --> "2->4"
+[6,6] --> "6"
+[8,9] --> "8->9"
+ 
+
+Constraints:
+
+0 <= nums.length <= 20
+-231 <= nums[i] <= 231 - 1
+All the values of nums are unique.
+nums is sorted in ascending order. 
+
+题目翻译：
+
+给定一个已排序且元素唯一的整数数组 nums。
+
+一个范围 [a,b] 是指从 a 到 b（包含）的所有整数集合。
+
+返回一个最小的已排序范围列表，恰好覆盖数组中的所有数字。也就是说，nums 的每个元素都恰好被范围列表中的一个范围覆盖，并且不存在整数 x 满足 x 在其中一个范围内，但不在 nums 中。
+
+列表中的每个范围 [a,b] 应该按以下方式输出：
+
+"a->b" 如果 a != b
+"a" 如果 a == b
+示例 1：
+
+输入：nums = [0,1,2,4,5,7]
+输出：["0->2","4->5","7"]
+解释：范围是：
+[0,2] --> "0->2"
+[4,5] --> "4->5"
+[7,7] --> "7"
+示例 2：
+
+输入：nums = [0,2,3,4,6,8,9]
+输出：["0","2->4","6","8->9"]
+解释：范围是：
+[0,0] --> "0"
+[2,4] --> "2->4"
+[6,6] --> "6"
+[8,9] --> "8->9"
+
+约束条件：
+
+0 <= nums.length <= 20
+-2^31 <= nums[i] <= 2^31 - 1
+nums 中的所有值都是唯一的。
+nums 是按升序排列的。
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Solution {
+    public List<String> summaryRanges(int[] nums) {
+        // 初始化结果列表
+        List<String> result = new ArrayList<>();
+        // 遍历数组的索引
+        int i = 0;
+        // 当索引小于数组长度时，继续遍历
+        while (i < nums.length) {
+            // 记录当前连续范围的起始位置
+            int start = i;
+            // 当下一个元素与当前元素相差 1 时，移动索引
+            while (i + 1 < nums.length && nums[i + 1] == nums[i] + 1) {
+                i++;
+            }
+            // 如果起始位置和当前位置相同，表示只有一个元素，直接添加到结果列表
+            if (start == i) {
+                result.add(Integer.toString(nums[start]));
+            } else { // 否则，添加范围字符串 "a->b"
+                result.add(nums[start] + "->" + nums[i]);
+            }
+            // 移动索引到下一个范围的起始位置
+            i++;
+        }
+        // 返回结果列表
+        return result;
+    }
+}
+ 
+best answer:
+class Solution {
+    public List<String> summaryRanges(int[] nums) {
+        // 初始化结果列表
+        List<String> list = new ArrayList<>();
+        // 如果数组长度为 0，直接返回空列表
+        if (nums.length == 0) return list;
+        // 初始化 start 和 end 为数组中第一个元素
+        int start = nums[0], end = nums[0];
+        // 初始化字符串构建器
+        StringBuilder sb = new StringBuilder();
+        // 遍历数组元素，直到倒数第二个
+        for (int i = 0; i < nums.length - 1; i++) {
+            // 当前元素与下一个元素之间不连续时
+            if (nums[i] + 1 != nums[i + 1]) {
+                // 如果 start 和 end 相同，说明只有一个元素
+                if (start == end) {
+                    // 将 start 添加到字符串构建器中
+                    sb.append(start);
+                    // 将构建好的字符串添加到结果列表中
+                    list.add(sb.toString());
+                } else {
+                    // 否则，将范围字符串 "start->end" 添加到字符串构建器中
+                    sb.append(start).append("->").append(end);
+                    // 将构建好的字符串添加到结果列表中
+                    list.add(sb.toString());
+                }
+                // 清空字符串构建器
+                sb.setLength(0);
+                // 将 start 和 end 更新为下一个元素
+                start = nums[i + 1];
+                end = nums[i + 1];
+            } else {
+                // 如果当前元素与下一个元素之间连续，更新 end 为下一个元素
+                end = nums[i + 1];
+            }
+        }
+        // 处理数组最后一个元素
+        if (start == end) {
+            // 将 start 添加到字符串构建器中
+            sb.append(start);
+            // 将构建好的字符串添加到结果列表中
+            list.add(sb.toString());
+        } else {
+            // 将范围字符串 "start->end" 添加到字符串构建器中
+            sb.append(start).append("->").append(end);
+            // 将构建好的字符串添加到结果列表中
+            list.add(sb.toString());
+        }
+        // 返回结果列表
+        return list;
+    }
+}
