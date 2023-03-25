@@ -399,3 +399,7 @@ Leetcode 32 Longest Valid Parentheses
 Leetcode 1235 Maximum Profit in Job Scheduling (DP + binary search)
 Leetcode 1043 Partition Array for Maximum Sum
 Leetcode 926 Flip String to Monotone Increasing
+
+20230325 
+用什么语言刷题
+https://www.youtube.com/watch?v=ZyCQBrcr6jk&t=506s
