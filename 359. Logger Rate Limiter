@@ -1,0 +1,100 @@
+Design a logger system that receives a stream of messages along with their timestamps. Each unique message should only be printed at most every 10 seconds (i.e. a message printed at timestamp t will prevent other identical messages from being printed until timestamp t + 10).
+
+All messages will come in chronological order. Several messages may arrive at the same timestamp.
+
+Implement the Logger class:
+
+Logger() Initializes the logger object.
+bool shouldPrintMessage(int timestamp, string message) Returns true if the message should be printed in the given timestamp, otherwise returns false.
+ 
+
+Example 1:
+
+Input
+["Logger", "shouldPrintMessage", "shouldPrintMessage", "shouldPrintMessage", "shouldPrintMessage", "shouldPrintMessage", "shouldPrintMessage"]
+[[], [1, "foo"], [2, "bar"], [3, "foo"], [8, "bar"], [10, "foo"], [11, "foo"]]
+Output
+[null, true, true, false, false, false, true]
+
+Explanation
+Logger logger = new Logger();
+logger.shouldPrintMessage(1, "foo");  // return true, next allowed timestamp for "foo" is 1 + 10 = 11
+logger.shouldPrintMessage(2, "bar");  // return true, next allowed timestamp for "bar" is 2 + 10 = 12
+logger.shouldPrintMessage(3, "foo");  // 3 < 11, return false
+logger.shouldPrintMessage(8, "bar");  // 8 < 12, return false
+logger.shouldPrintMessage(10, "foo"); // 10 < 11, return false
+logger.shouldPrintMessage(11, "foo"); // 11 >= 11, return true, next allowed timestamp for "foo" is 11 + 10 = 21
+ 
+
+Constraints:
+
+0 <= timestamp <= 109
+Every timestamp will be passed in non-decreasing order (chronological order).
+1 <= message.length <= 30
+At most 104 calls will be made to shouldPrintMessage.
+
+设计一个日志记录系统，该系统接收带有时间戳的消息流。每个唯一的消息最多每10秒钟只能打印一次（即在时间戳t打印的消息将阻止其他相同的消息在时间戳t + 10之前被打印）。
+
+所有消息都将按时间顺序到达。多个消息可能在同一时间戳到达。
+
+实现Logger类：
+
+Logger() 初始化logger对象。
+bool shouldPrintMessage(int timestamp, string message) 如果应在给定的时间戳打印消息，则返回true，否则返回false。
+
+示例 1：
+
+输入
+["Logger", "shouldPrintMessage", "shouldPrintMessage", "shouldPrintMessage", "shouldPrintMessage", "shouldPrintMessage", "shouldPrintMessage"]
+[[], [1, "foo"], [2, "bar"], [3, "foo"], [8, "bar"], [10, "foo"], [11, "foo"]]
+输出
+[null, true, true, false, false, false, true]
+
+解释
+Logger logger = new Logger();
+logger.shouldPrintMessage(1, "foo"); // 返回true，"foo"的下一个允许的时间戳是1 + 10 = 11
+logger.shouldPrintMessage(2, "bar"); // 返回true，"bar"的下一个允许的时间戳是2 + 10 = 12
+logger.shouldPrintMessage(3, "foo"); // 3 < 11, 返回false
+logger.shouldPrintMessage(8, "bar"); // 8 < 12, 返回false
+logger.shouldPrintMessage(10, "foo"); // 10 < 11, 返回false
+logger.shouldPrintMessage(11, "foo"); // 11 >= 11, 返回true，"foo"的下一个允许的时间戳是11 + 10 = 21
+
+约束条件：
+
+0 <= timestamp <= 10^9
+每个时间戳将以非递减顺序（时间顺序）传递。
+1 <= message.length <= 30
+至多将进行10^4次对shouldPrintMessage的调用。
+
+
+// 创建Logger类
+class Logger {
+    // 创建一个私有的映射变量map，用于存储消息及其时间戳
+    private final Map<String, Integer> map;
+
+    // 构造函数，用于初始化Logger对象
+    public Logger() {
+        // 实例化map为一个新的HashMap对象
+        map = new HashMap<>();
+    }
+    
+    // 定义一个方法，用于判断是否应该在给定的时间戳打印消息
+    public boolean shouldPrintMessage(int timestamp, String message) {
+        // 初始化一个布尔变量shouldPrint，默认值为false
+        boolean shouldPrint = false;
+        // 从map中获取给定消息对应的旧时间戳，如果不存在，则设置默认值为-10
+        int oldTimestamp = map.getOrDefault(message, -10);
+        // 判断旧时间戳+10是否小于等于当前时间戳
+        if (oldTimestamp + 10 <= timestamp) {
+            // 如果满足条件，更新map中的消息对应的时间戳为当前时间戳
+            map.put(message, timestamp);
+            // 返回true，表示可以打印消息
+            return true;
+        }
+
+        // 如果不满足条件，返回false，表示不应该打印消息
+        return false;
+    }
+}
+
+这段代码创建了一个Logger类，它通过使用一个HashMap来存储消息及其时间戳。方法shouldPrintMessage()判断给定的消息在当前时间戳是否应该打印。如果消息的时间戳与当前时间戳之差大于等于10秒，那么允许打印消息并更新消息的时间戳；否则，不允许打印消息。
