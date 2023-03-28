@@ -1,0 +1,76 @@
+Given a string num which represents an integer, return true if num is a strobogrammatic number.
+
+A strobogrammatic number is a number that looks the same when rotated 180 degrees (looked at upside down).
+
+ 
+
+Example 1:
+
+Input: num = "69"
+Output: true
+Example 2:
+
+Input: num = "88"
+Output: true
+Example 3:
+
+Input: num = "962"
+Output: false
+ 
+
+Constraints:
+
+1 <= num.length <= 50
+num consists of only digits.
+num does not contain any leading zeros except for zero itself.
+
+题目翻译：
+给定一个表示整数的字符串num，如果num是一个翻转对称数，返回true。
+
+翻转对称数是指一个数字在旋转180度（倒过来看）时看起来仍然相同的数字。
+
+示例 1：
+
+输入：num = "69"
+输出：true
+示例 2：
+
+输入：num = "88"
+输出：true
+示例 3：
+
+输入：num = "962"
+输出：false
+
+限制条件：
+
+1 <= num.length <= 50
+num 仅由数字组成。
+num 本身除了0之外，不包含任何前导零。
+
+best answer
+
+
+// 定义一个名为Solution的类
+class Solution {
+    // 定义一个名为isStrobogrammatic的函数，接收一个字符串类型的参数num，返回值为布尔类型
+    public boolean isStrobogrammatic(String num) {
+        // 获取字符串num的长度，存储在整型变量length中
+        final int length = num.length();
+        // 使用一个for循环，初始化整型变量i为0，当i小于length时执行循环，并在每次循环结束后将i加1
+        for (int i = 0; i < length; i++) {
+            // 获取字符串num在位置i的字符，存储在字符型变量r中
+            final char r = num.charAt(i);
+            // 根据字符r的值，获取翻转后的字符，并存储在字符型变量reversed中
+            final char reversed = r == '6' ? '9'
+                : r == '9' ? '6'
+                : (r == '0' || r == '1' || r == '8') ? r
+                : '-';
+            // 判断翻转后的字符reversed是否与字符串num从右往左数第i个字符相等，如果不相等，则返回false
+            if (reversed != num.charAt(length - i - 1))
+                return false;
+        }
+        // 如果循环完成，说明该数字是翻转对称数，返回true
+        return true;
+    }
+}
