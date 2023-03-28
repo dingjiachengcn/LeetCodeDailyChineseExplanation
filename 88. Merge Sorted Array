@@ -78,3 +78,40 @@ nums2.length == n
 
 追加问题：你能想出一个时间复杂度为 O(m + n) 的算法吗？
 
+class Solution {
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        // 创建一个新的数组，长度为 m+n
+        int[] arr = new int[n + m];
+        // 初始化三个指针 i, j, k 分别表示 nums1, nums2, arr 的当前位置
+        int i = 0, j = 0, k = 0;
+        // 当 i 和 j 都没有遍历完时，进行循环
+        while (i < m && j < n) {
+            // 如果 nums1 的当前元素小于等于 nums2 的当前元素
+            if (nums1[i] <= nums2[j]) {
+                // 将 nums1 的当前元素放入 arr，并将 i 和 k 分别加 1
+                arr[k++] = nums1[i++];
+            } else if (nums1[i] > nums2[j]) {
+                // 否则，将 nums2 的当前元素放入 arr，并将 j 和 k 分别加 1
+                arr[k++] = nums2[j++];
+            }
+        }
+        // 当 nums1 还有剩余元素时
+        while (i < m) {
+            // 将剩余元素放入 arr，并将 i 和 k 分别加 1
+            arr[k++] = nums1[i++];
+        }
+        // 当 nums2 还有剩余元素时
+        while (j < n) {
+            // 将剩余元素放入 arr，并将 j 和 k 分别加 1
+            arr[k++] = nums2[j++];
+        }
+        // 遍历新数组 arr
+        for (int a = 0; a < arr.length; a++) {
+            // 将新数组 arr 的元素复制到 nums1 中，完成合并操作
+            nums1[a] = arr[a];
+        }
+    }
+}
+
+这段代码的逻辑是：创建一个新的数组，长度为 m+n，然后使用三个指针 i、j、k 分别遍历 nums1、nums2 和新数组 arr。将较小的元素从 nums1 和 nums2 中取出并放入新数组 arr 中，遍历完 nums1 和 nums2 后，将新数组 arr 的元素复制到 nums1 中，完成合并操作。
+
