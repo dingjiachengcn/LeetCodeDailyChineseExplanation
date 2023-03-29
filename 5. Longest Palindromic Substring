@@ -1,0 +1,90 @@
+Given a string s, return the longest 
+palindromic
+ 
+substring
+ in s.
+
+Example 1:
+
+Input: s = "babad"
+Output: "bab"
+Explanation: "aba" is also a valid answer.
+Example 2:
+
+Input: s = "cbbd"
+Output: "bb"
+ 
+Constraints:
+
+1 <= s.length <= 1000
+s consist of only digits and English letters.
+
+题目翻译：
+给定一个字符串 s，请返回 s 中最长的回文子字符串。
+
+示例 1：
+
+输入：s = "babad"
+输出："bab"
+解释："aba" 也是一个有效答案。
+示例 2：
+
+输入：s = "cbbd"
+输出："bb"
+
+限制条件：
+
+1 <= s.length <= 1000
+s 仅包含数字和英文字母。
+
+class Solution {
+
+    // 定义两个整数变量 palindromeLength 和 startIndex，分别用于存储找到的最长回文子串的长度和起始索引
+    int palindromeLength = 0;
+    int startIndex = 0;
+
+    public String longestPalindrome(String s) {
+
+        // 如果输入字符串 s 的长度小于 2，直接返回 s
+        if (s.length() < 2) {
+            return s;
+        }
+
+        // 对输入字符串 s 的每个字符进行遍历，注意遍历到倒数第二个字符即可
+        for (int i = 0; i < s.length() - 1; i++) {
+            // 检查以当前字符 s[i] 为中心的奇数长度回文子串
+            checkForPalindrome(s, i - 1, i + 1);
+            // 检查以当前字符 s[i] 和 s[i+1] 为中心的偶数长度回文子串
+            checkForPalindrome(s, i, i + 1);
+            // 如果找到的最长回文子串的长度等于字符串 s 的长度，直接跳出循环
+            if (palindromeLength == s.length()) {
+                break;
+            }
+        }
+        // 返回找到的最长回文子串
+        return s.substring(startIndex, startIndex + palindromeLength);
+    }
+
+    // 定义一个名为 checkForPalindrome 的私有方法，该方法接受一个字符串 s 和两个整数 left 和 right 作为输入参数
+    private void checkForPalindrome(String s, int left, int right) {
+        // 定义一个整数变量 tempLength，用于存储当前回文子串的长度
+        int tempLength = 0;
+        // 当左边界大于等于 0，右边界小于字符串 s 的长度，且 s[left] 等于 s[right] 时，进行循环
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            // 左边界向左移动
+            left--;
+            // 右边界向右移动
+            right++;
+        }
+        // 计算回文子串的长度
+        tempLength = right - left - 1;
+        // 如果当前回文子串的长度大于已找到的最长回文子串的长度
+        if (tempLength > palindromeLength) {
+            // 更新最长回文子串的长度和起始索引
+            palindromeLength = tempLength;
+            startIndex = left + 1;
+        }
+    }
+}
+
+以上是 Java 代码及其逐行的中文注释。这段代码使用了扩展中心法来寻找最长回文子串。对于输入字符串 s 的每个字符，我们尝试将其作为回文子串的中心，然后向两边扩展并计算回文子串的长度。我们记录并返回最长的回文子串。
