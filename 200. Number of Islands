@@ -1,0 +1,147 @@
+Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
+
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+ 
+
+Example 1:
+
+Input: grid = [
+  ["1","1","1","1","0"],
+  ["1","1","0","1","0"],
+  ["1","1","0","0","0"],
+  ["0","0","0","0","0"]
+]
+Output: 1
+Example 2:
+
+Input: grid = [
+  ["1","1","0","0","0"],
+  ["1","1","0","0","0"],
+  ["0","0","1","0","0"],
+  ["0","0","0","1","1"]
+]
+Output: 3
+ 
+
+Constraints:
+
+m == grid.length
+n == grid[i].length
+1 <= m, n <= 300
+grid[i][j] is '0' or '1'.
+
+题目翻译：
+给定一个m x n的二维二进制网格grid，它表示一个由'1'（陆地）和'0'（水域）组成的地图，返回岛屿的数量。
+
+岛屿是由水包围的，由水平或垂直相邻的陆地连接而成。您可以假设网格的四个边都被水包围。
+
+示例1：
+
+输入：grid = [
+["1","1","1","1","0"],
+["1","1","0","1","0"],
+["1","1","0","0","0"],
+["0","0","0","0","0"]
+]
+输出：1
+
+示例2：
+
+输入：grid = [
+["1","1","0","0","0"],
+["1","1","0","0","0"],
+["0","0","1","0","0"],
+["0","0","0","1","1"]
+]
+输出：3
+
+约束条件：
+
+m == grid.length
+n == grid[i].length
+1 <= m, n <= 300
+grid[i][j]是'0'或'1'。
+
+public class Solution {
+    // 定义numIslands函数，接收一个二维字符数组grid作为输入，返回整数类型的岛屿数量
+    public int numIslands(char[][] grid) {
+        // 初始化岛屿数量为0
+        int count = 0;
+        
+        // 遍历二维数组的行
+        for (int i = 0; i < grid.length; i++) {
+            // 遍历二维数组的列
+            for (int j = 0; j < grid[i].length; j++) {
+                // 如果当前位置是陆地（值为'1'），则进行深度优先搜索，并将岛屿数量加1
+                if (grid[i][j] == '1') {
+                    dfs(grid, i, j);
+                    count++;
+                }
+            }
+        }
+        // 返回岛屿数量
+        return count;
+    }
+
+    // 定义深度优先搜索函数，接收一个二维字符数组grid，和两个整数i和j作为输入
+    private void dfs(char[][] grid, int i, int j) {
+        // 如果i和j的值越界，或者当前位置是水域（值为'0'），则直接返回
+        if (i < 0 || i >= grid.length || j < 0 || j >= grid[i].length || grid[i][j] == '0') {
+            return;
+        }
+
+        // 将当前位置的值设为'0'，表示已访问
+        grid[i][j] = '0';
+
+        // 深度优先搜索上下左右四个方向的相邻位置
+        dfs(grid, i - 1, j);
+        dfs(grid, i + 1, j);
+        dfs(grid, i, j - 1);
+        dfs(grid, i, j + 1);
+    }
+}
+
+best answer
+class Solution {
+    int r; // 定义整型变量r，用于存储二维数组的行数
+    int c; // 定义整型变量c，用于存储二维数组的列数
+    char[][] arr; // 定义一个二维字符数组arr
+    int count; // 定义整型变量count，用于存储岛屿数量
+
+    public int numIslands(char[][] grid) {
+        r = grid.length; // 获取二维数组的行数
+        c = grid[0].length; // 获取二维数组的列数
+        arr = grid; // 将输入的二维数组赋值给arr
+
+        count = 0; // 初始化岛屿数量为0
+        for (int i = 0; i < r; i++) { // 遍历二维数组的行
+            check(grid[i], i); // 检查当前行中的每个元素
+        }
+
+        return count; // 返回岛屿数量
+    }
+
+    void check(char[] row, int i) // 定义check方法，用于检查二维数组的每个元素
+    {
+        for (int j = 0; j < c; j++) // 遍历二维数组的列
+        {
+            if (row[j] == '1') // 如果当前位置是陆地（值为'1'）
+            {
+                visitIsland(i, j); // 访问岛屿并将其周围的陆地都标记为已访问
+                count++; // 岛屿数量加1
+            }
+        }
+    }
+
+    public void visitIsland(int i, int j) { // 定义访问岛屿的方法
+        arr[i][j] = '2'; // 将当前位置标记为已访问，值设为'2'
+
+        // 判断当前位置的上下左右四个相邻位置是否是陆地，若是则递归访问
+        if (i - 1 >= 0 && arr[i - 1][j] == '1') visitIsland(i - 1, j);
+        if (i + 1 < r && arr[i + 1][j] == '1') visitIsland(i + 1, j);
+        if (j - 1 >= 0 && arr[i][j - 1] == '1') visitIsland(i, j - 1);
+        if (j + 1 < c && arr[i][j + 1] == '1') visitIsland(i, j + 1);
+    }
+}
+
