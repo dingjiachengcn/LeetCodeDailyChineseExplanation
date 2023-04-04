@@ -1,0 +1,91 @@
+Given an integer array nums, find the 
+subarray
+ with the largest sum, and return its sum.
+
+ 
+
+Example 1:
+
+Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
+Output: 6
+Explanation: The subarray [4,-1,2,1] has the largest sum 6.
+Example 2:
+
+Input: nums = [1]
+Output: 1
+Explanation: The subarray [1] has the largest sum 1.
+Example 3:
+
+Input: nums = [5,4,-1,7,8]
+Output: 23
+Explanation: The subarray [5,4,-1,7,8] has the largest sum 23.
+ 
+
+Constraints:
+
+1 <= nums.length <= 105
+-104 <= nums[i] <= 104
+ 
+
+Follow up: If you have figured out the O(n) solution, try coding another solution using the divide and conquer approach, which is more subtle.
+
+题目：给定一个整数数组 nums，找到具有最大和的子数组，并返回其和。
+
+示例 1:
+
+输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
+输出：6
+解释：子数组 [4,-1,2,1] 有最大的和 6。
+示例 2:
+
+输入：nums = [1]
+输出：1
+解释：子数组 [1] 有最大的和 1。
+示例 3:
+
+输入：nums = [5,4,-1,7,8]
+输出：23
+解释：子数组 [5,4,-1,7,8] 有最大的和 23。
+
+约束条件：
+
+1 <= nums.length <= 10^5
+-10^4 <= nums[i] <= 10^4
+
+进阶：如果您已经找到了 O(n) 的解决方案，请尝试使用分治法编写另一个解决方案，这种方法更加微妙。
+
+class Solution {
+    public int maxSubArray(int[] nums) {
+        // 初始化sum为0，用于存储当前和
+        int sum = 0;
+        // 初始化maxi为整数的最小值，用于存储最大和
+        int maxi = Integer.MIN_VALUE;
+        // 初始化i和j为0，用于遍历数组
+        int i = 0, j = 0;
+
+        // 当j小于数组长度时，继续遍历
+        while (j < nums.length) {
+            // 如果当前和sum小于0且nums[j]大于等于sum
+            if (sum < 0 && nums[j] >= sum) {
+                // 将sum置为0
+                sum = 0;
+                // 更新i为j
+                i = j;
+            }
+            // 将nums[j]累加到sum
+            sum += nums[j];
+            // 更新最大和maxi
+            maxi = Math.max(maxi, sum);
+            // j自增，继续遍历下一个元素
+            j++;
+        }
+        // 返回最大和
+        return maxi;
+    }
+}
+这段代码通过遍历数组，累加和，同时更新最大和，时间复杂度为O(n)。
+
+
+
+
+
