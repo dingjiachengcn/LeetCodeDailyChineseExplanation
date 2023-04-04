@@ -1,0 +1,69 @@
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+ 
+
+Example 1:
+
+Input: n = 3
+Output: ["((()))","(()())","(())()","()(())","()()()"]
+Example 2:
+
+Input: n = 1
+Output: ["()"]
+ 
+
+Constraints:
+
+1 <= n <= 8
+
+题目：给定 n 对括号，编写一个函数生成所有格式正确的括号组合。
+
+示例 1:
+
+输入：n = 3
+输出：["((()))","(()())","(())()","()(())","()()()"]
+示例 2:
+
+输入：n = 1
+输出：["()"]
+
+限制条件：
+
+1 <= n <= 8
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Solution {
+    public List<String> generateParenthesis(int n) {
+        // 创建一个 List，用于存储生成的括号组合
+        List<String> res = new ArrayList<>();
+        
+        // 调用回溯函数生成括号组合
+        backtrack(res, "", 0, 0, n);
+        
+        // 返回生成的括号组合
+        return res;
+    }
+
+    // 回溯函数，用于生成括号组合
+    private void backtrack(List<String> res, String current, int open, int close, int max) {
+        // 当前括号字符串的长度达到 2 * max 时，表示生成完成，添加到结果集中
+        if (current.length() == max * 2) {
+            res.add(current);
+            return;
+        }
+
+        // 如果 open 数量小于 max，继续尝试添加左括号
+        if (open < max) {
+            backtrack(res, current + "(", open + 1, close, max);
+        }
+
+        // 如果 close 数量小于 open，继续尝试添加右括号
+        if (close < open) {
+            backtrack(res, current + ")", open, close + 1, max);
+        }
+    }
+}
+
+这个 Java 代码实现了一个函数，用于生成 n 对括号的所有格式正确的组合。采用回溯算法，通过递归调用回溯函数，在每个步骤中尝试添加左括号或右括号。当生成的括号字符串长度达到 2 * n 时，将其添加到结果集中。
