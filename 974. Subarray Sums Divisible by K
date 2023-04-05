@@ -1,0 +1,68 @@
+Given an integer array nums and an integer k, return the number of non-empty subarrays that have a sum divisible by k.
+
+A subarray is a contiguous part of an array.
+
+ 
+
+Example 1:
+
+Input: nums = [4,5,0,-2,-3,1], k = 5
+Output: 7
+Explanation: There are 7 subarrays with a sum divisible by k = 5:
+[4, 5, 0, -2, -3, 1], [5], [5, 0], [5, 0, -2, -3], [0], [0, -2, -3], [-2, -3]
+Example 2:
+
+Input: nums = [5], k = 9
+Output: 0
+ 
+
+Constraints:
+
+1 <= nums.length <= 3 * 104
+-104 <= nums[i] <= 104
+2 <= k <= 104
+
+题目翻译：
+给定一个整数数组 nums 和一个整数 k，返回和能被 k 整除的非空子数组的个数。
+
+子数组是数组的连续部分。
+
+示例 1：
+
+输入：nums = [4,5,0,-2,-3,1], k = 5
+输出：7
+解释：有 7 个子数组的和能被 k = 5 整除：
+[4, 5, 0, -2, -3, 1], [5], [5, 0], [5, 0, -2, -3], [0], [0, -2, -3], [-2, -3]
+
+示例 2：
+
+输入：nums = [5], k = 9
+输出：0
+
+约束：
+
+1 <= nums.length <= 3 * 104
+-104 <= nums[i] <= 104
+2 <= k <= 104
+
+class Solution { // 定义一个名为 Solution 的类
+    public int subarraysDivByK(int[] nums, int k) { // 定义一个名为 subarraysDivByK 的公共方法，接受一个整数数组 nums 和一个整数 k 作为参数
+        int[] arr = new int[k]; // 创建一个长度为 k 的新数组 arr，用于存储余数出现的次数
+        Arrays.fill(arr, 0); // 使用 0 填充数组 arr
+        arr[0] = 1; // 将数组 arr 中下标为 0 的元素设置为 1
+        int count = 0; // 初始化计数器 count，用于记录和可以被 k 整除的子数组的数量
+        int sum = 0; // 初始化变量 sum，用于存储累计和
+        for (int i = 0; i < nums.length; i++) { // 使用 for 循环遍历整数数组 nums
+            sum += nums[i]; // 累加当前元素到 sum 变量中
+            int rem = sum % k; // 计算累计和 sum 除以 k 的余数，并将结果赋值给变量 rem
+            if (rem < 0) { // 判断余数 rem 是否小于 0
+                rem += k; // 如果余数 rem 小于 0，则将其加上 k，以保证余数为非负数
+            }
+            count += arr[rem]; // 将数组 arr 中下标为 rem 的元素的值累加到计数器 count 中
+            arr[rem]++; // 将数组 arr 中下标为 rem 的元素的值加 1，表示当前余数出现的次数增加 1
+        }
+        return count; // 返回计数器 count 的值，即和可以被 k 整除的子数组的数量
+    }
+}
+
+这段代码实现了一个用于求解数组中和可以被 k 整除的子数组个数的算法。它首先初始化一个长度为 k 的数组 arr，用于记录各个余数出现的次数。接着，遍历输入数组 nums，并计算累计和以及当前和对 k 的余数。通过更新数组 arr 中对应余数的计数，最终得到和可以被 k 整除的子数组的数量。
