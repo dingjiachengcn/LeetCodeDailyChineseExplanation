@@ -1,0 +1,108 @@
+Given an array of meeting time intervals intervals where intervals[i] = [starti, endi], return the minimum number of conference rooms required.
+
+ 
+
+Example 1:
+
+Input: intervals = [[0,30],[5,10],[15,20]]
+Output: 2
+Example 2:
+
+Input: intervals = [[7,10],[2,4]]
+Output: 1
+ 
+
+Constraints:
+
+1 <= intervals.length <= 10^4
+0 <= starti < endi <= 10^6
+
+题目翻译：给定一个表示会议时间间隔的数组intervals，其中intervals[i] = [starti, endi]，返回所需的最小会议室数量。
+
+示例1：
+
+输入：intervals = [[0,30],[5,10],[15,20]]
+输出：2
+示例2：
+
+输入：intervals = [[7,10],[2,4]]
+输出：1
+
+约束条件：
+
+1 <= intervals.length <= 10^4
+0 <= starti < endi <= 10^6
+
+import java.util.Arrays;
+import java.util.PriorityQueue;
+
+public class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        // 对会议时间按照开始时间进行排序
+        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+        
+        // 使用优先队列存储会议结束时间
+        PriorityQueue<Integer> meetingEnds = new PriorityQueue<>();
+        
+        // 初始化最小会议室数量为0
+        int minRooms = 0;
+        
+        // 遍历所有会议时间
+        for (int[] interval : intervals) {
+            // 如果优先队列不为空且当前会议的开始时间大于或等于队列中最早结束的会议的结束时间
+            if (!meetingEnds.isEmpty() && interval[0] >= meetingEnds.peek()) {
+                // 移除最早结束的会议，表示会议室可以被复用
+                meetingEnds.poll();
+            }
+            
+            // 将当前会议的结束时间添加到优先队列中
+            meetingEnds.offer(interval[1]);
+            
+            // 更新最小会议室数量
+            minRooms = Math.max(minRooms, meetingEnds.size());
+        }
+        
+        // 返回最小会议室数量
+        return minRooms;
+    }
+}
+
+
+best answer:
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        // 如果会议时间间隔数组长度为1，直接返回1，表示只需要一个会议室
+        if (intervals.length == 1) return 1;
+
+        // 初始化开始时间数组和结束时间数组
+        int[] starts = new int[intervals.length];
+        int[] ends = new int[intervals.length];
+        // 遍历会议时间间隔数组，将开始时间和结束时间分别存储到对应的数组中
+        for (int i = 0; i < intervals.length; i++) {
+            starts[i] = intervals[i][0];
+            ends[i] = intervals[i][1];
+        }
+        // 对开始时间数组和结束时间数组进行排序
+        Arrays.sort(starts);
+        Arrays.sort(ends);
+        // 初始化最小会议室数量为1
+        int min = 1;
+        // 初始化结束时间数组的索引
+        int j = 0;
+        // 遍历开始时间数组
+        for (int i = 1; i < intervals.length; i++) {
+            // 如果当前会议的开始时间小于结束时间数组中对应的结束时间
+            if (starts[i] < ends[j]) {
+                // 需要增加一个会议室
+                min++;
+            } else {
+                // 否则，更新结束时间数组的索引，表示会议室可以被复用
+                j++;
+            }
+        }
+
+        // 返回最小会议室数量
+        return min;
+    }
+}
+这段代码的主要思路是分别对开始时间和结束时间进行排序，然后遍历开始时间数组，检查当前会议的开始时间是否小于结束时间数组中对应的结束时间。如果是，则需要增加一个会议室；否则，更新结束时间数组的索引，表示会议室可以被复用。最后返回最小会议室数量。
