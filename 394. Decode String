@@ -1,0 +1,140 @@
+Given an encoded string, return its decoded string.
+
+The encoding rule is: k[encoded_string], where the encoded_string inside the square brackets is being repeated exactly k times. Note that k is guaranteed to be a positive integer.
+
+You may assume that the input string is always valid; there are no extra white spaces, square brackets are well-formed, etc. Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers, k. For example, there will not be input like 3a or 2[4].
+
+The test cases are generated so that the length of the output will never exceed 105.
+
+ 
+
+Example 1:
+
+Input: s = "3[a]2[bc]"
+Output: "aaabcbc"
+Example 2:
+
+Input: s = "3[a2[c]]"
+Output: "accaccacc"
+Example 3:
+
+Input: s = "2[abc]3[cd]ef"
+Output: "abcabccdcdcdef"
+ 
+
+Constraints:
+
+1 <= s.length <= 30
+s consists of lowercase English letters, digits, and square brackets '[]'.
+s is guaranteed to be a valid input.
+All the integers in s are in the range [1, 300].
+
+题目翻译：
+给定一个编码字符串，返回它的解码字符串。
+
+编码规则是：k[encoded_string]，其中方括号内的encoded_string恰好重复k次。请注意，k保证为正整数。
+
+你可以假设输入字符串始终有效；没有多余的空格，方括号格式正确等。此外，你可以假设原始数据不包含任何数字，数字仅用于表示重复次数k。例如，不会有类似3a或2[4]的输入。
+
+测试用例生成时，输出的长度永远不会超过105。
+
+示例1：
+
+输入：s = "3[a]2[bc]"
+输出："aaabcbc"
+示例2：
+
+输入：s = "3[a2[c]]"
+输出："accaccacc"
+示例3：
+
+输入：s = "2[abc]3[cd]ef"
+输出："abcabccdcdcdef"
+
+约束：
+
+1 <= s.length <= 30
+s 由小写英文字母、数字和方括号'[]'组成。
+s 保证为有效输入。
+s 中的所有整数都在[1, 300]范围内。
+
+public class Solution {
+    // 主函数
+    public String decodeString(String s) {
+        // 初始化栈
+        Stack<Integer> countStack = new Stack<>();
+        Stack<StringBuilder> stringStack = new Stack<>();
+        StringBuilder currentString = new StringBuilder();
+        int k = 0;
+
+        // 遍历输入字符串
+        for (char ch : s.toCharArray()) {
+            if (Character.isDigit(ch)) { // 如果字符是数字
+                // 计算重复次数
+                k = k * 10 + ch - '0';
+            } else if (ch == '[') { // 如果字符是左方括号
+                // 将重复次数和当前字符串分别入栈
+                countStack.push(k);
+                stringStack.push(currentString);
+                // 重置k和当前字符串
+                k = 0;
+                currentString = new StringBuilder();
+            } else if (ch == ']') { // 如果字符是右方括号
+                // 出栈重复次数
+                int repeatTimes = countStack.pop();
+                StringBuilder parentString = stringStack.pop();
+                // 按照重复次数添加子字符串
+                for (int i = 0; i < repeatTimes; i++) {
+                    parentString.append(currentString);
+                }
+                // 更新当前字符串
+                currentString = parentString;
+            } else { // 如果字符是字母
+                // 将字符添加到当前字符串中
+                currentString.append(ch);
+            }
+        }
+
+        // 返回解码后的字符串
+        return currentString.toString();
+    }
+}
+
+
+best answer
+
+class Solution {
+    int index = 0; // 初始化全局变量index，用于在字符串中移动
+
+    public String decodeString(String s) {
+        return helper(s + ']'); // 调用递归辅助函数，将字符串末尾添加一个']'方便处理
+    }
+
+    public String helper(String s) {
+        int repeat = 0; // 初始化重复次数为0
+        StringBuilder builder = new StringBuilder(); // 初始化一个用于构建解码字符串的StringBuilder
+
+        while (index < s.length()) { // 当index小于字符串长度时，继续遍历
+            Character c = s.charAt(index); // 获取当前字符
+
+            if (Character.isDigit(c)) { // 如果字符是数字
+                repeat = repeat * 10 + (c - '0'); // 计算重复次数
+            } else if (c == '[') { // 如果字符是左方括号
+                index++; // index向后移动一位
+                String sub = helper(s); // 递归调用helper函数处理子字符串
+                for (int r = 0; r < repeat; r++) { // 根据重复次数将子字符串添加到结果中
+                    builder.append(sub);
+                }
+                repeat = 0; // 重置重复次数
+            } else if (c == ']') { // 如果字符是右方括号
+                break; // 跳出循环，返回当前解码的字符串
+            } else { // 如果字符是字母
+                builder.append(c); // 将字符添加到当前解码字符串中
+            }
+
+            index++; // index向后移动一位，继续遍历
+        }
+
+        return builder.toString(); // 返回解码后的字符串
+    }
+}
