@@ -1,0 +1,136 @@
+The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+
+P   A   H   N
+A P L S I I G
+Y   I   R
+And then read line by line: "PAHNAPLSIIGYIR"
+
+Write the code that will take a string and make this conversion given a number of rows:
+
+string convert(string s, int numRows);
+ 
+
+Example 1:
+
+Input: s = "PAYPALISHIRING", numRows = 3
+Output: "PAHNAPLSIIGYIR"
+Example 2:
+
+Input: s = "PAYPALISHIRING", numRows = 4
+Output: "PINALSIGYAHRPI"
+Explanation:
+P     I    N
+A   L S  I G
+Y A   H R
+P     I
+Example 3:
+
+Input: s = "A", numRows = 1
+Output: "A"
+ 
+
+Constraints:
+
+1 <= s.length <= 1000
+s consists of English letters (lower-case and upper-case), ',' and '.'.
+1 <= numRows <= 1000
+
+题目翻译：
+字符串 "PAYPALISHIRING" 按照给定的行数以Z字形模式书写，如下所示：（你可能希望在固定字体中显示此模式以便更好地辨识）
+
+P A H N
+A P L S I I G
+Y I R
+然后逐行阅读："PAHNAPLSIIGYIR"
+
+编写代码，输入一个字符串和行数，进行此转换：
+
+string convert(string s, int numRows);
+
+示例 1：
+
+输入：s = "PAYPALISHIRING", numRows = 3
+输出："PAHNAPLSIIGYIR"
+示例 2：
+
+输入：s = "PAYPALISHIRING", numRows = 4
+输出："PINALSIGYAHRPI"
+解释：
+P I N
+A L S I G
+Y A H R
+P I
+示例 3：
+
+输入：s = "A", numRows = 1
+输出："A"
+
+约束：
+
+1 <= s.length <= 1000
+s 由英文字母（小写和大写）、',' 和 '.' 组成。
+1 <= numRows <= 1000
+
+
+class Solution {
+    public String convert(String s, int numRows) {
+        if (numRows == 1) { // 当行数为1时，直接返回原字符串
+            return s;
+        }
+
+        // 初始化StringBuilder数组，数组大小为行数
+        StringBuilder[] rows = new StringBuilder[numRows];
+        for (int i = 0; i < numRows; i++) {
+            rows[i] = new StringBuilder();
+        }
+
+        int index = 0; // 初始化字符串索引
+        int direction = -1; // 初始化方向，-1代表向上，1代表向下
+        int row = 0; // 初始化当前行数
+
+        // 遍历字符串中的所有字符
+        while (index < s.length()) {
+            rows[row].append(s.charAt(index)); // 将当前字符添加到对应行的StringBuilder中
+
+            // 当到达Z字形的拐点时，改变方向
+            if (row == 0 || row == numRows - 1) {
+                direction = -direction;
+            }
+
+            row += direction; // 更新当前行数
+            index++; // 更新字符串索引
+        }
+
+        // 将所有行的StringBuilder合并为一个StringBuilder
+        StringBuilder result = new StringBuilder();
+        for (StringBuilder rowBuilder : rows) {
+            result.append(rowBuilder);
+        }
+
+        // 返回结果字符串
+        return result.toString();
+    }
+}
+
+best answer
+class Solution {
+    public String convert(String s, int numRows) {
+        if (numRows == 1) return s; // 当行数为1时，直接返回原字符串
+        int x = 2 * (numRows - 1); // 计算两个竖列之间的距离，如 |/|/|...
+        int len = s.length(); // 获取字符串的长度
+        char[] c = new char[len]; // 初始化字符数组，用于存放结果
+        int k = 0; // 初始化字符数组的索引
+
+        for (int i = 0; i < numRows; i++) { // 遍历每一行
+            for (int j = i; j < len; j = j + x) { // 从当前行的第一个字符开始，按竖列间距遍历
+                c[k++] = s.charAt(j); // 将当前字符添加到结果字符数组中
+                // 如果当前行不是第一行和最后一行，且存在额外的字符需要添加
+                if (i > 0 && i < numRows - 1 && j + x - 2 * i < len) {
+                    c[k++] = s.charAt(j + x - 2 * i); // 添加位于两竖列之间的额外字符
+                }
+            }
+        }
+        return new String(c); // 将字符数组转换为字符串并返回
+    }
+}
+
