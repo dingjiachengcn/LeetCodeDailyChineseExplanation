@@ -1,0 +1,145 @@
+Given n points on a 2D plane, find if there is such a line parallel to the y-axis that reflects the given points symmetrically.
+
+In other words, answer whether or not if there exists a line that after reflecting all points over the given line, the original points' set is the same as the reflected ones.
+
+Note that there can be repeated points.
+
+ 
+
+Example 1:
+
+
+Input: points = [[1,1],[-1,1]]
+Output: true
+Explanation: We can choose the line x = 0.
+Example 2:
+
+
+Input: points = [[1,1],[-1,-1]]
+Output: false
+Explanation: We can't choose a line.
+ 
+
+Constraints:
+
+n == points.length
+1 <= n <= 10^4
+-10^8 <= points[i][j] <= 10^8
+ 
+
+Follow up: Could you do better than O(n^2)?
+
+题目翻译：
+
+在一个二维平面上给定 n 个点，找出是否存在一条平行于 y 轴的线，使得给定的点关于这条线对称。
+
+换句话说，回答是否存在一条线，当所有点沿着这条线反射后，原始点集与反射点集相同。
+
+请注意，可能会有重复的点。
+
+示例 1：
+
+输入：points = [[1,1],[-1,1]]
+输出：true
+解释：我们可以选择线 x = 0。
+
+示例 2：
+
+输入：points = [[1,1],[-1,-1]]
+输出：false
+解释：我们找不到一条线。
+
+约束条件：
+
+n == points.length
+1 <= n <= 10^4
+-10^8 <= points[i][j] <= 10^8
+
+进阶：你能优于 O(n^2) 的时间复杂度吗？
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class Solution {
+    public boolean isReflected(int[][] points) {
+        // 创建一个哈希集合存储点
+        Set<String> pointSet = new HashSet<>();
+        // 初始化最大最小 x 值
+        int maxX = Integer.MIN_VALUE;
+        int minX = Integer.MAX_VALUE;
+
+        // 遍历所有点
+        for (int[] point : points) {
+            // 更新最大最小 x 值
+            maxX = Math.max(maxX, point[0]);
+            minX = Math.min(minX, point[0]);
+            // 将点加入哈希集合
+            pointSet.add(point[0] + "," + point[1]);
+        }
+
+        // 计算对称线的 x 坐标
+        int sum = maxX + minX;
+
+        // 遍历所有点，检查它们的对称点是否在集合中
+        for (int[] point : points) {
+            int reflectedX = sum - point[0];
+            if (!pointSet.contains(reflectedX + "," + point[1])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
+在这段代码中，我们首先找到所有点的最大和最小 x 坐标值。然后，我们计算对称线的 x 坐标，该坐标是最大和最小 x 坐标值的和。接下来，我们检查所有点的对称点是否在集合中。如果所有对称点都在集合中，则返回 true，表示存在一条对称线。否则，返回 false。这个算法的时间复杂度为 O(n)。
+
+best answer
+
+class Solution {
+    public boolean isReflected(int[][] points) {
+        // 根据 x 坐标对点进行排序，如果 x 坐标相同，则根据 y 坐标排序
+        Arrays.sort(points, (a, b) -> a[0] == b[0] ? Integer.compare(a[1], b[1]) : Integer.compare(a[0], b[0]));
+
+        // 去除重复点
+        int cur = 0;
+        for (int i = 1; i < points.length; i++) {
+            if (!Arrays.equals(points[i], points[cur])) {
+                points[++cur] = points[i];
+            }
+        }
+        // 截取非重复点
+        points = Arrays.copyOfRange(points, 0, cur + 1);
+
+        // 计算中间点的索引
+        int mid = (points.length + 1) / 2;
+        // 从中间点开始，根据 x 坐标对点进行排序，如果 x 坐标相同，则根据 y 坐标逆序排序
+        Arrays.sort(points, mid, points.length, (a, b) -> a[0] == b[0] ? Integer.compare(b[1], a[1]) : Integer.compare(a[0], b[0]));
+
+        // 初始化左右指针
+        int ll = 0, rr = points.length - 1;
+
+        // 计算左右点 x 坐标之和
+        int sum = points[ll][0] + points[rr][0];
+        
+        // 当左指针小于等于右指针时，进行检查
+        while (ll <= rr) {
+            // 如果左点 x 坐标的两倍等于 sum 或右点 x 坐标的两倍等于 sum，则返回 true
+            if (points[ll][0] * 2 == sum || points[rr][0] * 2 == sum) {
+                return true;
+            }
+            // 如果左右点的 y 坐标不相等，或左右点 x 坐标之和不等于 sum，则返回 false
+            if (points[ll][1] != points[rr][1] || points[ll][0] + points[rr][0] != sum) {
+                return false;
+            }
+            // 左指针右移，右指针左移
+            ll++;
+            rr--;
+        }
+        // 如果检查完成，返回 true
+        return true;
+    }
+}
+
+这段代码首先对点集按照 x 坐标进行排序，然后去除重复的点。接下来，找到中间点的索引，并从中间点开始对右侧的点进行排序。最后，使用双指针法检查是否存在一条平行于 y 轴的线，使得给定的点关于这条线对称。
+
