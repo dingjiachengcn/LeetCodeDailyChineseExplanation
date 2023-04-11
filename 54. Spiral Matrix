@@ -1,0 +1,88 @@
+Given an m x n matrix, return all elements of the matrix in spiral order.
+
+ 
+
+Example 1:
+
+
+Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
+Output: [1,2,3,6,9,8,7,4,5]
+Example 2:
+
+
+Input: matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+Output: [1,2,3,4,8,12,11,10,9,5,6,7]
+ 
+
+Constraints:
+
+m == matrix.length
+n == matrix[i].length
+1 <= m, n <= 10
+-100 <= matrix[i][j] <= 100
+
+题目翻译：
+给定一个 m x n 的矩阵，以螺旋顺序返回矩阵的所有元素。
+
+示例 1:
+
+输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+输出：[1,2,3,6,9,8,7,4,5]
+示例 2:
+
+输入：matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+输出：[1,2,3,4,8,12,11,10,9,5,6,7]
+
+约束条件：
+
+m == matrix.length
+n == matrix[i].length
+1 <= m, n <= 10
+-100 <= matrix[i][j] <= 100
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> result = new ArrayList<>(); // 创建一个 ArrayList 用于存储螺旋顺序的元素
+
+        if (matrix == null || matrix.length == 0) { // 如果输入的矩阵为空或长度为0，则直接返回空的 ArrayList
+            return result;
+        }
+
+        int rowBegin = 0; // 行的起始索引
+        int rowEnd = matrix.length - 1; // 行的结束索引
+        int colBegin = 0; // 列的起始索引
+        int colEnd = matrix[0].length - 1; // 列的结束索引
+
+        while (rowBegin <= rowEnd && colBegin <= colEnd) { // 当行和列的起始索引均小于等于结束索引时，继续遍历
+
+            for (int j = colBegin; j <= colEnd; j++) { // 遍历上方的行，从左到右
+                result.add(matrix[rowBegin][j]);
+            }
+            rowBegin++; // 更新行的起始索引，往下移动一行
+
+            for (int i = rowBegin; i <= rowEnd; i++) { // 遍历右侧的列，从上到下
+                result.add(matrix[i][colEnd]);
+            }
+            colEnd--; // 更新列的结束索引，往左移动一列
+
+            if (rowBegin <= rowEnd) { // 如果行的起始索引仍然小于等于结束索引
+                for (int j = colEnd; j >= colBegin; j--) { // 遍历下方的行，从右到左
+                    result.add(matrix[rowEnd][j]);
+                }
+            }
+            rowEnd--; // 更新行的结束索引，往上移动一行
+
+            if (colBegin <= colEnd) { // 如果列的起始索引仍然小于等于结束索引
+                for (int i = rowEnd; i >= rowBegin; i--) { // 遍历左侧的列，从下到上
+                    result.add(matrix[i][colBegin]);
+                }
+            }
+            colBegin++; // 更新列的起始索引，往右移动一列
+        }
+
+        return result; // 返回存储螺旋顺序元素的 ArrayList
+    }
+}
