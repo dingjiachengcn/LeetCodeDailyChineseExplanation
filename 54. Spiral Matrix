@@ -86,3 +86,48 @@ public class Solution {
         return result; // 返回存储螺旋顺序元素的 ArrayList
     }
 }
+
+best answer
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        int row = matrix.length; // 矩阵的行数
+        int col = matrix[0].length; // 矩阵的列数
+        int top = 0; // 上边界
+        int right = col - 1; // 右边界
+        int bottom = row - 1; // 下边界
+        int left = 0; // 左边界
+        List<Integer> result = new ArrayList<>(); // 存储螺旋顺序元素的列表
+
+        while (result.size() < row * col) { // 当列表中的元素数量小于矩阵中的元素总数时继续循环
+            for (int j = left; j <= right; j++) { // 从左到右遍历上边界
+                result.add(matrix[top][j]); // 将元素添加到结果列表中
+            }
+            for (int j = top + 1; j <= bottom; j++) { // 从上到下遍历右边界
+                result.add(matrix[j][right]); // 将元素添加到结果列表中
+            }
+            if (top != bottom) { // 如果上边界与下边界不重合
+                for (int j = right - 1; j >= left; j--) { // 从右到左遍历下边界
+                    result.add(matrix[bottom][j]); // 将元素添加到结果列表中
+                }
+            }
+            if (left != right) { // 如果左边界与右边界不重合
+                for (int j = bottom - 1; j > top; j--) { // 从下到上遍历左边界
+                    result.add(matrix[j][left]); // 将元素添加到结果列表中
+                }
+            }
+            top++; // 上边界向下移动
+            left++; // 左边界向右移动
+            right--; // 右边界向左移动
+            bottom--; // 下边界向上移动
+        }
+        return result; // 返回结果列表
+    }
+}
+
+对于这两个代码，它们的时间复杂度都是 O(m*n)，因为都需要遍历整个矩阵。但是，在实际运行时间上，它们可能会有一定的差异。这主要是因为代码实现的细节不同，以及执行的循环次数有所差别。
+
+在第一个代码示例中，每个方向（上、右、下、左）的遍历都有单独的循环，而且还需要在每次循环结束后更新边界值。这可能导致执行的循环次数相对较多，从而影响实际运行时间。
+
+而在第二个代码示例中，它的实现更加紧凑，将每个方向的遍历合并到一个大循环中。同时，它还在遍历下边界和左边界时添加了条件判断，以避免在边界重合时的重复遍历。这样的实现可能在实际运行中更加高效。
+
+所以，在实际运行时间上，第二个代码可能会比第一个代码更快一些。但从理论上讲，它们的时间复杂度都是 O(m*n)。
