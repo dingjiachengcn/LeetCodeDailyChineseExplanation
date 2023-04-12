@@ -1,0 +1,62 @@
+You are given a sorted array consisting of only integers where every element appears exactly twice, except for one element which appears exactly once.
+
+Return the single element that appears only once.
+
+Your solution must run in O(log n) time and O(1) space.
+
+ 
+
+Example 1:
+
+Input: nums = [1,1,2,3,3,4,4,8,8]
+Output: 2
+Example 2:
+
+Input: nums = [3,3,7,7,10,11,11]
+Output: 10
+ 
+
+Constraints:
+
+1 <= nums.length <= 10^5
+0 <= nums[i] <= 10^5
+
+题目翻译：
+
+给定一个只包含整数的已排序数组，其中每个元素都恰好出现两次，除了一个元素只出现一次。
+
+返回只出现一次的那个元素。
+
+你的解决方案必须在 O(log n) 的时间复杂度和 O(1) 的空间复杂度内运行。
+
+示例 1:
+
+输入: nums = [1,1,2,3,3,4,4,8,8]
+输出: 2
+示例 2:
+
+输入: nums = [3,3,7,7,10,11,11]
+输出: 10
+
+约束条件:
+
+1 <= nums.length <= 10^5
+0 <= nums[i] <= 10^5
+
+best answer
+class Solution {
+    public int singleNonDuplicate(int[] nums) {
+        int left = 0, right = nums.length-1; // 初始化左指针为0，右指针为数组长度减1
+        
+        while(left < right){ // 当左指针小于右指针时，继续循环
+            int mid = (left + right)/2; // 计算中间索引 mid
+            
+            // 如果 mid 是偶数且 nums[mid] 等于 nums[mid + 1]，或者 mid 是奇数且 nums[mid] 等于 nums[mid - 1]，更新左指针
+            if( (mid % 2 == 0 && nums[mid] == nums[mid +1]) || (mid %2 == 1 && nums[mid] == nums[mid - 1]) )
+                left = mid + 1; // 将左指针更新为 mid + 1
+            else
+                right = mid; // 否则，将右指针更新为 mid
+        }
+        return nums[left]; // 返回左指针指向的元素，即只出现一次的元素
+    }   
+}
