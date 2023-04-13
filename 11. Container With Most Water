@@ -1,0 +1,77 @@
+You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+
+Find two lines that together with the x-axis form a container, such that the container contains the most water.
+
+Return the maximum amount of water a container can store.
+
+Notice that you may not slant the container.
+
+ 
+
+Example 1:
+
+
+Input: height = [1,8,6,2,5,4,8,3,7]
+Output: 49
+Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+Example 2:
+
+Input: height = [1,1]
+Output: 1
+ 
+
+Constraints:
+
+n == height.length
+2 <= n <= 10^5
+0 <= height[i] <= 10^4
+
+题目翻译：
+给定一个长度为n的整数数组height。绘制n条垂直线，使得第i条线的两个端点分别为（i，0）和（i，height[i]）。
+
+找到两条线，与x轴一起形成一个容器，使得该容器能够装入最多的水。
+
+返回容器能够存储的最大水量。
+
+注意，容器不能倾斜。
+
+示例 1：
+
+输入：height = [1,8,6,2,5,4,8,3,7]
+输出：49
+解释：上述垂直线由数组[1,8,6,2,5,4,8,3,7]表示。在这种情况下，容器可以容纳的水的最大面积（蓝色部分）为49。
+示例 2：
+
+输入：height = [1,1]
+输出：1
+
+约束条件：
+
+n == height.length
+2 <= n <= 10^5
+0 <= height[i] <= 10^4
+
+best answer
+class Solution { // 定义解决方案类
+    public int maxArea(int[] height) { // 定义一个名为maxArea的公共方法，传入一个整数数组height，并返回一个整数
+        int start = 0, end = height.length - 1; // 初始化左右指针，左指针start指向数组的第一个元素，右指针end指向数组的最后一个元素
+        int max = 0; // 初始化最大面积为0
+
+        while (start < end) { // 当左指针小于右指针时执行循环
+            int area = 0; // 初始化当前面积为0
+            if (height[start] <= height[end]) { // 如果左指针所指高度小于等于右指针所指高度
+                area = height[start] * (end - start); // 计算当前面积为左指针所指高度乘以左右指针之间的距离
+                max = area > max ? area : max; // 比较当前面积与已知最大面积，取较大值
+                start++; // 将左指针右移一位
+            } else { // 如果左指针所指高度大于右指针所指高度
+                area = height[end] * (end - start); // 计算当前面积为右指针所指高度乘以左右指针之间的距离
+                max = area > max ? area : max; // 比较当前面积与已知最大面积，取较大值
+                end--; // 将右指针左移一位
+            }
+        }
+
+        return max; // 返回最大面积
+    }
+}
+
+这段代码定义了一个名为Solution的类，其中包含一个名为maxArea的公共方法。这个方法接收一个整数数组height作为输入，并返回一个整数作为输出。方法的目的是计算由输入数组中的元素表示的垂直线段组成的最大容器的面积。
