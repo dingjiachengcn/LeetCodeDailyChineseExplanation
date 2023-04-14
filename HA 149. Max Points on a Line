@@ -1,0 +1,86 @@
+Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane, return the maximum number of points that lie on the same straight line.
+
+ 
+
+Example 1:
+
+
+Input: points = [[1,1],[2,2],[3,3]]
+Output: 3
+Example 2:
+
+
+Input: points = [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
+Output: 4
+ 
+
+Constraints:
+
+1 <= points.length <= 300
+points[i].length == 2
+-10^4 <= xi, yi <= 10^4
+All the points are unique.
+
+题目翻译：给定一个点数组，其中 points[i] = [xi, yi] 表示 X-Y 平面上的一个点，返回在同一条直线上的点的最大数量。
+
+示例 1：
+
+输入：points = [[1,1],[2,2],[3,3]]
+输出：3
+
+示例 2：
+
+输入：points = [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
+输出：4
+
+约束条件：
+
+1 <= points.length <= 300
+points[i].length == 2
+-10^4 <= xi, yi <= 10^4
+所有的点都是唯一的。
+
+
+
+best answer
+class Solution {
+    public int maxPoints(int[][] points) {
+        // 获取点的数量
+        int n = points.length;
+
+        // 如果点的数量小于等于 2，直接返回点的数量
+        if(n <= 2) return n;
+
+        // 初始化答案为 2，因为至少有两个点在同一直线上
+        int ans = 2;
+        // 遍历每个点
+        for(int i = 0; i < n; i++) {
+            // 遍历 i 点之后的点
+            for(int j = i+1; j < n; j++) {
+                // 初始化临时计数器为 2，因为至少有两个点在同一直线上
+                int temp = 2;
+                // 遍历 j 点之后的点
+                for(int k = j+1; k < n; k++) {
+                    // 计算斜率的分子
+                    int x = (points[j][1] - points[i][1]) * (points[k][0] - points[i][0]); 
+                    // 计算斜率的分母
+                    int y = (points[j][0] - points[i][0]) * (points[k][1] - points[i][1]);
+
+                    // 如果斜率相等，说明点 k 也在同一直线上
+                    if(x == y) {
+                        temp++;
+                    } 
+                }
+
+                // 更新答案，取最大值
+                if(temp > ans) {
+                    ans = temp;
+                }
+            }
+        }
+
+        // 返回答案
+        return ans;
+    }
+}
+
