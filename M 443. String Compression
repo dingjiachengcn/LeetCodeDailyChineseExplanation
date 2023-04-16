@@ -1,0 +1,134 @@
+Given an array of characters chars, compress it using the following algorithm:
+
+Begin with an empty string s. For each group of consecutive repeating characters in chars:
+
+If the group's length is 1, append the character to s.
+Otherwise, append the character followed by the group's length.
+The compressed string s should not be returned separately, but instead, be stored in the input character array chars. Note that group lengths that are 10 or longer will be split into multiple characters in chars.
+
+After you are done modifying the input array, return the new length of the array.
+
+You must write an algorithm that uses only constant extra space.
+
+ 
+
+Example 1:
+
+Input: chars = ["a","a","b","b","c","c","c"]
+Output: Return 6, and the first 6 characters of the input array should be: ["a","2","b","2","c","3"]
+Explanation: The groups are "aa", "bb", and "ccc". This compresses to "a2b2c3".
+Example 2:
+
+Input: chars = ["a"]
+Output: Return 1, and the first character of the input array should be: ["a"]
+Explanation: The only group is "a", which remains uncompressed since it's a single character.
+Example 3:
+
+Input: chars = ["a","b","b","b","b","b","b","b","b","b","b","b","b"]
+Output: Return 4, and the first 4 characters of the input array should be: ["a","b","1","2"].
+Explanation: The groups are "a" and "bbbbbbbbbbbb". This compresses to "ab12".
+ 
+
+Constraints:
+
+1 <= chars.length <= 2000
+chars[i] is a lowercase English letter, uppercase English letter, digit, or symbol.
+
+题目翻译：
+
+给定一个字符数组 chars，使用以下算法对其进行压缩：
+
+从一个空字符串 s 开始。对于 chars 中每组连续重复的字符：
+
+如果组的长度为 1，则将字符追加到 s。
+否则，将字符追加到 s，后面跟着组的长度。
+压缩后的字符串 s 不应单独返回，而是应存储在输入字符数组 chars 中。注意，长度为 10 或更长的组将在 chars 中分成多个字符。
+
+在修改输入数组后，返回数组的新长度。
+
+你必须编写一种只使用常量额外空间的算法。
+
+
+best answer
+class Solution {
+    public int compress(char[] chars) {
+        // 当字符数组长度为1时，直接返回1，无需压缩
+        if (chars.length == 1) return 1;
+
+        // 初始化指针和计数器
+        int j = 0;
+        int i = 0;
+        int finalSize = 0;
+        int count = 0;
+        char check = chars[0];
+
+        // 当 i 小于字符数组长度时，继续循环
+        while (i < chars.length) {
+            // 如果当前字符与 check 相同，则 i 自增，count 自增
+            if (chars[i] == check) {
+                i++;
+                count += 1;
+            } else {
+                // 如果 count 等于1
+                if (count == 1) {
+                    chars[j] = check; // 将 check 写入字符数组
+                    j++; // j 自增
+                    check = chars[i]; // 更新 check 为当前字符
+                    finalSize += 1; // 更新最终数组长度
+                } else if (count < 10) {
+                    // 如果 count 小于10
+                    chars[j] = check; // 将 check 写入字符数组
+                    j++; // j 自增
+                    chars[j] = (char)(count + '0'); // 将 count 转换为字符并写入字符数组
+                    j++; // j 自增
+                    check = chars[i]; // 更新 check 为当前字符
+                    finalSize += 2; // 更新最终数组长度
+                } else {
+                    // 如果 count 大于等于10
+                    chars[j] = check; // 将 check 写入字符数组
+                    String tmp = Integer.toString(count); // 将 count 转换为字符串
+                    j++; // j 自增
+                    for (char c : tmp.toCharArray()) {
+                        chars[j] = c; // 将 count 的每个字符写入字符数组
+                        j++; // j 自增
+                    }
+                    check = chars[i]; // 更新 check 为当前字符
+                    finalSize += tmp.length() + 1; // 更新最终数组长度
+                }
+
+                // 重置计数器
+                count = 0;
+            }
+        }
+
+        // 当字符数组长度不为1时
+        if (chars.length != 1) {
+            if (count == 1) {
+                // 如果 count 等于1
+                chars[j] = check; // 将 check 写入字符数组
+                finalSize += 1; // 更新最终数组长度
+            } else if (count < 10) {
+                // 如果 count 小于10
+                chars[j] = check; // 将 check 写入字符数组
+                j++; // j 自增
+                chars[j] = (char)(count + '0'); // 将 count 转换为字符并写入字符数组
+                finalSize += 2; // 更新最终数组长度
+            } else {
+                // 如果 count 大于等于10
+                chars[j] = check; // 将 check 写入字符数组
+                String tmp = Integer.toString(count); // 将 count 转换为字符串
+                j++; // j 自增
+                for (char c : tmp.toCharArray()) {
+                    chars[j] = c; // 将 count 的每个字符写入字符数组
+                    j++; // j 自增
+                }
+               
+            finalSize += tmp.length() + 1; // 更新最终数组长度
+        }
+    }
+
+    // 返回压缩后的字符数组长度
+    return finalSize;
+}
+
+
