@@ -1,0 +1,121 @@
+Given an array of strings strs, group the anagrams together. You can return the answer in any order.
+
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
+ 
+
+Example 1:
+
+Input: strs = ["eat","tea","tan","ate","nat","bat"]
+Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+Example 2:
+
+Input: strs = [""]
+Output: [[""]]
+Example 3:
+
+Input: strs = ["a"]
+Output: [["a"]]
+ 
+
+Constraints:
+
+1 <= strs.length <= 104
+0 <= strs[i].length <= 100
+strs[i] consists of lowercase English letters.
+
+题目翻译：
+
+给定一个字符串数组 strs，将字谜词组合在一起。你可以按任意顺序返回答案。
+
+字谜是通过重新排列不同单词或短语的字母形成的单词或短语，通常使用所有原始字母恰好一次。
+
+示例1:
+
+输入: strs = ["eat","tea","tan","ate","nat","bat"]
+输出: [["bat"],["nat","tan"],["ate","eat","tea"]]
+
+示例2:
+
+输入: strs = [""]
+输出: [[""]]
+
+示例3:
+
+输入: strs = ["a"]
+输出: [["a"]]
+
+约束条件：
+
+1 <= strs.length <= 104
+0 <= strs[i].length <= 100
+strs[i] 由小写英文字母组成。
+
+best answer
+
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        // 创建一个HashMap，键为排序后的字符串，值为一个包含对应字谜组的字符串列表
+        Map<String, List<String>> temp = new HashMap<>();
+        
+        // 遍历输入的字符串数组
+        for (int i = 0; i < strs.length; i++) {
+            // 将字符串转换为字符数组，以便进行排序
+            char[] c = strs[i].toCharArray();
+            
+            // 对字符数组进行排序
+            Arrays.sort(c);
+            
+            // 将排序后的字符数组转回字符串
+            String s = new String(c);
+            
+            // 如果HashMap中不存在排序后的字符串作为键，则添加新的键值对
+            if (!temp.containsKey(s)) {
+                temp.put(s, new ArrayList<>());
+            }
+            
+            // 将原始字符串添加到排序后字符串对应的值列表中
+            temp.get(s).add(strs[i]);
+        }
+        
+        // 返回HashMap中所有值的列表
+        return new ArrayList(temp.values());
+    }
+}
+
+
+代码解释：
+
+定义一个 Solution 类。
+在 Solution 类中定义一个方法 groupAnagrams，接受一个字符串数组作为参数，返回值类型为 List<List<String>>。
+创建一个 HashMap，键为排序后的字符串，值为包含对应字谜组的字符串列表。
+遍历输入的字符串数组。
+将字符串转换为字符数组，以便进行排序。
+对字符数组进行排序。
+将排序后的字符数组转回字符串。
+如果 HashMap 中不存在排序后的字符串作为键，则添加新的键值对。
+将原始字符串添加到排序后字符串对应的值列表中。
+返回 HashMap 中所有值的列表。
+
+当然可以。这个问题的解法是基于哈希表的。我们需要找出具有相同字母组成的字符串并将它们归为一组。为了实现这一目标，我们可以采取以下步骤：
+
+遍历输入的字符串数组。
+对于每个字符串，我们将其转换为字符数组并进行排序。排序后的字符串可以作为哈希表的键。这样，具有相同字母的字符串将具有相同的排序后字符串。
+在哈希表中，如果当前排序后的字符串不存在，则添加一个新的键值对。键为排序后的字符串，值为一个新的字符串列表。
+将原始字符串添加到排序后字符串对应的值列表中。这样，所有具有相同字母的字符串将被添加到同一个列表中。
+最后，返回哈希表中所有值的列表，即包含所有分组的列表。
+这种方法利用了哈希表的查询和插入操作的高效性，能够有效地找出并分组具有相同字母组成的字符串。
+
+
+
+
+嘉诚 丁
+是这样的，我经常听到哈希表和哈希值，你能不能用简单的语言，举个例子，告诉我什么是这两个东西，顺便，也帮助我，我想能够给没有基础的朋友一分钟解释清楚这个问题。
+哈希表是一种数据结构，它允许你通过一个唯一的键值（key）来快速地存储和查找数据。这里的“哈希值”指的是键值对应的一个整数，这个整数是通过哈希函数计算得到的。哈希函数能将键值映射到哈希表中的一个位置，使得存储和查找操作非常高效。
+
+举个例子，假设你有一堆字符串，你想要记录每个字符串出现的次数。你可以使用哈希表来实现这个功能，将字符串作为键，出现次数作为值。当遇到一个新的字符串时，你可以先计算它的哈希值（通过哈希函数），然后在哈希表中找到相应的位置。如果这个位置上已经有一个键值对，且键与新
+
+
+
+
+
