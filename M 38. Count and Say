@@ -1,0 +1,151 @@
+The count-and-say sequence is a sequence of digit strings defined by the recursive formula:
+
+countAndSay(1) = "1"
+countAndSay(n) is the way you would "say" the digit string from countAndSay(n-1), which is then converted into a different digit string.
+To determine how you "say" a digit string, split it into the minimal number of substrings such that each substring contains exactly one unique digit. Then for each substring, say the number of digits, then say the digit. Finally, concatenate every said digit.
+
+For example, the saying and conversion for digit string "3322251":
+
+
+Given a positive integer n, return the nth term of the count-and-say sequence.
+
+ 
+
+Example 1:
+
+Input: n = 1
+Output: "1"
+Explanation: This is the base case.
+Example 2:
+
+Input: n = 4
+Output: "1211"
+Explanation:
+countAndSay(1) = "1"
+countAndSay(2) = say "1" = one 1 = "11"
+countAndSay(3) = say "11" = two 1's = "21"
+countAndSay(4) = say "21" = one 2 + one 1 = "12" + "11" = "1211"
+ 
+
+Constraints:
+
+1 <= n <= 30
+
+题目翻译：
+“数数和说”序列是由以下递归公式定义的数字字符串序列：
+countAndSay(1) = "1"
+countAndSay(n) 是从 countAndSay(n-1) 中“说”出的数字字符串，然后转换成另一个不同的数字字符串。
+要确定如何“说”一个数字字符串，将其拆分成最小数量的子字符串，以便每个子字符串恰好包含一个唯一的数字。然后对于每个子字符串，说出数字的数量，然后说出该数字。最后，连接每个说出的数字。
+
+例如，数字字符串 "3322251" 的说法和转换：
+
+给定一个正整数 n，返回“数数和说”序列的第 n 项。
+
+示例 1：
+
+输入：n = 1
+输出："1"
+解释：这是基本情况。
+示例 2：
+
+输入：n = 4
+输出："1211"
+解释：
+countAndSay(1) = "1"
+countAndSay(2) = 说 "1" = 一个 1 = "11"
+countAndSay(3) = 说 "11" = 两个 1 = "21"
+countAndSay(4) = 说 "21" = 一个 2 + 一个 1 = "12" + "11" = "1211"
+
+约束条件：
+
+1 <= n <= 30
+
+
+class Solution {
+    // 返回第n个“数数和说”序列
+    public String countAndSay(int n) {
+        // 如果n等于1，返回"1"
+        if (n == 1) {
+            return "1";
+        }
+        
+        // 递归调用 countAndSay(n-1) 获取前一个序列
+        String prev = countAndSay(n - 1);
+        StringBuilder sb = new StringBuilder();
+        
+        // 遍历前一个序列，生成当前序列
+        for (int i = 0; i < prev.length();) {
+            // 计数相同的连续数字
+            int count = 1;
+            // 当前遍历的数字
+            char currentDigit = prev.charAt(i);
+            
+            // 遍历相邻的相同数字并计数
+            while (i + count < prev.length() && prev.charAt(i + count) == currentDigit) {
+                count++;
+            }
+            
+            // 在结果字符串中添加计数和数字
+            sb.append(count).append(currentDigit);
+            
+            // 更新索引
+            i += count;
+        }
+        
+        // 返回结果字符串
+        return sb.toString();
+    }
+}
+
+这段代码中，我们实现了一个递归函数，用于生成“数数和说”序列的第 n 个数字字符串。我们首先处理基本情况，当 n 等于 1 时返回 "1"。然后我们递归地获取前一个序列，遍历它并生成当前序列。我们计算相同的连续数字，并将计数和数字添加到结果字符串中。最后，我们返回结果字符串。
+
+best answer
+
+class Solution {
+    
+    // 转换数字字符串的方法，生成下一个数字字符串
+    private String convert(String digits) {
+        // 使用 StringBuilder 存储结果
+        StringBuilder res = new StringBuilder();
+        // 保存前一个字符
+        char prev = digits.charAt(0);
+        // 计数相同字符的数量
+        int count = 0;
+        
+        // 遍历输入的数字字符串
+        for (char digit : digits.toCharArray()) {
+            // 如果当前字符与前一个字符相同，计数加一
+            if (digit == prev) {
+                count++;
+            } else {
+                // 否则，将计数和前一个字符添加到结果中
+                res.append(count).append(prev);
+                // 重置计数为1，更新前一个字符
+                count = 1;
+                prev = digit;
+            }
+        }
+        // 添加最后一个字符及其计数到结果中
+        res.append(count).append(prev);
+        // 返回结果字符串
+        return res.toString();
+    }
+    
+    // 将整数表示的 n 转换为字符串表示，并递归处理
+    private String countAndSay(String n) {
+        // 如果输入为 "1"，返回 "1"
+        if ("1".equals(n)) {
+            return "1";
+        }
+        // 转换 countAndSay(n-1) 的结果，并递归调用
+        return convert(countAndSay((Integer.parseInt(n) - 1) + ""));
+    }
+    
+    // 将整数 n 转换为字符串表示，并调用递归处理方法
+    public String countAndSay(int n) {
+        return countAndSay(n + "");
+    }
+}
+
+从算法层面讲，这道题目要求我们找到第 n 个“数数和说”的序列。对于一个给定的数字字符串，我们需要统计相邻的相同数字的数量，并将计数和数字添加到结果字符串中。本解决方案将问题分为两个部分：将整数 n 转换为字符串表示并处理，以及将字符串表示的 n 转换为下一个序列。我们实现了一个 convert 方法来处理字符串表示的转换，以及一个 countAndSay 方法将整数 n 转换为字符串表示并进行递归处理。最后，我们实现了一个公共方法，将整数 n 转换为字符串表示并调用递归处理方法。整个算法的时间复杂度为 O(n * m)，其中 n 是给定整数，m 是生成的字符串的平均长度。
+
