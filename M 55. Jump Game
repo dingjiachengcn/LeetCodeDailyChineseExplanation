@@ -1,0 +1,97 @@
+ou are given an integer array nums. You are initially positioned at the array's first index, and each element in the array represents your maximum jump length at that position.
+
+Return true if you can reach the last index, or false otherwise.
+
+ 
+
+Example 1:
+
+Input: nums = [2,3,1,1,4]
+Output: true
+Explanation: Jump 1 step from index 0 to 1, then 3 steps to the last index.
+Example 2:
+
+Input: nums = [3,2,1,0,4]
+Output: false
+Explanation: You will always arrive at index 3 no matter what. Its maximum jump length is 0, which makes it impossible to reach the last index.
+ 
+
+Constraints:
+
+1 <= nums.length <= 10^4
+0 <= nums[i] <= 10^5
+
+题目翻译：
+给定一个整数数组 nums。最初你位于数组的第一个索引上，数组中的每个元素表示你在该位置的最大跳跃长度。
+
+如果你可以到达最后一个索引，返回 true，否则返回 false。
+
+示例 1：
+
+输入：nums = [2,3,1,1,4]
+输出：true
+解释：从索引 0 跳跃 1 步到索引 1，然后跳跃 3 步到最后一个索引。
+示例 2：
+
+输入：nums = [3,2,1,0,4]
+输出：false
+解释：无论如何，你总是会到达索引 3。它的最大跳跃长度是 0，这使得无法到达最后一个索引。
+
+约束：
+
+1 <= nums.length <= 10^4
+0 <= nums[i] <= 10^5
+
+public class Solution {
+    // 定义 canJump 函数，参数为整数数组 nums
+    public boolean canJump(int[] nums) {
+        // 初始化 maxJump 为 0，用于记录能到达的最远位置
+        int maxJump = 0;
+
+        // 遍历整个数组
+        for (int i = 0; i < nums.length; i++) {
+            // 如果当前位置 i 大于 maxJump，则说明无法到达当前位置，返回 false
+            if (i > maxJump) {
+                return false;
+            }
+            // 更新 maxJump，取 maxJump 和 当前位置 i 加上当前位置的跳跃长度 的较大值
+            maxJump = Math.max(maxJump, i + nums[i]);
+        }
+        // 如果遍历完成，返回 true，表示可以到达最后一个索引
+        return true;
+    }
+}
+
+算法解释：
+这道题目可以使用贪心算法来解决。从数组的第一个元素开始遍历，记录能到达的最远位置。在遍历过程中，不断更新能到达的最远位置。如果遍历过程中，当前位置的索引大于能到达的最远位置，说明无法到达当前位置，返回 false。如果遍历完成，说明可以到达最后一个索引，返回 true。
+
+best answer:
+
+class Solution {
+
+    // 判断是否能到达最后一个位置
+    // 贪心算法：时间复杂度 O(n)
+    public boolean canJump(int[] nums) {
+        // 记录最后一个位置的索引（目标位置）
+        int last = nums.length - 1;
+        
+        // 从后往前开始遍历，检查是否能到达最后一个位置
+        for (int index = nums.length - 2; index >= 0; --index) {
+            // 如果当前位置可以到达目标位置（当前索引加上当前位置的跳跃长度大于等于目标索引）
+            if (index + nums[index] >= last) {
+                // 将目标位置更新为当前位置
+                last = index;
+            }
+        }
+        
+        // 判断最后一个目标位置是否是数组的起始位置（索引为 0）
+        return (last == 0);
+    }
+}
+
+这段代码的每一行中文注释解释了代码的功能和目的。它使用贪心算法从后往前遍历数组，检查是否能到达最后一个位置。在遍历过程中，如果当前位置可以到达目标位置，就更新目标位置为当前位置。最后判断最后一个目标位置是否是数组的起始位置。
+
+
+
+
+
