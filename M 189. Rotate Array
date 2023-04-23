@@ -1,0 +1,109 @@
+Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
+
+ 
+
+Example 1:
+
+Input: nums = [1,2,3,4,5,6,7], k = 3
+Output: [5,6,7,1,2,3,4]
+Explanation:
+rotate 1 steps to the right: [7,1,2,3,4,5,6]
+rotate 2 steps to the right: [6,7,1,2,3,4,5]
+rotate 3 steps to the right: [5,6,7,1,2,3,4]
+Example 2:
+
+Input: nums = [-1,-100,3,99], k = 2
+Output: [3,99,-1,-100]
+Explanation: 
+rotate 1 steps to the right: [99,-1,-100,3]
+rotate 2 steps to the right: [3,99,-1,-100]
+ 
+
+Constraints:
+
+1 <= nums.length <= 10^5
+-2^31 <= nums[i] <= 2^31 - 1
+0 <= k <= 105
+ 
+
+Follow up:
+
+Try to come up with as many solutions as you can. There are at least three different ways to solve this problem.
+Could you do it in-place with O(1) extra space?
+
+题目翻译：
+给定一个整数数组 nums，将数组向右旋转 k 步，其中 k 是非负数。
+
+示例 1：
+
+输入：nums = [1,2,3,4,5,6,7], k = 3
+输出：[5,6,7,1,2,3,4]
+解释：
+向右旋转 1 步：[7,1,2,3,4,5,6]
+向右旋转 2 步：[6,7,1,2,3,4,5]
+向右旋转 3 步：[5,6,7,1,2,3,4]
+示例 2：
+
+输入：nums = [-1,-100,3,99], k = 2
+输出：[3,99,-1,-100]
+解释：
+向右旋转 1 步：[99,-1,-100,3]
+向右旋转 2 步：[3,99,-1,-100]
+
+约束：
+
+1 <= nums.length <= 10^5
+-2^31 <= nums[i] <= 2^31 - 1
+0 <= k <= 10^5
+
+进阶：
+
+尝试提出尽可能多的解决方案。至少有三种不同的方法可以解决这个问题。
+你能用 O(1) 额外空间原地完成吗？
+
+这道题目要求我们将一个整数数组向右旋转 k 步。从算法的层面来看，我们可以采用暴力法、翻转法或者使用循环替换的方法来解决这个问题。这里，我们使用翻转法来解决这个问题，因为它可以在原地使用 O(1) 额外空间完成。翻转法的步骤如下：
+
+将整个数组翻转
+将前 k 个元素翻转
+将剩下的元素翻转
+
+public class Solution {
+    // 使用翻转法实现数组旋转
+    public void rotate(int[] nums, int k) {
+        // 获取数组长度
+        int n = nums.length;
+        // 由于 k 可能大于 n，对 k 取模，避免多余的旋转操作
+        k %= n;
+        // 将整个数组翻转
+        reverse(nums, 0, n - 1);
+        // 将前 k 个元素翻转
+        reverse(nums, 0, k - 1);
+        // 将剩下的元素翻转
+        reverse(nums, k, n - 1);
+    }
+
+    // 翻转数组中 start 到 end 之间的元素
+    private void reverse(int[] nums, int start, int end) {
+        // 使用双指针法，一前一后交换元素
+        while (start < end) {
+            // 交换 nums[start] 和 nums[end]
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            // 将 start 和 end 分别向中间移动
+start++;
+end--;
+}
+}
+}
+
+
+通过上面的代码，我们可以实现数组的旋转。下面简要概括一下这个解法：
+
+1. 首先，我们找到需要旋转的 k 个元素，k 可能大于数组长度，所以我们需要对 k 取模，避免多余的旋转操作。
+2. 接着，我们将整个数组翻转。
+3. 接下来，我们将前 k 个元素翻转。
+4. 最后，我们将剩下的元素翻转。
+
+这样，我们就实现了将数组向右旋转 k 步，同时满足了 O(1) 额外空间的原地操作要求。
+
