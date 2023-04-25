@@ -1,0 +1,126 @@
+A valid IP address consists of exactly four integers separated by single dots. Each integer is between 0 and 255 (inclusive) and cannot have leading zeros.
+
+For example, "0.1.2.201" and "192.168.1.1" are valid IP addresses, but "0.011.255.245", "192.168.1.312" and "192.168@1.1" are invalid IP addresses.
+Given a string s containing only digits, return all possible valid IP addresses that can be formed by inserting dots into s. You are not allowed to reorder or remove any digits in s. You may return the valid IP addresses in any order.
+
+ 
+
+Example 1:
+
+Input: s = "25525511135"
+Output: ["255.255.11.135","255.255.111.35"]
+Example 2:
+
+Input: s = "0000"
+Output: ["0.0.0.0"]
+Example 3:
+
+Input: s = "101023"
+Output: ["1.0.10.23","1.0.102.3","10.1.0.23","10.10.2.3","101.0.2.3"]
+ 
+
+Constraints:
+
+1 <= s.length <= 20
+s consists of digits only.
+
+一个有效的IP地址由四个整数组成，每个整数之间用一个点隔开。每个整数的范围在0到255（包含）之间，并且不能有前导零。
+
+例如，"0.1.2.201" 和 "192.168.1.1" 是有效的IP地址，但 "0.011.255.245"、"192.168.1.312" 和 "192.168@1.1" 是无效的IP地址。
+给定一个只包含数字的字符串s，返回可以通过在s中插入点来形成的所有可能的有效IP地址。不允许重新排序或删除s中的任何数字。可以按任意顺序返回有效的IP地址。
+
+约束条件：
+1 <= s.length <= 20
+s 仅由数字组成。
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Solution {
+    // 主函数
+    public List<String> restoreIpAddresses(String s) {
+        List<String> res = new ArrayList<>(); // 存储结果的列表
+        dfs(s, 0, new ArrayList<>(), res); // 深度优先搜索
+        return res;
+    }
+
+    // 深度优先搜索函数
+    private void dfs(String s, int idx, List<String> path, List<String> res) {
+        // 如果已经得到四段并且遍历完字符串，将结果加入 res 列表
+        if (path.size() == 4) {
+            if (idx == s.length()) {
+                res.add(String.join(".", path));
+            }
+            return;
+        }
+
+        // 从 1 到 3 的循环，尝试不同长度的数字
+        for (int len = 1; len <= 3; len++) {
+            // 如果剩余字符串长度不足以构成有效IP地址，直接返回
+            if (idx + len > s.length() || (4 - path.size()) * 3 < s.length() - idx - len) {
+                return;
+            }
+            
+            String segment = s.substring(idx, idx + len); // 获取当前段
+            int num = Integer.parseInt(segment); // 将字符串转换为整数
+            
+            // 检查当前段是否有效（范围在0-255之间，且没有前导零）
+            if (num <= 255 && (segment.length() == 1 || segment.charAt(0) != '0')) {
+                path.add(segment); // 将当前段加入路径
+                dfs(s, idx + len, path, res); // 继续搜索下一段
+                path.remove(path.size() - 1); // 回溯，删除刚加入的段
+            }
+        }
+    }
+}
+
+这道题目的解题思路是使用深度优先搜索（DFS）来找到所有可能的有效IP地址。在搜索过程中，我们尝试将字符串切分成四段，每段长度最长为3个字符。当我们找到四段时，检查剩余的字符串是否已经遍历完，如果是，则将这个IP地址加入到结果列表中。在每次尝试过程中，我们需要检查当前段是否有效（范围在
+0-255之间，且没有前导零）。如果有效，就将当前段加入路径，然后继续搜索下一段。在回溯时，需要删除刚刚加入的段，以便尝试其他可能的组合。
+
+整个算法的核心是深度优先搜索，通过不断地尝试将字符串分成四段，检查每个段是否有效，并在有效的情况下继续搜索，直到找到所有可能的有效IP地址。这种方法能够确保我们找到所有有效的组合，同时也避免了一些无效的组合。
+
+best answer
+
+class Solution { // 定义一个名为Solution的类
+    public List<String> restoreIpAddresses(String s) { // 定义一个名为restoreIpAddresses的公共方法，参数为一个字符串s，返回一个字符串列表
+        List<String> ips = new ArrayList<>(); // 创建一个新的字符串列表来保存IP地址
+        StringBuilder sb = new StringBuilder(); // 创建一个StringBuilder实例用于构建IP地址
+
+        restoreIps(s, sb, 0, ips, 1); // 调用restoreIps方法进行搜索，参数分别为输入的字符串、StringBuilder实例、起始索引0、IP地址列表和段级别1
+
+        return ips; // 返回找到的所有有效IP地址
+    }
+
+    private void restoreIps(String s, StringBuilder sb, int index, List<String> ips, int level){ // 定义一个名为restoreIps的私有方法，参数为字符串s、StringBuilder实例、当前索引index、IP地址列表和段级别level
+        if(index == s.length() || level > 4) return; // 如果当前索引等于字符串长度或者段级别大于4，直接返回
+        
+        for(int i = 1; i <= 3; i++){ // 遍历每个段的长度，从1到3
+            if(index + i > s.length()) return; // 如果当前索引加上段长度超过字符串长度，返回
+            String sub = s.substring(index, index + i); // 截取当前段
+            int first = Integer.parseInt(sub); // 将当前段转换为整数
+            if( first > 255 || (sub.length() > 1 && sub.charAt(0) == '0') ) return; // 如果当前段大于255或者具有前导零，返回
+            
+            sb.append(sub); // 将当前段添加到StringBuilder实例中
+            if(level == 4 && index + i == s.length()) { // 如果当前为第4段且已经遍历完字符串
+                ips.add(sb.toString()); // 将当前构建的IP地址添加到IP地址列表中
+                for(int j = 1; j <= i; j++) sb.deleteCharAt(sb.length() - j); // 移除刚刚添加的段以进行回溯
+                continue;
+            }else{
+                sb.append("."); // 在当前段后添加一个点
+            }
+            restoreIps(s, sb, index + i, ips, level + 1); // 继续递归搜索下一段
+            for(int j = 1; j <= i; j++){ // 移除刚刚添加的段以进行回溯
+                sb.deleteCharAt(sb.length() - 1);
+            }
+            sb.deleteCharAt(sb.length() - 1); // 移除刚刚添加的点以进行回溯
+        }
+    }
+}
+
+算法的思路是使用深度优先搜索（DFS）来遍历所有可能的IP地址组合。在递归过程中，我们通过判断当前的段是否有效（即在0-255之间且没有前导零）来决定是否继续搜索下一段。在每次搜索时，我们
+使用一个StringBuilder实例来构建IP地址。当我们遍历到第4段且已经遍历完字符串时，说明我们找到了一个有效的IP地址，可以将其添加到IP地址列表中。然后通过回溯方法，我们会移除刚刚添加的段以及点，返回到上一级继续搜索。
+
+在整个搜索过程中，我们使用了一个递归函数restoreIps，它有5个参数：字符串s、StringBuilder实例sb、当前索引index、IP地址列表ips和段级别level。我们从第一个字符开始，逐段构建IP地址，直到找到所有有效的IP地址或者遍历完字符串。在每个段的搜索过程中，我们会检查当前段是否有效，然后决定是否继续搜索。最后，返回找到的所有有效IP地址列表。
+
+这个算法通过深度优先搜索遍历所有可能的IP地址组合，并通过回溯的方法减少了搜索空间，提高了效率。整体时间复杂度为O(3^4)，因为在最坏情况下，我们需要遍历3^4种组合来找到所有可能的IP地址。空间复杂度为O(n)，因为我们需要存储找到的所有有效IP地址。
+
