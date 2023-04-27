@@ -1,0 +1,84 @@
+You are given an array time where time[i] denotes the time taken by the i th bus to complete one trip.
+
+Each bus can make multiple trips successively; that is, the next trip can start immediately after completing the current trip. Also, each bus operates independently; that is, the trips of one bus do not influence the trips of any other bus.
+
+You are also given an integer totalTrips, which denotes the number of trips all buses should make in total. Return the minimum time required for all buses to complete at least totalTrips trips.
+
+ 
+
+Example 1:
+
+Input: time = [1,2,3], totalTrips = 5
+Output: 3
+Explanation:
+- At time t = 1, the number of trips completed by each bus are [1,0,0]. 
+  The total number of trips completed is 1 + 0 + 0 = 1.
+- At time t = 2, the number of trips completed by each bus are [2,1,0]. 
+  The total number of trips completed is 2 + 1 + 0 = 3.
+- At time t = 3, the number of trips completed by each bus are [3,1,1]. 
+  The total number of trips completed is 3 + 1 + 1 = 5.
+So the minimum time needed for all buses to complete at least 5 trips is 3.
+Example 2:
+
+Input: time = [2], totalTrips = 1
+Output: 2
+Explanation:
+There is only one bus, and it will complete its first trip at t = 2.
+So the minimum time needed to complete 1 trip is 2.
+ 
+
+Constraints:
+
+1 <= time.length <= 10^5
+1 <= time[i], totalTrips <= 10^7
+
+给定一个数组time，其中time[i]表示第i辆公交车完成一次行程所需的时间。每辆公交车可以连续进行多次行程，即下一次行程可以在当前行程结束后立即开始。此外，每辆公交车独立运行，即一辆公交车的行程不会影响其他公交车的行程。还给定了一个整数totalTrips，表示所有公交车总共应完成的行程次数。返回所有公交车至少完成totalTrips次行程所需的最短时间。
+
+class Solution {
+    public long minimumTime(int[] time, int totalTrips) {
+        // 寻找数组time中的最小值作为搜索范围的左边界，将最小值乘以totalTrips作为搜索范围的右边界
+        long min = Integer.MAX_VALUE;
+        for (int t : time) {
+            min = Math.min(min, t);
+        }
+        long left = min, right = min * totalTrips;
+
+        // 当左边界小于右边界时，进行二分查找
+        while (left < right) {
+            // 计算中间值
+            long mid = left + (right - left) / 2;
+            // 判断当前mid是否满足条件，如果满足则缩小搜索范围到左半边，否则缩小搜索范围到右半边
+            if (helper(mid, time, totalTrips)) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        // 返回最终的左边界，即为所有公交车至少完成totalTrips次行程所需的最短时间
+        return left;
+    }
+
+    // helper方法用于判断当前时间mid是否满足条件，即在mid时间内是否能完成至少totalTrips次行程
+    private boolean helper(long mid, int[] time, int totalTrips) {
+        int cur = 0;
+        // 遍历数组time，计算每辆公交车在mid时间内能完成的行程次数，累加到cur变量
+        for (int t : time) {
+            cur += (int) (mid / t);
+            // 如果累加的行程次数已经达到或超过totalTrips，说明当前时间mid满足条件，返回true
+            if (cur >= totalTrips) {
+                return true;
+            }
+        }
+        // 如果遍历完数组time后，累加的行程次数仍未达到totalTrips，说明当前时间mid不满足条件，返回false
+        return false;
+    }
+}
+
+算法思路：与之前的代码相似，这个代码使用二分查找算法来找到可以使所有公交车完成至少totalTrips次行程的最短时间。不同之处在于，这里将搜索范围的左边界初始化为数组time中的最小值，右边界初始化为最小值乘以totalTrips。这样设置边界可以稍微缩小搜索范围。接下来，对于每个中间值mid，通过调用helper方法来判断当前时间mid是否满足条件。helper方法遍历数组time，计算每辆公交车在mid时间内能完成的行程次数，并累加到cur变量。如果累加的行程次数已经达到或超过totalTrips，说明当前时间mid满足条件，返回true。否则，返回false。在进行二分
+
+查找的过程中，我们根据helper方法的返回值来判断是否需要调整搜索范围。如果helper方法返回true，说明当前mid值满足条件，我们需要在左半边继续搜索，看看是否有更小的满足条件的时间值。因此，我们将右边界right更新为mid。如果helper方法返回false，说明当前mid值不满足条件，我们需要在右半边继续搜索，找到一个更大的时间值使得条件得以满足。于是，我们将左边界left更新为mid + 1。
+
+当左边界left小于右边界right时，我们会不断地进行二分查找。最后，当left大于等于right时，二分查找结束。我们返回左边界left作为答案，即为所有公交车至少完成totalTrips次行程所需的最短时间。
+
+整个算法的时间复杂度为O(n * log(m))，其中n为数组time的长度，m为最大时间值。这是因为二分查找的时间复杂度为O(log(m))，而在每次查找过程中，我们需要遍历数组time，这部分的时间复杂度为O(n)。将这两部分相乘，得到整个算法的时间复杂度。
+
