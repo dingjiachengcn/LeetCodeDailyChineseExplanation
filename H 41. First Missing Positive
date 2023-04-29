@@ -1,0 +1,119 @@
+Given an unsorted integer array nums, return the smallest missing positive integer.
+
+You must implement an algorithm that runs in O(n) time and uses constant extra space.
+
+ 
+
+Example 1:
+
+Input: nums = [1,2,0]
+Output: 3
+Explanation: The numbers in the range [1,2] are all in the array.
+Example 2:
+
+Input: nums = [3,4,-1,1]
+Output: 2
+Explanation: 1 is in the array but 2 is missing.
+Example 3:
+
+Input: nums = [7,8,9,11,12]
+Output: 1
+Explanation: The smallest positive integer 1 is missing.
+ 
+
+Constraints:
+
+1 <= nums.length <= 10^5
+-2^31 <= nums[i] <= 2^31 - 1
+
+
+题目翻译：
+给定一个未排序的整数数组nums，返回最小的缺失正整数。
+
+你必须实现一个算法，它的运行时间为O(n)，并且使用常量额外空间。
+
+示例 1：
+
+输入：nums = [1,2,0]
+输出：3
+解释：范围[1,2]内的数字都在数组中。
+示例 2：
+
+输入：nums = [3,4,-1,1]
+输出：2
+解释：1在数组中，但2缺失。
+示例 3：
+
+输入：nums = [7,8,9,11,12]
+输出：1
+解释：最小的正整数1缺失。
+
+约束：
+
+1 <= nums.length <= 10^5
+-2^31 <= nums[i] <= 2^31 - 1
+
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        int n = nums.length;
+        
+        // 遍历数组，将正数与数组索引关联，将负数和0变成n+1（因为n+1一定不是最小缺失正整数）
+        for (int i = 0; i < n; i++) {
+            if (nums[i] <= 0) {
+                nums[i] = n + 1;
+            }
+        }
+        
+        // 遍历数组，用索引和正数的关联关系，将存在的正数在数组中的位置标为负数
+        for (int i = 0; i < n; i++) {
+            int num = Math.abs(nums[i]);
+            if (num <= n) {
+                nums[num - 1] = -Math.abs(nums[num - 1]);
+            }
+        }
+        
+        // 遍历数组，找到第一个正数，返回它的索引+1，表示最小缺失正整数
+        for (int i = 0; i < n; i++) {
+            if (nums[i] > 0) {
+                return i + 1;
+            }
+        }
+        
+        // 如果数组中都是负数，则返回n+1，表示最小缺失正整数
+        return n + 1;
+    }
+}
+
+从算法的层面讲，这道题的关键在于将数组nums视为一个哈希表，通过遍历数组nums并将正数与数组索引关联。我们首先将数组中的负数和0都替换为n+1，这样就确保了数组中的所有元素都是正数，且n+1一定不是最小缺失正整数。然后我们再次遍历数组，将数组中元素值对应的索引位置的值变为负数，这表示我们已经找到了这个正数。最后我们再遍历一次数组，找到第一个正数，返回它的索引+1，表示最小缺失正整数。如果数组中都是负数，则返回n+1，表示最小缺失正整数。整个算法的时间复杂度为O(n)，空间复杂度为O(1)。
+
+best answer:
+
+class Solution {
+    boolean[] v; // 定义一个布尔数组v
+
+    public int firstMissingPositive(int[] nums) {
+        int l = nums.length;
+        v = new boolean[l + 2]; // 初始化布尔数组v，长度为l+2，因为最小缺失正整数可能为l+1
+        for (int i = 0; i < l; i++) {
+            if (nums[i] > 0 && nums[i] <= l) {
+                // 当数组中的元素为正数且在1到l范围内时，将v数组对应索引的值设为true
+                v[nums[i]] = true;
+            }
+        }
+        for (int i = 1; i < v.length; i++) {
+            // 遍历v数组，找到第一个值为false的索引
+            if (!v[i]) {
+                return i; // 返回找到的第一个值为false的索引，即为最小缺失正整数
+            }
+        }
+        return 0; // 这一行代码实际上永远不会执行，因为前面的循环总会找到一个值为false的索引并返回
+    }
+}
+
+从算法的层面讲，这个代码首先使用一个布尔数组v来记录哪些正整数出现在输入数组nums中。我们首先遍历数组nums，将满足条件的正整数对应在布尔数组v中的位置设为true。然后我们遍历布尔数组v，找到第一个为false的索引，即为最小缺失正整数。整个算法的时间复杂度为O(n)，空间复杂度为O(n)。
+
+
+
+
+
+
