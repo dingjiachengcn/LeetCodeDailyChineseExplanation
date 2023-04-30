@@ -1,0 +1,83 @@
+Given an array of integers arr, find the sum of min(b), where b ranges over every (contiguous) subarray of arr. Since the answer may be large, return the answer modulo 10^9 + 7.
+
+ 
+
+Example 1:
+
+Input: arr = [3,1,2,4]
+Output: 17
+Explanation: 
+Subarrays are [3], [1], [2], [4], [3,1], [1,2], [2,4], [3,1,2], [1,2,4], [3,1,2,4]. 
+Minimums are 3, 1, 2, 4, 1, 1, 2, 1, 1, 1.
+Sum is 17.
+Example 2:
+
+Input: arr = [11,81,94,43,3]
+Output: 444
+ 
+
+Constraints:
+
+1 <= arr.length <= 3 * 10^4
+1 <= arr[i] <= 3 * 10^4
+
+题目翻译：给定一个整数数组arr，找到所有连续子数组的最小值之和。由于答案可能很大，因此返回答案模 10^9 + 7 的结果。
+
+示例 1：
+
+输入：arr = [3,1,2,4]
+输出：17
+解释：
+子数组有 [3], [1], [2], [4], [3,1], [1,2], [2,4], [3,1,2], [1,2,4], [3,1,2,4]。
+最小值分别是 3, 1, 2, 4, 1, 1, 2, 1, 1, 1。
+总和是 17。
+示例 2：
+
+输入：arr = [11,81,94,43,3]
+输出：444
+
+约束条件：
+
+1 <= arr.length <= 3 * 10^4
+1 <= arr[i] <= 3 * 10^4
+
+class Solution {
+    public int sumSubarrayMins(int[] A) {
+        int n = A.length, mod = 1_000_000_007;
+        long sum = 0;
+        int[] left = new int[n], right = new int[n];
+        left[0] = -1; // 初始化左侧边界
+        right[n - 1] = n; // 初始化右侧边界
+
+        // 从左到右遍历数组，找到每个元素左侧第一个较小元素的下标
+        for (int i = 1; i < n; i++) {
+            int p = i - 1;
+            while (p >= 0 && A[p] > A[i]) p = left[p];
+            left[i] = p;
+        }
+
+        // 从右到左遍历数组，找到每个元素右侧第一个较小元素的下标
+        for (int i = n - 2; i >= 0; i--) {
+            int q = i + 1;
+            while (q < n && A[q] >= A[i]) q = right[q];
+            right[i] = q;
+        }
+
+        // 计算每个元素作为子数组最小值时贡献的和
+        for (int i = 0; i < n; i++) {
+            long p = i - (left[i] + 1) + 1,
+                q = right[i] - 1 - i + 1,
+                pq = ((p * q) % mod * A[i]) % mod;
+            sum = (sum + pq) % mod;
+        }
+        return (int) sum;
+    }
+}
+
+
+算法层面的解释：
+
+初始化两个数组left和right，分别表示每个元素在子数组中左侧第一个较小元素和右侧第一个较小元素的下标。
+从左到右遍历数组，找到每个元素左侧第一个较小元素的下标。使用指针p从当前位置向左搜索，并将左侧第一个较小元素的下标赋值给left[i]。
+从右到左遍历数组，找到每个元素右侧第一个较小元素的下标。使用指针q从当前位置向右搜索，并将右侧第一个较小元素的下标赋值给right[i]。
+计算每个元素作为子数组最小值时贡献的和，将其累加到结果sum中。计算时，需要计算当前元素左侧和右侧较小元素下标的差值p和q，然后计算p * q * A[i]并将结果取模。将这个值累
