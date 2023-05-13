@@ -1,0 +1,150 @@
+Convert a non-negative integer num to its English words representation.
+
+ 
+
+Example 1:
+
+Input: num = 123
+Output: "One Hundred Twenty Three"
+Example 2:
+
+Input: num = 12345
+Output: "Twelve Thousand Three Hundred Forty Five"
+Example 3:
+
+Input: num = 1234567
+Output: "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+ 
+
+Constraints:
+
+0 <= num <= 2^31 - 1
+
+题目翻译：
+
+将一个非负整数 num 转化为其英文单词表示。
+
+例子1：
+
+输入: num = 123
+输出: "One Hundred Twenty Three"
+
+例子2：
+
+输入: num = 12345
+输出: "Twelve Thousand Three Hundred Forty Five"
+
+例子3：
+
+输入: num = 1234567
+输出: "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+
+限制条件：
+
+0 <= num <= 2^31 - 1
+
+从算法层面来讲，这道题的关键在于能够将整数拆分成各个部分，然后转换为对应的英文单词。我们可以通过使用余数和除法操作将整数拆分成几个部分：个位，十位，百位，千位，以及千位以上的部分。然后，我们可以使用预先定义的映射表将这些部分转换为英文单词。
+
+class Solution {
+    // 定义一些需要用到的常量数组
+    private final String[] belowTen = new String[] {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"};
+    private final String[] belowTwenty = new String[] {"Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+    private final String[] belowHundred = new String[] {"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+    
+    public String numberToWords(int num) {
+        // 如果输入的数字为0，直接返回 "Zero"
+        if (num == 0) return "Zero";
+        return helper(num);
+    }
+
+    private String helper(int num) {
+        String result = "";
+        // 大于1亿的部分
+        if (num >= 1000000000) {
+            result += helper(num / 1000000000) + " Billion " + helper(num % 1000000000);
+        // 大于1百万的部分
+        } else if (num >= 1000000) {
+            result += helper(num / 1000000) + " Million " + helper(num % 1000000);
+        // 大于1千的部分
+        } else if (num >= 1000) {
+            result += helper(num / 1000) + " Thousand " + helper(num % 1000);
+        // 大于1百的部分
+        } else if (num >= 100) {
+            result += helper(num / 100) + " Hundred " + helper(num % 100);
+        // 大于20的部分
+        } else if (num >= 20) {
+            result += belowHundred[num / 10] + " " + helper(num % 10);
+        // 大于10的部分
+        } else if (num >= 10) {
+            result += belowTwenty[num - 10];
+        // 小于10的部分
+        } else if (num > 0) {
+                        result += belowTen[num];
+        }
+        // 去掉前后的空白字符
+        return result.trim();
+    }
+}
+
+best answer
+
+// 创建一个名为Solution的类
+class Solution {
+    // 定义数组tens，存储10到90的英文单词
+    static String[] tens = {"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+    // 定义数组ones，存储0到19的英文单词
+    static String[] ones = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven",
+            "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+    // 定义数字的量级
+    static int billion = 1000000000;
+    static int million = 1000000;
+    static int thousand = 1000;
+    static int hundred = 100;
+    static int ten = 10;
+
+    // 主函数，如果数字为0，返回"Zero"，否则调用helper函数并去掉末尾可能存在的空格
+    public static String numberToWords(int num) {
+        if (num == 0) return "Zero";
+        return helper(num).trim();
+    }
+
+    // helper函数，用于递归处理数字，将数字转换为英文表示
+    static String helper(int num) {
+        // 使用StringBuilder来优化字符串拼接
+        StringBuilder sb = new StringBuilder();
+        // 如果数字大于等于十亿
+        if (num >= billion) {
+            sb.append(helper(num / billion)).append(" Billion ").append( helper(num % billion));
+        // 如果数字大于等于一百万
+        } else if  (num >= million) {
+            sb.append(helper(num / million)).append(" Million ").append( helper(num % million));
+        // 如果数字大于等于一千
+        }else if (num >= thousand) {
+            sb.append(helper(num / thousand)).append(" Thousand ").append( helper(num % thousand));
+        // 如果数字大于等于一百
+        }else if (num >= hundred) {
+            sb.append(helper(num / hundred)).append(" Hundred ").append( helper(num % hundred));
+        // 如果数字大于等于二十
+        }else if (num >= 20) {
+            sb.append(tens[num / ten]).append(" ").append( helper(num % ten));
+        // 如果数字小于二十
+        } else {
+            sb.append(ones[num]);
+        }
+        // 返回英文表示，并去掉末尾可能存在的空格
+        return sb.toString().trim();
+    }
+}
+
+
+从算法层面讲，这个题目主要是通过递归的方式处理每个量级的数字，并将其转换为对应的英文单词。如果一个数字大于等于某个量级，那么就需要处理这个量级的部分，然后再处理余下
+的部分。这个过程通过递归的方式实现。
+
+对于大于等于20的数字，我们需要将其拆分为两部分：十位部分和个位部分。十位部分可以直接从tens数组中获取对应的英文单词，个位部分则通过递归调用helper函数处理。
+
+对于小于20的数字，我们可以直接从ones数组中获取对应的英文单词。
+
+值得注意的是，在每个递归调用之后，我们都加上了一个空格字符，这是为了在英文单词之间添加空格。但是，这也可能在字符串的末尾添加了额外的空格，所以在返回结果之前，我们需要调用trim方法去除这些额外的空格。
+
+总的来说，这个算法通过递归和字符串拼接的方式，将一个数字转换为了其对应的英文单词表示。在这个过程中，递归帮助我们处理了不同量级的数字，而字符串拼接则帮助我们构建了最终的英文单词表示。
+
