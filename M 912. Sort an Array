@@ -1,0 +1,115 @@
+Given an array of integers nums, sort the array in ascending order and return it.
+
+You must solve the problem without using any built-in functions in O(nlog(n)) time complexity and with the smallest space complexity possible.
+
+ 
+
+Example 1:
+
+Input: nums = [5,2,3,1]
+Output: [1,2,3,5]
+Explanation: After sorting the array, the positions of some numbers are not changed (for example, 2 and 3), while the positions of other numbers are changed (for example, 1 and 5).
+Example 2:
+
+Input: nums = [5,1,1,2,0,0]
+Output: [0,0,1,1,2,5]
+Explanation: Note that the values of nums are not necessairly unique.
+ 
+
+Constraints:
+
+1 <= nums.length <= 5 * 10^4
+-5 * 10^4 <= nums[i] <= 5 * 10^4
+
+这个问题的要求是：给定一个整数数组 nums，将数组按照升序排序并返回。
+
+你必须在O(nlog(n))的时间复杂度内解决问题，而且空间复杂度要尽可能的小，不能使用任何内置的排序函数。
+
+题目例子说明了，排序后，有些数字的位置可能不会改变（比如例子1中的2和3），而有些数字的位置会改变（比如例子1中的1和5）。需要注意的是，nums的值可能并不唯一（例子2中的0和1就出现了两次）。
+
+约束条件是：nums的长度在1到5 * 10^4之间，nums中的元素值在-5 * 10^4到5 * 10^4之间。
+
+这个问题我们可以使用快速排序算法来解决。快速排序是一种高效的排序算法，其基本思想是分而治之（Divide and Conquer）。在未排序的序列中选择一个元素作为“基准”，然后将所有小于“基准”的元素移动到“基准”的左边，所有大于“基准”的元素移动到“基准”的右边。这个过程称为分区操作（Partition）。然后对“基准”左右两边的子序列进行同样的操作，直到所有元素都被排序。
+
+接下来我们来看Java代码实现：
+
+best answer
+
+public class Solution {
+    // 创建一个随机数生成器
+    private static final Random rand = new Random();
+
+    // 设置插入排序和快速排序的切换阈值
+    private static final int CUTOFF = 8;
+
+    // 检查数组是否已经排好序
+    private static boolean isSorted(int[] a, int lo , int hi) {
+        for (int i = lo + 1; i <= hi; i++) {
+            if (a[i - 1] > a[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // 交换数组中两个元素的位置
+    private static void swap(int[] a , int x, int y) {
+        int tmp = a[y];
+        a[y] = a[x];
+        a[x] = tmp;
+    }
+
+    // 插入排序的实现
+    private static void insertionSort(int[] a, int lo, int hi) {
+        for (int i = lo + 1; i <= hi; i++) {
+            for (int j = i; j > lo && a[j] < a[j-1]; j--) {
+                swap(a, j, j-1);
+            }
+        }
+    }
+
+    // 快速排序的分区函数
+    private static int partition(int[] a, int lo, int hi) {
+        int i = lo;
+        int j = hi - 1;;
+
+        while (true) {
+            while (a[i] < a[hi]) {
+                i++;
+            }
+            while (j > i && a[j] >= a[hi]) {
+                j--;
+            }
+            if (i >= j) break;
+            swap(a, i, j);
+        }
+       swap(a, i, hi);
+       return i;
+    }
+
+    // 综合插入排序和快速排序的 sort 函数
+    private static void sort(int[] a, int lo, int hi) {
+        if (isSorted(a, lo, hi)) return;
+
+        if ((hi - lo + 1) <= CUTOFF) {
+            insertionSort(a, lo, hi);
+            return;
+        }
+
+        // 随机选一个元素和末尾元素交换，这是随机化快速排序的一部分
+        swap(a, rand.nextInt(lo, hi + 1), hi);
+
+        int p = partition(a, lo, hi);
+        sort(a, lo, p - 1);
+        sort(a, p + 1, hi);
+    }
+
+    // 主函数，调用 sort 函数进行排序
+    public int[] sortArray(int[] nums) {
+        sort(nums, 0, nums.length - 1);
+        return nums;
+    }
+}
+
+这个程序使用了插入排序和快速排序的组合进行排序。插入排序在处理小数组时更有效，而快速排序在处理大数组时更有效。此外，为了避免快速排序在面对有序数组时效率下降，这个程序在快速排序中使用了随机化。在具体实现上，当待排序的数组长度小于某个阈值（在这里是8）时，使用插入排序；当数组长度大于阈值时，使用快速排序。
+
