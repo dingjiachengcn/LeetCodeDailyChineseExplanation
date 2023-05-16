@@ -1,0 +1,125 @@
+Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.
+
+A mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
+
+
+ 
+
+Example 1:
+
+Input: digits = "23"
+Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+Example 2:
+
+Input: digits = ""
+Output: []
+Example 3:
+
+Input: digits = "2"
+Output: ["a","b","c"]
+ 
+
+Constraints:
+
+0 <= digits.length <= 4
+digits[i] is a digit in the range ['2', '9']. 
+
+这道题目是一个经典的电话号码字母组合问题，它的要求是：
+
+给定一个字符串，这个字符串包含了2-9的数字，返回所有可能的字母组合，这些字母组合可能由数字所表示。返回的答案可以是任何顺序。
+
+数字到字母的映射（就像电话按钮上的）如下所示。注意1不映射到任何字母。
+
+例如：
+
+例子1：
+
+输入: digits = "23"
+输出: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+
+例子2：
+
+输入: digits = ""
+输出: []
+
+例子3：
+
+输入: digits = "2"
+输出: ["a","b","c"]
+
+约束条件:
+
+0 <= digits.length <= 4
+digits[i] 是一个在范围 ['2', '9'] 的数字。
+
+这段代码是解决这个问题的另一种方法。它利用了迭代的思想。对于输入的每一个字符，它将其对应的字母添加到现有的所有结果中，得到新的结果。这是一种广度优先搜索（BFS）的方式。
+
+具体来说，这段代码的主要步骤如下：
+
+首先，我们定义了一个字符串数组letters，数组中的索引对应于电话键盘上的数字，数组中的字符串对应于该数字对应的字母。
+
+然后，我们定义了一个列表answer，用来存储所有的字母组合结果。
+
+对于输入的每一个数字字符，我们通过函数combi将这个数字对应的所有字母添加到现有的所有结果中，得到新的结果。
+
+最后，我们返回所有的字母组合结果。
+
+class Solution {
+    // 主函数
+    public List<String> letterCombinations(String digits) {
+        // 初始化一个字符串数组，索引对应电话键盘上的数字，字符串对应该数字对应的字母
+        String letters[] = {"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+      
+        // 初始化一个列表，用来存储所有的字母组合结果
+        List<String> answer = new ArrayList<>();
+        
+        // 如果输入是空字符串，直接返回空的结果
+        if(digits.equals("")){
+            return answer;
+        }
+
+        // 将空字符串添加到结果中，作为组合的初始状态
+        answer.add("");
+        
+        // 对于输入的每一个数字字符
+        for(int i=0; i<digits.length(); i++){
+            // 通过函数combi将这个数字对应的所有字母添加到现有的所有结果中，得到新的结果
+            answer = combi(letters[digits.charAt(i)-'0'], answer);
+        }        
+
+        // 返回所有的字母组合结果
+        return answer;        
+    }
+    
+    // 这个函数将一个数字对应的所有字母添加到现有的所有结果中，得到新的结果
+    public static List<String> combi(String letter, List<String> answer){
+        // 初始化一个新的结果列表
+        List<String> result = new ArrayList<>();
+
+        // 对于字母字符串中的每一个字母
+        for(char x : letter.toCharArray()){
+            // 对于现有结果中的每一个字符串
+            for(String y : answer){
+                // 创建一个新的字符串，由现有的字符串加上新的字母
+                StringBuffer sb = new StringBuffer();
+                sb.append(y);
+                sb.append(x);
+                // 将新的字符串添加到新的结果中
+                result.add(sb.toString());
+            }
+        }
+        // 返回新的结果
+        return result;
+    }
+}
+
+
+从算法的层面来看，这段代码的时间复杂度和空间复杂度都是O(N * 4^M)，其中N是输入的字符串的长度，M是输入的字符串中最大的数字对应的字母的数量（最多为4）。这是因为对
+于输入的每一个数字，我们都需要对现有的所有结果进行处理，每个结果都可能添加4个新的字母（因为一个数字最多对应4个字母）。所以，总共的操作数量就是输入的字符串的长度乘以4的幂。
+
+这种方法的一个优点是，它不需要使用递归，所以在处理大规模输入时，不会有栈溢出的问题。另一个优点是，它可以逐步得到结果，所以可以在任何时候停止计算并返回当前的结果。
+
+然而，这种方法的一个缺点是，它需要额外的空间来存储中间的结果。特别是当输入的字符串长度很大时，所需要的空间会增长得非常快。而且，由于需要处理所有的中间结果，所以在处理大规模输入时，这种方法的计算速度可能会较慢。
+
+总的来说，这种方法适合用于处理中等规模的输入，或者需要逐步得到结果的场景。对于大规模输入，或者需要尽快得到最终结果的场景，可能需要使用其他的方法，例如分治法，动态规划，或者使用更高效的数据结构。
+
