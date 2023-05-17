@@ -1,0 +1,63 @@
+You have two types of tiles: a 2 x 1 domino shape and a tromino shape. You may rotate these shapes.
+
+
+Given an integer n, return the number of ways to tile an 2 x n board. Since the answer may be very large, return it modulo 10^9 + 7.
+
+In a tiling, every square must be covered by a tile. Two tilings are different if and only if there are two 4-directionally adjacent cells on the board such that exactly one of the tilings has both squares occupied by a tile.
+
+ 
+
+Example 1:
+
+
+Input: n = 3
+Output: 5
+Explanation: The five different ways are show above.
+Example 2:
+
+Input: n = 1
+Output: 1
+ 
+
+Constraints:
+
+1 <= n <= 1000
+
+你有两种类型的瓷砖：一个2 x 1的多米诺形状和一个三联体形状。你可以旋转这些形状。
+
+给定一个整数n，返回铺设一个2 x n的板子的方法数。由于答案可能非常大，所以返回它模10^9 + 7的结果。
+
+在一个铺设中，每一个方格都必须被一个瓷砖覆盖。两个铺设是不同的当且仅当在板子上有两个四方向相邻的单元格，只有一个铺设将两个方格都被瓷砖占据。
+
+约束条件：1 <= n <= 1000
+
+class Solution {
+    // 定义方法numTilings，输入一个整数n，返回一个整数，表示填充2xn的方格的方法数
+    public int numTilings(int n) {
+        // 当n小于等于3时，为了避免数组越界，我们需要让m等于3，否则m等于n
+        int m = (n > 3) ? n : 3;
+        // 定义一个数组dp，长度为m，dp[i]表示填充2x(i+1)的方格的方法数
+        long[] dp = new long[m];
+        // 初始化dp[0]、dp[1]和dp[2]，长度为1的方格有1种填充方式，长度为2的方格有2种填充方式，长度为3的方格有5种填充方式
+        dp[0] = 1; 
+        dp[1] = 2; 
+        dp[2] = 5;
+        // 从长度为4的方格开始，计算填充方法数
+        for(int i = 3; i < n; i++){
+            // dp[i]等于2倍的dp[i-1]加上dp[i-3]，即填充2x(i)的方格的方法数等于2倍填充2x(i-1)的方格的方法数加上填充2x(i-3)的方格的方法数
+            dp[i] = (dp[i - 1] * 2 + dp[i - 3]) % 1000000007;
+        }
+        // 返回填充2xn的方格的方法数，由于数组下标从0开始，所以需要返回dp[n-1]
+        return (int) dp[n - 1];
+    }
+}
+
+这个算法的思路和之前的动态规划略有不同。在这个算法中，我们考虑了2x1的多米诺瓷砖和三联体瓷砖的组合情况，并在递推公式中体现出来。递推公式为：dp[i] = 2 * dp[i-1] + dp[i-3]。
+
+首先，我们初始化数组dp，长度为m，m取决于n，当n小于等于3时，为了避免数组越界，我们需要让m等于3，否则m等于n。dp[0]、dp[1]和dp[2]分别表示长度为1、2和3的方格有1、2和5种填充方式。
+
+接下来，我们从长度为4的方格开始，计算填充方法数。填充2x(i)的方格的方法数等于2倍填充2x(i-1)的方格的方法数加上填充2x(i-3)的方格的方法数。这是因为，当我们考虑使用三联体瓷砖填充时，我们需要考虑与前面i-3长度方格相对应的组合。
+
+最后，我们返回填充
+
+2xn的方格的方法数，由于数组下标从0开始，所以需要返回dp[n-1]。
