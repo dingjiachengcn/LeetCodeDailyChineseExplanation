@@ -1,0 +1,169 @@
+There is an undirected connected tree with n nodes labeled from 0 to n - 1 and n - 1 edges.
+
+You are given the integer n and the array edges where edges[i] = [ai, bi] indicates that there is an edge between nodes ai and bi in the tree.
+
+Return an array answer of length n where answer[i] is the sum of the distances between the ith node in the tree and all other nodes.
+
+ 
+
+Example 1:
+
+
+Input: n = 6, edges = [[0,1],[0,2],[2,3],[2,4],[2,5]]
+Output: [8,12,6,10,10,10]
+Explanation: The tree is shown above.
+We can see that dist(0,1) + dist(0,2) + dist(0,3) + dist(0,4) + dist(0,5)
+equals 1 + 1 + 2 + 2 + 2 = 8.
+Hence, answer[0] = 8, and so on.
+Example 2:
+
+
+Input: n = 1, edges = []
+Output: [0]
+Example 3:
+
+
+Input: n = 2, edges = [[1,0]]
+Output: [1,1]
+ 
+
+Constraints:
+
+1 <= n <= 3 * 10^4
+edges.length == n - 1
+edges[i].length == 2
+0 <= ai, bi < n
+ai != bi
+The given input represents a valid tree.
+
+这是一道涉及图和树遍历的问题，我们可以通过深度优先遍历（DFS）和动态规划（DP）来解决。
+
+题目给出了一棵有n个节点（标记为0至n-1）和n-1条边的无向连通树。我们有一个整数n和一个数组edges，其中edges[i] = [ai, bi]表示树中节点ai和bi之间有一条边。题目要求我们返回一个长度为n的数组answer，其中answer[i]是树中第i个节点与所有其他节点之间的距离之和。
+
+例如，对于输入n = 6，edges = [[0,1],[0,2],[2,3],[2,4],[2,5]]，输出应为[8,12,6,10,10,10]。树如题目所示，我们可以计算出dist(0,1) + dist(0,2) + dist(0,3) + dist(0,4) + dist(0,5) = 1 + 1 + 2 + 2 + 2 = 8。因此，answer[0] = 8，以此类推。
+
+解决这个问题的关键是理解两个事实：
+
+对于任何节点i，它到所有其他节点的总距离是它的子树中所有节点到它的距离总和，加上它的父节点及其其他子树中所有节点到它的距离总和。
+
+由于树是连通的，因此任何两个节点之间只有一条路径。这意味着我们可以通过动态规划来计算每个节点到所有其他节点的距离总和，从而避免重复计算。
+
+为了实现这个算法，我们需要维护两个数组，一个是count，count[i]表示以i为根的子树（包括i）中的节点数量；另一个是res，res[i]表示节点i到其子树中所有节点的距离和。我们先对树进行一次深度优先遍历来初始化这两个数组，然后再进行一次深度优先遍历来更新res数组。
+
+这个算法的时间复杂度是O(n)，因为我们只对树进行了两次深度优先遍历。空间复杂度也是O(n)，主要是由于我们需要存储树的邻接列表、count数组和res数组。
+
+import java.util.*;
+
+class Solution {
+    List<Set<Integer>> tree;
+    int[] res;
+    int[] count;
+
+    public int[] sumOfDistancesInTree(int n, int[][] edges) {
+        // 建立一个tree列表来保存每个节点的相邻节点
+        tree = new ArrayList<>();
+        res = new int[n];
+        count = new int[n];
+        Arrays.fill(count, 1);  // 因为每个节点至少包括它自己，所以先初始化为1
+
+        // 初始化tree
+        for (int i = 0; i < n; i++) {
+            tree.add(new HashSet<>());
+        }
+        
+        // 根据边的关系构建无向图
+        for (int[] edge : edges) {
+            tree.get(edge[0]).add(edge[1]);
+            tree.get(edge[1]).add(edge[0]);
+        }
+        
+        // 从根节点开始进行两次深度优先搜索
+        dfs(0, -1);
+        dfs2(0, -1);
+        return res;
+    }
+
+    // 第一次深度优先搜索，初始化res数组和count数组
+    private void dfs(int node, int parent) {
+        // 遍历所有子节点
+        for (int child : tree.get(node)) {
+            if (child != parent) {
+                dfs(child, node);
+                count[node] += count[child];  // 当前节点的数量等于所有子节点数量之和加1
+                res[node] += res[child] + count[child];  // 当前节点到所有子节点的距离等于所有子节点到它们自己子节点的距离和加上所有子节点的数量
+            }
+        }
+    }
+
+    // 第二次深度优先搜索，更新res数组
+    private void dfs2(int node, int parent) {
+        // 遍历所有子节点
+        for (int child : tree.get(node)) {
+            if (child != parent) {
+                res[child] = res[node] - count[child] + count.length - count[child];  // 子节点到其他所有节点的距离等于父节点到所有节点的距离减去子节点的数量再加上总节点数减去子节点的数量
+                dfs2(child, node);
+            }
+        }
+    }
+}
+
+
+这是整个解决方案。注意，这种方法使用了深度优先搜索和动态规划，首先遍历整个树来初始化结果数组，然后再次遍历树来调整结果。在调整结果时，我们考虑了树中每个节点到所有其他节点的距离由两部分组成：一部分是节点到其子树中所有节点的距离，另一部分是节点到其父节点及其父节点的其他子树中所有节点的距离。
+
+best answer
+class Solution {
+    int[][] graph;  // 二维数组，表示图的邻接数组
+    int[] count;  // 数组，表示每个节点的子节点数量（包括自身）
+    int[] res;  // 数组，表示每个节点到所有其他节点的距离和
+    int N;  // 节点数量
+
+    public int[] sumOfDistancesInTree(int N, int[][] edges) {
+        this.N = N;
+        this.res = new int[N];
+        this.graph = new int[N][];
+        this.count = new int[N];
+        
+        // 初始化count数组
+        for (int[] e : edges) {
+            ++count[e[0]];
+            ++count[e[1]];
+        }
+        // 初始化graph数组
+        for (int i = 0; i < N; i++) {
+            graph[i] = new int[count[i]];
+        }
+        // 根据边的信息，填充graph数组
+        for (int[] e : edges) {
+            graph[e[0]][--count[e[0]]] = e[1];
+            graph[e[1]][--count[e[1]]] = e[0];
+        }
+        // 从根节点开始进行两次深度优先搜索
+        dfs1(0, -1);
+        dfs2(0, -1);
+        return res;
+    }
+
+    // 第一次深度优先搜索，初始化res数组和count数组
+    public void dfs1(int cur, int parent) {
+        count[cur] = 1;
+        for (int child : graph[cur]) {
+            if (child != parent) {
+                dfs1(child, cur);
+                count[cur] += count[child];  // 当前节点的数量等于所有子节点数量之和加1
+                res[cur] += res[child] + count[child];  // 当前节点到所有子节点的距离等于所有子节点到它们自己子节点的距离和加上所有子节点的数量
+            }
+        }
+    }
+
+    // 第二次深度优先搜索，更新res数组
+    public void dfs2(int cur, int parent) {
+        for (int child : graph[cur]) {
+            if (child != parent) {
+                res[child] = res[cur] + N - 2 * count[child];  // 子节点到其他所有节点的距离等于父节点到所有节点的距离减去子节点的数量再加上总节点数减去子节点的数量
+                dfs2(child, cur);
+            }
+        }
+    }
+}
+
+
