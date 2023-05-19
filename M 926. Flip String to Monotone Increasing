@@ -1,0 +1,95 @@
+A binary string is monotone increasing if it consists of some number of 0's (possibly none), followed by some number of 1's (also possibly none).
+
+You are given a binary string s. You can flip s[i] changing it from 0 to 1 or from 1 to 0.
+
+Return the minimum number of flips to make s monotone increasing.
+
+ 
+
+Example 1:
+
+Input: s = "00110"
+Output: 1
+Explanation: We flip the last digit to get 00111.
+Example 2:
+
+Input: s = "010110"
+Output: 2
+Explanation: We flip to get 011111, or alternatively 000111.
+Example 3:
+
+Input: s = "00011000"
+Output: 2
+Explanation: We flip to get 00000000.
+ 
+
+Constraints:
+
+1 <= s.length <= 10^5
+s[i] is either '0' or '1'.
+
+这道题目的意思是：二进制字符串被称为单调递增，如果它包含一些数量的0（可能没有），后面跟着一些数量的1（也可能没有）。
+
+给你一个二进制字符串s。你可以通过将s[i]从0翻转到1或从1翻转到0来翻转字符串s。
+
+返回使s单调递增所需的最小翻转次数。
+
+题目给出了一些例子以及字符串s的限制条件：字符串s的长度在1到10^5之间，字符串中的每个字符都是'0'或'1'。
+
+接下来，我会给出一种解决这个问题的方法，并用Java语言编写代码。该方法的主要思想是：我们要尽可能地将尽可能多的1变为0，而不是将0变为1。因此，我们将遍历整个字符串，并在遇到'1'时增加计数器，然后在遇到'0'时检查是否可以将之前的'1'翻转为'0'，以减少总的翻转次数。
+
+
+public class Solution {
+    // 定义一个函数，名为 minFlipsMonoIncr，接收一个字符串 s 作为参数
+    public int minFlipsMonoIncr(String s) {
+        // 定义两个整型变量，flipCount 和 oneCount，分别用来记录需要翻转的次数和1的个数
+        int flipCount = 0, oneCount = 0;
+        
+        // 遍历整个字符串
+        for(int i = 0; i < s.length(); i++) {
+            // 如果当前字符为 '1'
+            if(s.charAt(i) == '1') {
+                // 1的数量加1
+                oneCount++;
+            } else {
+                // 否则，如果1的数量大于0，则可以将一个1翻转为0，以此减少一次翻转次数
+                if(oneCount > 0) {
+                    // 所以，我们将 1 的数量减1，同时需要翻转的次数也减1
+                    oneCount--;
+                    flipCount++;
+                }
+            }
+        }
+        // 最后，返回需要翻转的次数
+        return flipCount;
+    }
+}
+
+这段代码首先定义了一个函数 minFlipsMonoIncr，它接收一个字符串 s 作为输入，然后定义了两个变量 flipCount 和 oneCount 来记录需要翻转的次数和1的个数。接着，代码会遍历整个字符串，如果遇到字符 '1'，就将 oneCount 加1；如果遇到字符 '0'，就检查 oneCount 是否大于0，如果是，就将一个 '1' 翻转为 '0'，这样可以减少一次翻转次数。最后，代码返回 flipCount，也就是需要翻转的次数。
+
+这个算法的时间复杂度为 O(n)，其中 n 是字符串 s 的长度，因为我们只需要遍历一次字符串。空间复杂度为 O(1)，因为我们只使用了两个整型变量。
+
+class Solution {
+    // 定义解决问题的函数 minFlipsMonoIncr，它接收一个字符串 s 作为输入
+    public int minFlipsMonoIncr(String s) {
+        int res = 0;  // 初始化翻转次数为0
+        int cntOnes = 0;  // 初始化'1'的数量为0
+        int n = s.length();  // 获取字符串的长度
+        for(char c:s.toCharArray()){  // 将字符串转换为字符数组并遍历
+            // 如果字符是'1'，那么它不会影响翻转的最小次数
+            // 如果字符是'0'，那么有两种选项可以使它单调递增
+            // 选项1：保持它为'0'，并将前面的所有'1'翻转为'0'，需要知道到目前为止'1'的数量
+            // 选项2：将它翻转为'1'，则不需要进行任何操作
+            if(c == '1') cntOnes++;  // 如果字符为'1'，'1'的数量加1
+            else res = Math.min(cntOnes, res + 1);  // 如果字符为'0'，决定是将前面的'1'翻转为'0'还是将这个'0'翻转为'1'
+        }
+        return res;  // 返回最小的翻转次数
+    }
+}
+
+
+这个解决方案的主要思想是在遇到'0'时做出选择，是否将前面的'1'翻转为'0'，还是将这个'0'翻转为'1'。如果'1'的数量比已经翻转的数量+1小，那么就选择将前面的'1'全部翻转为'0'，否则就选择将这个'0'翻转为'1'。通过这种方式，可以保证在每一步都选择最小的翻转次数，从而在遍历完整个字符串后得到总的最小翻转次数。
+
+这个算法的时间复杂度为O(n)，其中n为字符串s的长度，因为我们只需要遍历一次字符串。空间复杂度为O(1)，因为我们只使用了两个整型变量来记录状态。
+
+
