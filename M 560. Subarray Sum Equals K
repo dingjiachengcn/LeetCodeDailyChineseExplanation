@@ -1,0 +1,86 @@
+Given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
+
+A subarray is a contiguous non-empty sequence of elements within an array.
+
+ 
+
+Example 1:
+
+Input: nums = [1,1,1], k = 2
+Output: 2
+Example 2:
+
+Input: nums = [1,2,3], k = 3
+Output: 2
+ 
+
+Constraints:
+
+1 <= nums.length <= 2 * 10^4
+-1000 <= nums[i] <= 1000
+-10^7 <= k <= 10^7 
+
+首先，让我们逐句翻译一下题目。
+
+给定一个整数数组 nums 和一个整数 k，请返回和为 k 的子数组的总数。
+子数组是数组内连续的非空元素序列。
+
+示例 1:
+
+输入: nums = [1,1,1], k = 2
+输出: 2
+示例 2:
+
+输入: nums = [1,2,3], k = 3
+输出: 2
+
+限制条件：
+
+1 <= nums.length <= 2 * 10^4
+-1000 <= nums[i] <= 1000
+-10^7 <= k <= 10^7
+
+这道题目要求我们找出数组中和为特定值的子数组的数量。一个有效的方法是使用哈希表来存储之前元素的和出现的次数，然后对每个新的元素，计算其和当前元素之和是否为目标值。我们需要注意的是，子数组需要是连续的，所以我们需要保持对数组的累积和的跟踪，而不是单个元素的和。
+
+初始化一个哈希表，并将 (0,1) 作为初始值插入，这表示在开始时和为0的子数组只有一个，即空数组。
+初始化累积和 sum 为0，以及用于记录满足条件的子数组数量的变量 count 为0。
+遍历数组中的每一个元素，将元素值加到累积和 sum 上。
+检查 sum - k 是否在哈希表中，如果在，则将哈希表中 sum - k 的值加到 count 上。这是因为 sum - k 就表示在当前元素之前有多少个和为 sum - k 的子数组，这些子数组加上当前元素，其和就会为 k，这就是我们要找的满足条件的子数组。
+将 sum 的值作为键，次数作为值存入哈希表中，表示和为 sum 的子数组的数量增加了一个。
+遍历结束后，返回 count 的值，即为满足条件的子数组的数量。
+下面我会给出具体的代码实现，并对每一行代码进行注释。
+
+
+import java.util.*;
+
+public class Solution {
+    public int subarraySum(int[] nums, int k) {
+        // 创建哈希表，用于存储累积和及其出现的次数
+        Map<Integer, Integer> map = new HashMap<>();
+        // 将和为0的子数组数量初始化为1
+        map.put(0, 1);
+        
+        // 初始化累积和和子数组数量
+        int sum = 0, count = 0;
+        
+        // 遍历数组中的每一个元素
+        for (int i = 0; i < nums.length; i++) {
+            // 将当前元素值加到累积和上
+            sum += nums[i];
+            
+            // 检查 sum - k 是否在哈希表中，如果在，将哈希表中 sum - k 的值加到 count 上
+            if (map.containsKey(sum - k)) {
+                count += map.get(sum - k);
+            }
+            
+            // 将累积和的值和对应的次数存入哈希表中
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+        
+        // 返回满足条件的子数组的数量
+        return count;
+    }
+}
+以上代码的时间复杂度为 O(n)，其中 n 是数组的长度。因为我们只需要遍历一次数组，对于数组中的每个元素，我们在哈希表中插入和查找的操作都是常数时间的。
+
+空间复杂度也为 O(n)，因为在最坏的情况下，如果数组中所有元素的累积和都不同，那么我们需要在哈希表中存储这些累积和，所以空间复杂度为 O(n)。
