@@ -1,0 +1,134 @@
+It is a sweltering summer day, and a boy wants to buy some ice cream bars.
+
+At the store, there are n ice cream bars. You are given an array costs of length n, where costs[i] is the price of the ith ice cream bar in coins. The boy initially has coins coins to spend, and he wants to buy as many ice cream bars as possible. 
+
+Note: The boy can buy the ice cream bars in any order.
+
+Return the maximum number of ice cream bars the boy can buy with coins coins.
+
+You must solve the problem by counting sort.
+
+ 
+
+Example 1:
+
+Input: costs = [1,3,2,4,1], coins = 7
+Output: 4
+Explanation: The boy can buy ice cream bars at indices 0,1,2,4 for a total price of 1 + 3 + 2 + 1 = 7.
+Example 2:
+
+Input: costs = [10,6,8,7,7,8], coins = 5
+Output: 0
+Explanation: The boy cannot afford any of the ice cream bars.
+Example 3:
+
+Input: costs = [1,6,3,1,2,5], coins = 20
+Output: 6
+Explanation: The boy can buy all the ice cream bars for a total price of 1 + 6 + 3 + 1 + 2 + 5 = 18.
+ 
+
+Constraints:
+
+costs.length == n
+1 <= n <= 10^5
+1 <= costs[i] <= 10^5
+1 <= coins <= 10^8
+
+这道题目的描述为：在一个炎热的夏日，一个男孩想要买一些冰淇淋。
+
+在商店里，有n个冰淇淋。给定一个长度为n的数组costs，其中costs[i]是第i个冰淇淋的价格（以硬币计）。男孩最初有coins硬币来消费，他想买尽可能多的冰淇淋。
+
+注意：男孩可以以任何顺序购买冰淇淋。
+
+返回男孩可以用coins硬币购买的最大冰淇淋数。
+
+你必须通过计数排序来解决这个问题。
+
+然后是例子和一些约束条件。
+
+为了解决这个问题，我们可以使用计数排序的方法。计数排序是一种非比较排序算法，适用于一定范围内的整数排序。由于题目已经明确了价格的范围，我们可以用计数排序。
+
+先创建一个数组来存储每个价格出现的次数，然后从低到高遍历价格，每次尽可能购买该价格的冰淇淋，直到硬币用尽。
+
+class Solution {
+    public int maxIceCream(int[] costs, int coins) {
+        // 创建一个数组来存储每个价格出现的次数
+        int[] freq = new int[100001];
+        for (int cost : costs) {
+            freq[cost]++;
+        }
+        int count = 0;
+        // 从低到高遍历价格
+        for (int i = 1; i <= 100000; i++) {
+            if (coins >= i) {
+                // 尽可能购买该价格的冰淇淋
+                int buy = Math.min(freq[i], coins / i);
+                count += buy;
+                // 减去已经花费的硬币
+                coins -= i * buy;
+            } else {
+                break;
+            }
+        }
+        // 返回购买的冰淇淋数量
+        return count;
+    }
+}
+
+
+best answer
+
+这个解决方案的基本思路是使用计数排序的方式，对冰淇淋价格进行排序，然后从价格最低的开始购买，直到无法购买为止。为了实现这个目标，我们需要构建一个计数数组，记录每个价格出现的次数，然后从低到高遍历这个数组，购买尽可能多的冰淇淋。
+
+class Solution {
+    public int maxIceCream(int[] costs, int coins) {
+        // 初始化最大价格为0
+        int maxVal = 0;
+
+        // 遍历costs数组，找到最大的冰淇淋价格
+        for (int cost : costs) {
+            if (cost > maxVal) {
+                maxVal = cost;
+            }
+        }
+
+        // 创建一个长度为最大价格加1的计数数组
+        int[] countArray = new int[maxVal+1];
+
+        // 遍历costs数组，统计每个价格出现的次数
+        for (int cost : costs) {
+            countArray[cost] = countArray[cost] + 1;
+        }
+
+        // 初始化购买的冰淇淋数量为0
+        int iceCreams = 0;
+        // 遍历计数数组，从最低价格开始
+        for (int i = 0; i < countArray.length; i++) {
+            // 如果硬币数量为0或者不足以购买当前价格的冰淇淋，停止购买
+            if (coins <= 0 || coins < i) {
+                break;
+            }
+
+            // 如果当前价格的冰淇淋存在
+            if (countArray[i] > 0) {
+                // 遍历该价格的冰淇淋数量
+                for (int j = 0; j < countArray[i]; j++) {
+                    // 如果硬币数量足够购买
+                    if (coins >= i) {
+                        // 增加购买的冰淇淋数量
+                        iceCreams++;
+                        // 减少硬币数量
+                        coins -= i;
+                    }
+                }
+            }
+        }
+
+        // 返回最大的冰淇淋数量
+        return iceCreams;
+    }
+}
+
+
+这个算法的时间复杂度为O(n + m)，其中n为冰淇淋的数量，m为最大的冰淇淋价格。因为我们需要遍历一次costs数组来找到最大价格和计数每个价格，然后再遍历一次计数数组来购买冰淇淋。空间复杂度为O(m)，因为我们需要创建一个长度为最大价格加1的计数数组来存储每个价格出现的次数。
+
