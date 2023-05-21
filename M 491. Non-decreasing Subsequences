@@ -1,0 +1,229 @@
+Given an integer array nums, return all the different possible non-decreasing subsequences of the given array with at least two elements. You may return the answer in any order.
+
+ 
+
+Example 1:
+
+Input: nums = [4,6,7,7]
+Output: [[4,6],[4,6,7],[4,6,7,7],[4,7],[4,7,7],[6,7],[6,7,7],[7,7]]
+Example 2:
+
+Input: nums = [4,4,3,2,1]
+Output: [[4,4]]
+ 
+
+Constraints:
+
+1 <= nums.length <= 15
+-100 <= nums[i] <= 100 
+
+首先，我们来逐字逐句地翻译一下题目。
+
+给定一个整数数组 nums，返回给定数组的所有不同可能的非降序子序列，至少包含两个元素。你可以按任意顺序返回答案。
+
+示例 1：
+
+输入：nums = [4,6,7,7]
+输出：[[4,6],[4,6,7],[4,6,7,7],[4,7],[4,7,7],[6,7],[6,7,7],[7,7]]
+示例 2：
+
+输入：nums = [4,4,3,2,1]
+输出：[[4,4]]
+
+限制条件：
+
+1 <= nums.length <= 15
+-100 <= nums[i] <= 100
+
+这道题目要求我们找出数组中所有可能的非降序子序列。这是一个典型的回溯问题。回溯法是一种通过探索所有可能的候选解来找出所有解的算法。如果候选解被确认不是一个解（或者至少不是最后一个解），回溯法会通过在上一步进行一些变化来舍弃该解，即回溯并且尝试另一种可能。
+
+在这个问题中，我们需要遍历数组，对于每一个元素，我们都有两个选择：选择它，或者不选择它。然后我们进入下一个元素，重复这个过程。在选择的过程中，我们需要保证选择的元素是非降序的，即只有当这个元素大于等于前一个选择的元素，我们才能选择它。同时，由于题目要求所有的子序列都必须是不同的，我们需要使用一个集合来保存所有的子序列，防止重复。
+
+具体的算法步骤如下：
+
+初始化一个空的列表，用于保存当前的子序列。
+初始化一个空的集合，用于保存所有的子序列。
+使用一个函数来进行回溯。这个函数的参数包括当前的位置和上一个选择的元素。
+对于当前的位置，如果它已经超过了数组的长度，就返回。
+否则，我们可以选择这个位置的元素，然后继续回溯下一个位置。
+我们也可以选择不选择这个位置的元素，然后继续回溯下一个位置。
+在选择的过程中，我们需要检查当前的子序列是否包含至少两个元素，如果是的话，就将它添加到集合中。
+最后，我们返回集合中的所有子序列。
+下面我会给出具体的代码实现，并对每一行代码进行注释。
+
+import java.util.*;
+
+public class Solution {
+    // 使用 Set 集合来存储所有不同的子序列
+    Set<List<Integer>> res = new HashSet<>();
+
+    public List<List<Integer>> findSubsequences(int[] nums) {
+        // 调用回溯函数，从数组的第 0 个元素开始，初始的上一个元素值设为最小的整数
+        backtrace(nums, 0, Integer.MIN_VALUE, new ArrayList<Integer>());
+        // 将 Set 转换为 List 并返回
+        return new ArrayList<>(res);
+    }
+
+    private void backtrace(int[] nums, int idx, int last, ArrayList<Integer> tmp) {
+        // 如果当前索引超过数组长度，表示已经遍历完成，此时如果 tmp 中元素个数大于等于2，就加入到 res 中
+        if (idx == nums.length) {
+            if (tmp.size() >= 2) {
+                res.add(new ArrayList<>(tmp));
+            }
+            return;
+        }
+        // 如果当前元素大于等于上一个元素，就可以选择当前元素
+        if (nums[idx] >= last) {
+            tmp.add(nums[idx]);
+            backtrace(nums, idx + 1, nums[idx], tmp);
+            tmp.remove(tmp.size() - 1);
+        }
+        // 无论当前元素是否选择，都可以进入下一个元素的选择
+        if (nums[idx] != last) {
+            backtrace(nums, idx + 1, last, tmp);
+        }
+    }
+}
+
+
+在这段代码中，我们首先定义了一个全局的 Set res 来保存所有的子序列，使用 Set 能够自动去重，保证所有子序列都是不同的。然后我们定义了一个回溯函数 backtrace，这个函数接收四个参数，分别是整个数组 nums，当前处理的元素索引 idx，上一个被选择的元素 last，以及当前的子序列 tmp。
+
+在回溯函数中，我们首先检查当前索引是否已经超过了数组的长度，如果是的话，说明已经遍历完了所有的元素，此时如果 tmp 中的元素个数大于等于2，我们就将 tmp 加入到 res 中。然后我们检查当前元素 nums[idx] 是否大于等于上一个元素 last，如果是的话，说明可以选择当前元素，我们就把当前元素加入到 tmp 中，然后递归地处理下一个元素。无论当前元素是否被选择，我们都可以跳过当前元素，直接处理下一个元素。这就是我们的回溯过程。
+
+最后，我们返回 res 中的所有子序列。由于 res 是 Set 类型，我们需要先将它转换为 List 类型。
+
+这段代码的时间复杂度为 O(n^2 * 2^n)，其中 n 是数组的长度。因为在最坏的情况下，我们需要遍历所有可能的子序列，子序列的数量为 2^n，对于每个子序列，我们都需要 O(n) 的时间来复制到新的列表中。空间复杂度为 O(n)，主要用于保存当前的子序列。
+
+
+import java.util.*;
+
+public class Solution {
+    // 使用 Set 集合来存储所有不同的子序列
+    Set<List<Integer>> res = new HashSet<>();
+
+    public List<List<Integer>> findSubsequences(int[] nums) {
+        // 调用回溯函数，从数组的第 0 个元素开始，初始的上一个元素值设为最小的整数
+        backtrace(nums, 0, Integer.MIN_VALUE, new ArrayList<Integer>());
+        // 将 Set 转换为 List 并返回
+        return new ArrayList<>(res);
+    }
+
+    private void backtrace(int[] nums, int idx, int last, ArrayList<Integer> tmp) {
+        // 如果当前索引超过数组长度，表示已经遍历完成，此时如果 tmp 中元素个数大于等于2，就加入到 res 中
+        if (idx == nums.length) {
+            if (tmp.size() >= 2) {
+                res.add(new ArrayList<>(tmp));
+            }
+            return;
+        }
+        // 如果当前元素大于等于上一个元素，就可以选择当前元素
+        if (nums[idx] >= last) {
+            tmp.add(nums[idx]);
+            backtrace(nums, idx + 1, nums[idx], tmp);
+            tmp.remove(tmp.size() - 1);
+        }
+        // 无论当前元素是否选择，都可以进入下一个元素的选择
+        if (nums[idx] != last) {
+            backtrace(nums, idx + 1, last, tmp);
+        }
+    }
+}
+
+在这段代码中，我们首先定义了一个全局的 Set res 来保存所有的子序列，使用 Set 能够自动去重，保证所有子序列都是不同的。然后我们定义了一个回溯函数 backtrace，这个函数接收四个参数，分别是整个数组 nums，当前处理的元素索引 idx，上一个被选择的元素 last，以及当前的子序列 tmp。
+
+在回溯函数中，我们首先检查当前索引是否已经超过了数组的长度，如果是的话，说明已经遍历完了所有的元素，此时如果 tmp 中的元素个数大于等于2，我们就将 tmp 加入到 res 中。然后我们检查当前元素 nums[idx] 是否大于等于上一个元素 last，如果是的话，说明可以选择当前元素，我们就把当前元素加入到 tmp 中，然后递归地处理下一个元素。无论当前元素是否被选择，我们都可以跳过当前元素，直接处理下一个元素。这就是我们的回溯过程。
+
+最后，我们返回 res 中的所有子序列。由于 res 是 Set 类型，我们需要先将它转换为 List 类型。
+
+这段代码的时间复杂度为 O(n^2 * 2^n)，其中 n 是数组的长度。因为在最坏的情况下，我们需要遍历所有可能的子序列，子序列的数量为 2^n，对于每个子序列，我们都需要 O(n) 的时间来复制到新的列表中。空间复杂度为 O(n)，主要用于保存当前的子序列。
+
+class Solution {
+    public List<List<Integer>> findSubsequences(int[] nums) {
+        // 主函数，调用子函数 dfs4 来找出所有的子序列
+        return dfs4(nums, new ArrayList<>(), new ArrayList<>(), 0);
+    }
+
+    private Set<List<Integer>> dfs(int[] nums, HashSet<List<Integer>> set, List<Integer> list, int index) {
+        // 如果当前索引已经超过了数组的长度，直接返回结果集 set
+        if (index == nums.length) return set;
+        // 如果当前子序列为空，或者当前元素大于等于子序列的最后一个元素，说明可以选择当前元素
+        if (list.isEmpty() || nums[index] >= list.get(list.size()-1)) {
+            // 将当前元素添加到子序列的末尾
+            list.add(nums[index]);
+            // 如果当前子序列的长度大于1，将其添加到结果集中
+            if (list.size() > 1) set.add(new ArrayList(list));
+            // 递归地处理下一个元素
+            dfs(nums, set, list, index+1);
+            // 回溯，将刚刚添加的元素从子序列中移除
+            list.remove(list.size()-1);
+        }
+        // 不选择当前元素，直接处理下一个元素
+        dfs(nums, set, list, index+1);
+        return set;
+    }
+
+    private Set<List<Integer>> dfs2(int[] nums, HashSet<List<Integer>> set, List<Integer> list, int index) {
+        // 如果当前子序列的长度大于1，将其添加到结果集中
+        if (list.size() > 1) set.add(new ArrayList(list));
+        // 遍历当前索引及其后面的所有元素
+        for (int i = index; i < nums.length; i++) {
+            // 如果当前元素小于子序列的最后一个元素，跳过当前元素
+            if (!list.isEmpty() && nums[i] < list.get(list.size()-1)) continue;
+            // 否则，将当前元素添加到子序列的末尾
+            list.add(nums[i]);
+            // 递归地处理下一个元素
+            dfs2(nums, set, list, i+1);
+            // 回溯，将刚刚添加的元素从子序列中移除
+            list.remove(list.size()-1);
+        }
+        return set;
+    }
+
+    private List<List<Integer>> dfs3(int[] nums, List<List<Integer>> ans, List<Integer> list, int index) {
+        // 如果当前子序列的长度大于1，将其添加到结果集中
+        if (list.size() > 1) ans.add(new ArrayList(list));
+        // 使用一个 Set 来保存已经处理过的元素
+        Set<Integer> set = new HashSet<>();
+        // 遍历当前索引及其后面的所有元素
+        for (int i = index; i < nums.length; i++) {
+            // 如果当前元素已经在 Set 中，跳过当前元素
+            if (set.contains(nums[i])) continue;
+            // 如果当前元素小于子序列的最后一个元素，跳过当前元素
+            if (!list.isEmpty() && nums[i] < list.get(list.size()-1)) continue;
+            // 将当前元素添加到 Set 中
+            set.add(nums[i]);
+            // 将当前元素添加到子序列的末尾
+            list.add(nums[i]);
+            // 递归地处理下一个元素
+            dfs3(nums, ans, list, i+1);
+            // 回溯，将刚刚添加的元素从子序列中移除
+            list.remove(list.size()-1);
+        }
+        return ans;
+    }
+
+    // 不使用 set 的方法
+    private List<List<Integer>> dfs4(int[] nums, List<List<Integer>> ans, List<Integer> list, int index) {
+        // 如果当前索引已经超过了数组的长度，并且当前子序列的长度大于1，将其添加到结果集中
+        if (index == nums.length) {
+            if (list.size() > 1) ans.add(new ArrayList(list));
+            return ans;
+        }
+        // 如果当前子序列为空，或者当前元素大于等于子序列的最后一个元素，说明可以选择当前元素
+        if (list.isEmpty() || nums[index] >= list.get(list.size()-1)) {
+            // 将当前元素添加到子序列的末尾
+            list.add(nums[index]);
+            // 递归地处理下一个元素
+            dfs4(nums, ans, list, index+1);
+            // 回溯，将刚刚添加的元素从子序列中移除
+            list.remove(list.size()-1);
+        }
+        // 如果当前元素等于子序列的最后一个元素，跳过当前元素
+        if (index > 0 && !list.isEmpty() && nums[index] == list.get(list.size()-1)) 
+            return ans;
+        // 不选择当前元素，直接处理下一个元素
+        return dfs4(nums, ans, list, index+1);
+    }
+}
+
+
