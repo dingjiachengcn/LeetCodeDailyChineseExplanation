@@ -1,0 +1,61 @@
+There are n bulbs that are initially off. You first turn on all the bulbs, then you turn off every second bulb.
+
+On the third round, you toggle every third bulb (turning on if it's off or turning off if it's on). For the ith round, you toggle every i bulb. For the nth round, you only toggle the last bulb.
+
+Return the number of bulbs that are on after n rounds.
+
+ 
+
+Example 1:
+
+
+Input: n = 3
+Output: 1
+Explanation: At first, the three bulbs are [off, off, off].
+After the first round, the three bulbs are [on, on, on].
+After the second round, the three bulbs are [on, off, on].
+After the third round, the three bulbs are [on, off, off]. 
+So you should return 1 because there is only one bulb is on.
+Example 2:
+
+Input: n = 0
+Output: 0
+Example 3:
+
+Input: n = 1
+Output: 1
+ 
+
+Constraints:
+
+0 <= n <= 10^9 
+
+这道题目的题干如下：
+
+你有n个最初处于关闭状态的灯泡。首先，你打开所有的灯泡，然后你关闭每一个第二个灯泡。
+
+在第三轮，你切换每一个第三个灯泡（如果它是关闭的则打开，如果它是开着的则关闭）。对于第i轮，你切换每个i的灯泡。对于第n轮，你只切换最后一个灯泡。
+
+返回n轮后亮着的灯泡的数量。
+
+题目约束条件：0 <= n <= 10^9
+
+这道题目的思路其实很巧妙。我们需要寻找的是哪些灯泡会在经过n轮后依然亮着。一个明显的规律是，一个灯泡的状态会在它的因数个数为奇数时才是亮着的（因为初始状态为关闭，经过偶数次切换后仍然为关闭，只有经过奇数次切换才会是开启状态）。而只有完全平方数的因数个数是奇数（因为其它的数都可以配对成两个因数，而完全平方数有一个无法配对的单独的因数）。
+
+所以，n个灯泡后亮着的灯泡数量就是小于等于n的完全平方数的数量，这就等于sqrt(n)向下取整。
+
+// 定义一个名为Solution的类
+public class Solution {
+    // 定义一个名为bulbSwitch的公共方法，这个方法接收一个整数n作为输入，并返回一个整数
+    public int bulbSwitch(int n) {
+        // 对n进行平方根运算，然后将结果强制转换为整数并返回。
+        // 这是因为对一个灯泡进行操作的总次数将是其因数的数量。只有平方数的因数数量是奇数（因为平方数有一个重复的因数，即其平方根）。
+        // 所以，只有平方数位置的灯泡最终会保持打开状态。而1到n之间的平方数的数量就是n的平方根（向下取整）。
+        return (int)Math.sqrt(n);
+    }
+}
+
+
+理解这个问题的关键在于观察每个灯泡被切换开关的次数。一开始所有的灯泡都是关的，所以如果一个灯泡被切换了奇数次，它就会保持开着。只有当两个不同的数（设为a和b）相乘结果等于灯泡的位置编号时，这个灯泡就会被切换，而这就是一个因数对。大部分的数字都有偶数个因数，因为因数通常是成对出现的（如1和n，2和n/2等等）。但是，如果一个数是完全平方数，那么它就会有一个单独的、无法配对的因数（这个因数就是那个数的平方根），这就导致了它有奇数个因数。
+
+在这个问题中，我们只关心有奇数个因数的灯泡，也就是位置编号是完全平方数的灯泡，因为它们最后会保持开着。1到n之间的完全平方数的数量就是n的平方根（向下取整），这就是为什么最后的解只需要一行代码：返回(int)Math.sqrt(n)。
