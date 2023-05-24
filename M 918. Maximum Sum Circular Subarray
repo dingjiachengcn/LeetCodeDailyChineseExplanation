@@ -1,0 +1,93 @@
+Given a circular integer array nums of length n, return the maximum possible sum of a non-empty subarray of nums.
+
+A circular array means the end of the array connects to the beginning of the array. Formally, the next element of nums[i] is nums[(i + 1) % n] and the previous element of nums[i] is nums[(i - 1 + n) % n].
+
+A subarray may only include each element of the fixed buffer nums at most once. Formally, for a subarray nums[i], nums[i + 1], ..., nums[j], there does not exist i <= k1, k2 <= j with k1 % n == k2 % n.
+
+ 
+
+Example 1:
+
+Input: nums = [1,-2,3,-2]
+Output: 3
+Explanation: Subarray [3] has maximum sum 3.
+Example 2:
+
+Input: nums = [5,-3,5]
+Output: 10
+Explanation: Subarray [5,5] has maximum sum 5 + 5 = 10.
+Example 3:
+
+Input: nums = [-3,-2,-3]
+Output: -2
+Explanation: Subarray [-2] has maximum sum -2.
+ 
+
+Constraints:
+
+n == nums.length
+1 <= n <= 3 * 10^4
+-3 * 10^4 <= nums[i] <= 3 * 10^4
+
+首先，让我们逐字逐句地翻译题目：
+
+给定一个长度为n的整数循环数组nums，返回可能得到的最大的非空子数组之和。
+
+"循环数组"意味着数组的结尾与数组的开头相连。正式来说，nums[i]的下一个元素是nums[(i + 1) % n]，nums[i]的前一个元素是nums[(i - 1 + n) % n]。
+
+子数组最多只能包含固定缓冲区nums中的每个元素一次。正式来说，对于子数组nums[i]，nums[i + 1]，...，nums[j]，不存在i <= k1，k2 <= j满足k1 % n == k2 % n。
+
+best answer
+
+class Solution {
+    // 主函数
+    public int maxSubarraySumCircular(int[] nums) {
+        // 使用 Kadane 算法找出不环绕的最大子数组和
+        int maxSum = kadane(nums);
+        // 计算数组的总和
+        int totalSum = 0;
+        for(int i = 0;i<nums.length;i++){
+            totalSum += nums[i];
+            // 取反，用于后续找出最小子数组和
+            nums[i] = -nums[i];
+        }
+        // 再次使用 Kadane 算法找出取反数组的最大子数组和，也就是原数组的最小子数组和
+        int minSumNegated = kadane(nums);
+        // 计算环绕的最大子数组和
+        int maxNew = totalSum + minSumNegated;
+        // 如果最小子数组和等于整个数组的和（即，最小子数组就是整个数组），则返回不环绕的最大子数组和
+        if(maxNew == 0){
+            return maxSum;
+        }
+        // 否则返回两种情况下的最大值
+        return Math.max(maxSum, maxNew);
+    }
+
+    // Kadane 算法，用于找出最大子数组和
+    public int kadane(int[] nums){
+        int currSum = 0;
+        int n = nums.length;
+        int maxSum = Integer.MIN_VALUE;
+        for(int i = 0;i<n;i++){
+            // 对每一个元素，选择加上它或者从它开始重新计算子数组和
+            currSum = Math.max(nums[i], currSum + nums[i]);
+            // 更新最大子数组和
+            maxSum = Math.max(maxSum, currSum);
+        }
+        // 返回最大子数组和
+        return maxSum;
+    }
+}
+
+
+首先，让我为你提供一些算法上的解释：
+
+这个问题是一个找出最大子数组和的问题，但它有一些特别的地方：数组是循环的。对于这种情况，我们可以找到两种最大子数组和：一种是数组没有被"环绕"的情况（即，子数组在原数组的一端）；另一种是数组被"环绕"的情况（即，子数组的起始和结束部分在原数组的两端）。
+
+对于没有环绕的情况，我们可以直接使用 Kadane 算法来找出最大子数组和。对于环绕的情况，我们可以计算出数组的总和，然后通过求原数组的反向数数组的最大子数组和，找出原数组的最小子数组和，然后用总和减去最小子数组和就可以得到环绕的情况下的最大子数组和。
+
+那么，对于这两种情况，我们只需返回他们的最大值即可。
+
+
+
+
