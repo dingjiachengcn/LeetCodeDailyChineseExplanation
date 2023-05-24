@@ -1,0 +1,62 @@
+Given the head of a singly linked list, return the middle node of the linked list.
+
+If there are two middle nodes, return the second middle node.
+
+ 
+
+Example 1:
+
+
+Input: head = [1,2,3,4,5]
+Output: [3,4,5]
+Explanation: The middle node of the list is node 3.
+Example 2:
+
+
+Input: head = [1,2,3,4,5,6]
+Output: [4,5,6]
+Explanation: Since the list has two middle nodes with values 3 and 4, we return the second one.
+ 
+
+Constraints:
+
+The number of nodes in the list is in the range [1, 100].
+1 <= Node.val <= 100
+
+这个题目的描述是：给定一个单链表的头节点，返回链表的中间节点。如果有两个中间节点，返回第二个中间节点。
+
+以下是题目的例子：
+
+例1：
+
+输入：头节点为 [1,2,3,4,5]
+输出：[3,4,5]
+解释：链表的中间节点是数值为3的节点。
+
+例2：
+
+输入：头节点为 [1,2,3,4,5,6]
+输出：[4,5,6]
+解释：链表有两个中间节点，数值分别为3和4，我们返回第二个中间节点，即数值为4的节点。
+
+限制条件：
+
+链表的节点数量在1到100的范围内。
+节点的数值在1到100的范围内。
+
+class Solution {
+    public ListNode middleNode(ListNode head) {
+        // 初始化两个指针，都指向链表头节点
+        ListNode slow = head, fast = head; 
+        
+        // 当快指针及其下一个节点不为空时，继续执行循环
+        while (fast != null && fast.next != null) {
+            slow = slow.next;  // 慢指针每次向前移动一步
+            fast = fast.next.next; // 快指针每次向前移动两步
+        }
+        // 当循环结束时，快指针指向链表尾部，慢指针恰好在链表的中间位置
+        return slow;  // 返回链表的中间节点
+    }
+}
+
+这段代码中，快指针fast和慢指针slow的运动形式相当于“乌龟与兔子赛跑”。在这个比赛中，兔子（即快指针fast）的速度是乌龟（即慢指针slow）的两倍，因此，当兔子到达链表的尾部时，乌龟刚好在链表的中部，这就是找到链表中部节点的方法。
