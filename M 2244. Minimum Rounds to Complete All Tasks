@@ -1,0 +1,66 @@
+You are given a 0-indexed integer array tasks, where tasks[i] represents the difficulty level of a task. In each round, you can complete either 2 or 3 tasks of the same difficulty level.
+
+Return the minimum rounds required to complete all the tasks, or -1 if it is not possible to complete all the tasks.
+
+ 
+
+Example 1:
+
+Input: tasks = [2,2,3,3,2,4,4,4,4,4]
+Output: 4
+Explanation: To complete all the tasks, a possible plan is:
+- In the first round, you complete 3 tasks of difficulty level 2. 
+- In the second round, you complete 2 tasks of difficulty level 3. 
+- In the third round, you complete 3 tasks of difficulty level 4. 
+- In the fourth round, you complete 2 tasks of difficulty level 4.  
+It can be shown that all the tasks cannot be completed in fewer than 4 rounds, so the answer is 4.
+Example 2:
+
+Input: tasks = [2,3,3]
+Output: -1
+Explanation: There is only 1 task of difficulty level 2, but in each round, you can only complete either 2 or 3 tasks of the same difficulty level. Hence, you cannot complete all the tasks, and the answer is -1.
+ 
+
+Constraints:
+
+1 <= tasks.length <= 10^5
+1 <= tasks[i] <= 10^9
+
+best answer
+
+class Solution {
+    // 计算连续相同任务的数量，然后取3的模
+    public int minimumRounds(int[] tasks) {
+        Arrays.sort(tasks); // 将数组排序
+        int count = 1; // 计数器，用于记录相同任务的数量
+        int res = 0; // 结果变量，记录最小的轮数
+        for (int i = 1; i < tasks.length; i++) { // 遍历任务数组
+            if (tasks[i] == tasks[i - 1]) { // 如果当前任务和前一个任务相同
+                count++; // 计数器增加
+            }
+            else { // 如果当前任务和前一个任务不同
+                if (count == 1) { // 如果计数器为1，即只有一个任务，不能在一轮内完成
+                    return -1; // 返回-1
+                }
+                res += count / 3; // 增加轮数，一个轮次可以完成3个任务
+                if (count % 3 != 0) { // 如果不能整除3，那么还需要增加一轮
+                    res++;
+                }
+                count = 1; // 重置计数器
+            }
+        }
+        if (count != 0) { // 如果最后还有未处理的任务
+            if (count == 1) { // 如果计数器为1，即只有一个任务，不能在一轮内完成
+                return -1; // 返回-1
+            }
+            res += count / 3; // 增加轮数，一个轮次可以完成3个任务
+            if (count % 3 != 0) { // 如果不能整除3，那么还需要增加一轮
+                res++;
+            }
+        }
+        return res; // 返回最小轮数
+    }
+}
+
+从算法的角度来看，这个问题的关键在于如何有效地处理和计数连续相同的任务。在每一轮中，我们可以完成2个或3个任务，所以我们需要记录每个任务的数量，并尽可能地让任务在一轮中被完成。因此，我们首先将数组排序，这样相同的任务会相邻。然后我们用一个计数器记录连续相同任务的数量，每当我们遇到一个新的任务时，就处理之前的任务，根据任务数量计算需要的轮数，然后重置计数器。最后，我们需要处理最后一组相同的任务。这个算法的时间复杂度主要取决于排序的时间复杂度，所以是 O(n log n)，其中 n 是任务的数量。
+
