@@ -1,0 +1,144 @@
+You are given an array of n strings strs, all of the same length.
+
+The strings can be arranged such that there is one on each line, making a grid.
+
+For example, strs = ["abc", "bce", "cae"] can be arranged as follows:
+abc
+bce
+cae
+You want to delete the columns that are not sorted lexicographically. In the above example (0-indexed), columns 0 ('a', 'b', 'c') and 2 ('c', 'e', 'e') are sorted, while column 1 ('b', 'c', 'a') is not, so you would delete column 1.
+
+Return the number of columns that you will delete.
+
+ 
+
+Example 1:
+
+Input: strs = ["cba","daf","ghi"]
+Output: 1
+Explanation: The grid looks as follows:
+  cba
+  daf
+  ghi
+Columns 0 and 2 are sorted, but column 1 is not, so you only need to delete 1 column.
+Example 2:
+
+Input: strs = ["a","b"]
+Output: 0
+Explanation: The grid looks as follows:
+  a
+  b
+Column 0 is the only column and is sorted, so you will not delete any columns.
+Example 3:
+
+Input: strs = ["zyx","wvu","tsr"]
+Output: 3
+Explanation: The grid looks as follows:
+  zyx
+  wvu
+  tsr
+All 3 columns are not sorted, so you will delete all 3.
+ 
+
+Constraints:
+
+n == strs.length
+1 <= n <= 100
+1 <= strs[i].length <= 1000
+strs[i] consists of lowercase English letters.
+
+
+题目翻译：
+你有一个包含n个字符串的数组strs，所有的字符串长度都一样。
+
+这些字符串可以排列起来，使得每一行都有一个，形成一个网格。
+
+比如，strs = ["abc", "bce", "cae"]可以被排列为：
+abc
+bce
+cae
+你想删除那些字典序未排序的列。在上面的例子中（0为基准索引），第0列（'a', 'b', 'c'）和第2列（'c', 'e', 'e'）是排好序的，而第1列（'b', 'c', 'a'）没有，所以你要删除第1列。
+
+返回你将要删除的列的数量。
+
+例如：
+
+例子1：
+
+输入：strs = ["cba","daf","ghi"]
+输出：1
+解释：网格看起来像这样：
+cba
+daf
+ghi
+第0列和第2列都是排好序的，但是第1列没有，所以你只需要删除1列。
+例子2：
+
+输入：strs = ["a","b"]
+输出：0
+解释：网格看起来像这样：
+a
+b
+第0列是唯一的列并且已经排好序了，所以你不需要删除任何列。
+例子3：
+
+输入：strs = ["zyx","wvu","tsr"]
+输出：3
+解释：网格看起来像这样：
+zyx
+wvu
+tsr
+所有3列都没有排好序，所以你需要删除所有3列。
+
+约束：
+
+n == strs.length
+1 <= n <= 100
+1 <= strs[i].length <= 1000
+strs[i] 由小写英文字母组成。
+
+best answer
+class Solution {
+    public int minDeletionSize(String[] strs) {
+        // 初始化需要删除的列数为0
+        int res = 0;
+        // 获取字符串数组的长度，也就是行数
+        int arrLen = strs.length;
+        // 获取第一个字符串的长度，也就是列数
+        int strLen = strs[0].length();
+        // 如果只有一行，那么不需要删除任何列，直接返回0
+        if (arrLen == 1) {
+            return res;
+        }
+
+        // 创建一个字符二维数组，用来存储字符串中的每一个字符
+        char[][] charArr = new char[arrLen][];
+        int index = 0;
+        // 遍历字符串数组，将每个字符串转换为字符数组
+        for (String str: strs) {
+            charArr[index] = str.toCharArray();
+            index++;
+        }
+        // 遍历每一列
+        for (int i = 0; i < strLen; i++) {
+            // 遍历选定列的每一行，从第二行开始
+            for (int j = 1; j < arrLen; j++) {
+                // 如果当前行的字符小于上一行的字符，说明这一列没有按字典顺序排列
+                if (charArr[j][i] < charArr[j-1][i]) {
+                    // 增加需要删除的列数
+                    res++;
+                    // 检查下一列
+                    break;
+                }
+            }
+        }
+        // 返回需要删除的列数
+        return res;
+    }
+}
+
+这段代码的算法逻辑基本和我之前解释的相同：遍历每一列，对于每一列检查每一行，如果在任何点上，下一行的字符（在同一列中）小于当前行的字符，那么我们就知道这一列没有按照字典顺序排序，因此需要删除。每次我们发现这样的列，我们就增加res的值，并跳过该列的其余部分，继续检查下一列。
+
+最后，我们返回res的值，这就是我们需要删除的列数。
+
+使用字符数组而非字符串的一个优势是，访问字符数组的元素比访问字符串的字符要快，因为字符串的charAt方法需要额外的范围检查。
