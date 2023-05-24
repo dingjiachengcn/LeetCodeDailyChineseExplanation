@@ -1,0 +1,159 @@
+Given a 2D grid consists of 0s (land) and 1s (water).  An island is a maximal 4-directionally connected group of 0s and a closed island is an island totally (all left, top, right, bottom) surrounded by 1s.
+
+Return the number of closed islands.
+
+ 
+
+Example 1:
+
+
+
+Input: grid = [[1,1,1,1,1,1,1,0],[1,0,0,0,0,1,1,0],[1,0,1,0,1,1,1,0],[1,0,0,0,0,1,0,1],[1,1,1,1,1,1,1,0]]
+Output: 2
+Explanation: 
+Islands in gray are closed because they are completely surrounded by water (group of 1s).
+Example 2:
+
+
+
+Input: grid = [[0,0,1,0,0],[0,1,0,1,0],[0,1,1,1,0]]
+Output: 1
+Example 3:
+
+Input: grid = [[1,1,1,1,1,1,1],
+               [1,0,0,0,0,0,1],
+               [1,0,1,1,1,0,1],
+               [1,0,1,0,1,0,1],
+               [1,0,1,1,1,0,1],
+               [1,0,0,0,0,0,1],
+               [1,1,1,1,1,1,1]]
+Output: 2
+ 
+
+Constraints:
+
+1 <= grid.length, grid[0].length <= 100
+0 <= grid[i][j] <=1
+
+这个问题可以被解决通过使用深度优先搜索（DFS）来寻找和标记所有的岛屿。我们将每个遇到的岛屿都标记为1，并检查岛屿是否被水完全包围。如果岛屿接触到网格的边缘，那么它就不能被视为封闭的岛屿。我们可以通过在DFS过程中检查这个条件来确定岛屿是否封闭。
+
+题目翻译：
+给定一个2D网格，由0（陆地）和1（水）组成。一个岛屿是一个最大的四向连接的0群组，一个封闭的岛屿是一个完全（所有左，顶，右，底）被1环绕的岛屿。
+返回封闭岛屿的数量。
+
+answer:
+
+class Solution {
+    int[][] dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    public int closedIsland(int[][] grid) {
+        // 初始化封闭岛屿数量为0
+        int count = 0;
+        // 遍历网格
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                // 如果当前格子是陆地（0），检查是否是封闭岛屿
+                if (grid[i][j] == 0) {
+                    // 如果是封闭岛屿，计数加1
+                    if (dfs(grid, i, j)) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+    private boolean dfs(int[][] grid, int i, int j) {
+        // 如果当前格子在网格边界上，那么这个岛屿肯定不是封闭的
+        if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length) {
+            return false;
+        }
+        // 如果当前格子是水（1），那么无需继续搜索
+        if (grid[i][j] == 1) {
+            return true;
+        }
+        // 将当前格子标记为水（1）
+        grid[i][j] = 1;
+        // 初始化一个布尔值，用来表示当前岛屿是否是封闭的
+        boolean isClosed = true;
+        // 以当前格子为中心，向四个方向进行深度优先搜索
+        for (int[] dir : dirs) {
+            isClosed &= dfs(grid, i + dir[0], j + dir[1]);
+        }
+        // 如果四个方向的搜索结果都是true，那么当前岛屿是封闭的，否则不是
+        return isClosed;
+    }
+}
+
+对代码的中文解释已经在代码注释中给出，主要思路就是用深度优先搜索遍历每一个未被访问过的陆地格子，如果在搜索过程中遇到网格边界，那么说明这个岛屿不是封闭的。我们用一个布尔值来表示当前岛屿是否是封闭的，只有当四个方向的搜索结果都是true，我们才认为当前岛屿是封闭的。
+
+best answer
+
+这段Java代码的基本思路是对整个网格进行遍历，当遇到0（陆地）时，就使用深度优先搜索（DFS）来遍历所有连接的0，并判断这个岛屿是否是封闭的。对于每一个格子，我们都判断其是否在边界上，如果在边界上，我们返回false表示这不是一个封闭的岛屿。如果不在边界上，我们就将其标记为已访问（这里标记为-1），并继续向其四周进行DFS，只有当所有方向都返回true，我们才认为这个岛屿是封闭的。
+
+
+class Solution {
+    public int closedIsland(int[][] grid) {
+        // 如果网格为空或者没有元素，返回0
+        if(grid==null||grid.length==0)
+        {
+            return 0;
+        }
+        // 初始化封闭岛屿的数量为0
+        int noOfClosedIsland=0;
+        // m为网格的行数，n为网格的列数
+        int m=grid.length;
+        int n=grid[0].length;
+        // 遍历整个网格，注意由于边界上的格子不可能是封闭岛屿的一部分，所以这里从1开始，到m-1和n-1结束
+        for(int i=1;i<m-1;i++)
+        {
+            for(int j=1;j<n-1;j++)
+            {
+              // 如果当前格子是陆地（0），就判断这个岛屿是否是封闭的
+              if(grid[i][j]==0)
+              {
+                // 如果是封闭岛屿，就增加封闭岛屿的数量
+                if(isClosedIsland(grid,i,j,m,n))
+                {
+                   noOfClosedIsland++;
+                }
+              }
+            }
+        }
+        // 返回封闭岛屿的数量
+        return noOfClosedIsland;
+    }
+
+    // 判断一个岛屿是否是封闭的
+    private boolean isClosedIsland(int[][] grid,int i,int j,int r,int c)
+    {
+        // 如果当前格子已经被访问过，或者是水（1），就返回true
+        if(grid[i][j]==-1 || grid[i][j]==1)
+        {
+            return true;
+        }
+        // 如果当前格子在网格的边界上，就返回false表示这不是一个封闭的岛屿
+        if(isOnPerimeter(i,j,r,c))
+        {
+            return false;
+        }
+        // 将当前格子标记为已访问
+        grid[i][j]=-1;
+        // 对当前格子的左、右、上、下四个方向进行深度优先搜索
+        boolean left=isClosedIsland(grid,i,j-1,r,c);
+        boolean right=isClosedIsland(grid,i,j+1,r,c);
+        boolean up=isClosedIsland(grid,i-1,j,r,c);
+        boolean down=isClosedIsland(grid,i+1,j,r,c);
+        // 只有当四个方向都返回true，我们才认为这个岛屿是封闭的
+        return left && right && up && down;
+    }
+
+    // 判断一个格子是否在网格的边界上
+    private boolean isOnPerimeter(int i,int j,int r,int c)
+    {
+        return (i==0 ||j==0||i==r-1||j==c-1);
+    }
+}
+
+
+这道题是关于二维网格遍历和深度优先搜索的题目，其主要难点在于如何确定一个岛屿是否是封闭的。在遍历网格的过程中，我们对于每一个陆地格子都进行深度优先搜索，并在搜索过程中判断当前岛屿是否是封闭的。这里我们使用了一个小技巧，即对于已经访问过的格子和水域，我们都返回true，这样可以简化代码的复杂度。另外，这里还需要注意边界条件的处理，即如何判断一个格子是否在网格的边界上。
+
