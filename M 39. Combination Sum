@@ -1,0 +1,123 @@
+Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates where the chosen numbers sum to target. You may return the combinations in any order.
+
+The same number may be chosen from candidates an unlimited number of times. Two combinations are unique if the 
+frequency
+ of at least one of the chosen numbers is different.
+
+The test cases are generated such that the number of unique combinations that sum up to target is less than 150 combinations for the given input.
+
+ 
+
+Example 1:
+
+Input: candidates = [2,3,6,7], target = 7
+Output: [[2,2,3],[7]]
+Explanation:
+2 and 3 are candidates, and 2 + 2 + 3 = 7. Note that 2 can be used multiple times.
+7 is a candidate, and 7 = 7.
+These are the only two combinations.
+Example 2:
+
+Input: candidates = [2,3,5], target = 8
+Output: [[2,2,2,2],[2,3,3],[3,5]]
+Example 3:
+
+Input: candidates = [2], target = 1
+Output: []
+ 
+
+Constraints:
+
+1 <= candidates.length <= 30
+2 <= candidates[i] <= 40
+All elements of candidates are distinct.
+1 <= target <= 40
+
+首先，我们先逐字逐句地翻译一下题目：
+
+题目给出一个不重复的整数数组 candidates 和一个目标整数 target，返回所有唯一的候选数组的组合，这些组合的和等于 target。你可以以任何顺序返回组合。
+
+candidates 中的同一个数字可以被选取无数次。两个组合被认为是独特的，当且仅当至少一个被选取的数字的出现次数不同。
+
+测试用例确保对给定的输入，和为 target 的独特组合的数量不超过 150 个组合。
+
+现在，我们来看看这个问题的解法。这个问题的关键在于如何进行搜索和回溯。首先，我们需要枚举出所有可能的组合，然后对每一个组合进行求和，检查和是否等于目标值。这可以通过深度优先搜索（DFS）来实现。当我们找到一个有效的组合（即组合的和等于目标值）时，我们就将这个组合添加到结果集中。同时，我们需要注意的是，为了避免重复的组合出现在结果集中，我们需要进行剪枝。
+
+
+class Solution {
+    // 存储结果和路径
+    List<List<Integer>> res = new ArrayList<>();
+    List<Integer> path = new ArrayList<>();
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        // 先排序，方便后面的剪枝操作
+        Arrays.sort(candidates);
+        dfs(candidates, target, 0, 0);
+        return res;
+    }
+
+    private void dfs(int[] candidates, int target, int sum, int index) {
+        if (sum == target) {
+            // 当路径和等于目标值时，将其加入到结果中
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = index; i < candidates.length && sum + candidates[i] <= target; i++) {
+            // 选择当前节点，加入路径中
+            path.add(candidates[i]);
+            // 继续深度搜索，注意由于每个元素可以使用多次，所以下一层仍然从i开始
+            dfs(candidates, target, sum + candidates[i], i);
+            // 回溯，从路径中移除当前节点
+            path.remove(path.size() - 1);
+        }
+    }
+}
+
+算法的复杂度如下：时间复杂度是O(n*2^n)，这是因为最坏情况下需要遍历所有的子集，n是候选数字的数量。空间复杂度是O(target)，这是因为在最坏情况下，路径的长度可能为target。
+
+best answer:
+class Solution {
+    // 主函数，返回所有可能的组合
+    public List<List<Integer>> combinationSum(int[] candidates, int target){
+
+        // 初始化结果集
+        List<List<Integer>> ans = new ArrayList<>();
+        // 调用辅助函数
+        combinationHelper(candidates, 0, new ArrayList<>(), ans, target);
+        // 返回结果
+        return ans;
+    }
+
+    // 辅助函数，用于生成所有可能的组合
+    public void combinationHelper(int []candidates, int start, List<Integer> tempSet, List<List<Integer>> ans, int target ){
+        // 如果开始的位置等于候选数组的长度，那么检查target是否为0
+        // 如果target为0，那么将tempSet复制一份并添加到ans中
+        if(start == candidates.length) {
+            if(target == 0) 
+                ans.add(new ArrayList<>(tempSet));
+
+            // 返回，不再进行后续的处理
+            return;
+        }
+
+        // 如果target大于等于当前的候选数字，那么将当前的候选数字添加到tempSet中
+        // 然后调用辅助函数，参数中的start不变，target减去当前的候选数字
+        if(target >= candidates[start]) {
+            tempSet.add(candidates[start]);
+            combinationHelper(candidates, start, tempSet, ans, target - candidates[start]);
+            // 回溯，移除tempSet中的最后一个元素
+            tempSet.remove(tempSet.size() - 1);
+
+        }
+        // 调用辅助函数，参数中的start加1，target不变
+        combinationHelper(candidates, start + 1, tempSet, ans, target);
+    }
+}
+
+这段代码的主要思路是使用深度优先搜索（DFS）算法遍历所有可能的组合。对于候选数组中的每一个元素，我们都有两种选择：选择它或者不选择它。如果选择它，那么我们需要从目标值中减去当前元素的值，然后继续处理同一个元素；如果不选择它，那么我们继续处理下一个元素。这样，我们就能遍历所有可能的组合。当遍历到数组的结尾时，如果目标值变成了0，那么就说明我们找到了一个有效的组合，把这个组合添加到结果集中。
+
+这种方法的时间复杂度是O(2^n)，其中n是候选数组的长度。因为对于每一个元素，我们都有两种选择，所以总的可能的组合数是2^n。空间复杂度是O(n)，这是因为我们需要一个大小为n的临时数组来存储当前的组合。
+
+
+
+
