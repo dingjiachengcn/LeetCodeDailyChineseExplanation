@@ -1,0 +1,111 @@
+Given the head of a linked list, reverse the nodes of the list k at a time, and return the modified list.
+
+k is a positive integer and is less than or equal to the length of the linked list. If the number of nodes is not a multiple of k then left-out nodes, in the end, should remain as it is.
+
+You may not alter the values in the list's nodes, only nodes themselves may be changed.
+
+ 
+
+Example 1:
+
+
+Input: head = [1,2,3,4,5], k = 2
+Output: [2,1,4,3,5]
+Example 2:
+
+
+Input: head = [1,2,3,4,5], k = 3
+Output: [3,2,1,4,5]
+ 
+
+Constraints:
+
+The number of nodes in the list is n.
+1 <= k <= n <= 5000
+0 <= Node.val <= 1000
+ 
+
+Follow-up: Can you solve the problem in O(1) extra memory space? 
+
+题目给定一个链表的头节点，你需要按照每k个节点为一组进行翻转，然后返回修改后的链表。
+
+这里的k是一个正整数，并且小于或等于链表的长度。如果节点的数量不是k的倍数，那么在最后剩下的节点应该保持原来的顺序。
+
+你不能改变链表节点中的值，只能改变节点本身。
+
+题目给出的两个例子是：
+
+例子1：
+
+输入：head = [1,2,3,4,5], k = 2
+输出：[2,1,4,3,5]
+
+例子2：
+
+输入：head = [1,2,3,4,5], k = 3
+输出：[3,2,1,4,5]
+
+题目的限制条件是：
+
+链表中节点的数量为n。
+1 <= k <= n <= 5000
+0 <= Node.val <= 1000
+
+题目的进阶要求是：你能否在使用O(1)额外的内存空间的情况下解决这个问题？
+
+best answer:
+// 定义解决方案类
+public class Solution {
+    // 定义主函数
+    public ListNode reverseKGroup(ListNode head, int k) {
+        // 判断特殊情况，包括链表为空、链表只有一个节点以及k小于2的情况。这些情况都不需要反转，直接返回原链表
+        if (head==null||head.next==null||k<2) return head;
+
+        // 创建一个虚拟头节点，方便在头部插入节点
+        ListNode dummy = new ListNode(0);
+        // 将虚拟头节点的下一个节点指向原链表的头节点
+        dummy.next = head;
+
+        // 定义三个指针：prev指向待反转部分的前一个节点，tail指向待反转部分的后一个节点，temp用于移动节点
+        ListNode tail = dummy, prev = dummy, temp;
+        // 定义一个计数器，用于计算链表的长度
+        int count;
+        // 开始主循环，当链表未遍历完时进行
+        while(true){
+            // 每次开始新的循环时，都将计数器重置为k
+            count =k;
+            // 遍历链表，直到tail指向的是第k+1个节点，或者链表遍历完
+            while(count>0&&tail!=null){
+                count--;
+                tail=tail.next;
+            } 
+            // 如果链表遍历完（tail为空），则结束循环
+            if (tail==null) break;
+            
+            // 将head指向待反转部分的第一个节点
+            head=prev.next;
+            // 开始将待反转部分的节点一个个移动到反转部分的末尾
+            while(prev.next!=tail){
+                // 将temp指向待反转部分的第一个节点
+                temp=prev.next;
+                // 将待反转部分的第一个节点删除
+                prev.next=temp.next;
+                
+                // 将删除的节点插入到反转部分的末尾
+                temp.next=tail.next;
+                tail.next=temp;
+            }
+            
+            // 移动prev和tail到下一组待反转部分的前一个位置
+            tail=head;
+            prev=head;
+        }
+        // 返回虚拟头节点的下一个节点，即新链表的头节点
+        return dummy.next;
+    }
+}
+
+这种解法的主要思想是将链表的每个k个节点看作一个部分，并对每个部分进行反转。在实际实现中，我们并没有真正地一次性反转k个节点，而是逐个将节点移动到反转部分的末尾，这样就达到了反转的效果。
+
+整个算法的时间复杂度为O(n)，其中n是链表的长度。这是因为我们只需要遍历一次链表，每个节点也只被处理一次。空间复杂度为O(1)，这是因为我们只使用了常数个指针变量。
+
