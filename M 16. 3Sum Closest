@@ -1,0 +1,83 @@
+Given an integer array nums of length n and an integer target, find three integers in nums such that the sum is closest to target.
+
+Return the sum of the three integers.
+
+You may assume that each input would have exactly one solution.
+
+ 
+
+Example 1:
+
+Input: nums = [-1,2,1,-4], target = 1
+Output: 2
+Explanation: The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
+Example 2:
+
+Input: nums = [0,0,0], target = 1
+Output: 0
+Explanation: The sum that is closest to the target is 0. (0 + 0 + 0 = 0).
+ 
+
+Constraints:
+
+3 <= nums.length <= 500
+-1000 <= nums[i] <= 1000
+-104 <= target <= 10^4
+
+这道题目是要求从给定的整数数组中找出三个数，使得它们的和最接近目标值，并返回这三个数的和。
+
+题目中假设每次输入都只有一个答案。
+
+接下来是题目的例子：
+
+例子1：
+
+输入：nums = [-1,2,1,-4], target = 1
+
+输出：2
+
+解释：最接近目标值的三个数的和是2。(-1 + 2 + 1 = 2)
+
+例子2：
+
+输入：nums = [0,0,0], target = 1
+
+输出：0
+
+解释：最接近目标值的三个数的和是0。(0 + 0 + 0 = 0)
+
+题目还给出了一些限制条件：
+
+数组nums的长度在3到500之间。
+数组中的元素大小在-1000到1000之间。
+目标值大小在-10^4到10^4之间。
+
+class Solution { // 定义解决方案类
+    public int threeSumClosest(int[] nums, int target) { // 定义公开函数，输入是一个整数数组和一个目标整数，输出是一个整数
+        Arrays.sort(nums); // 首先将输入数组进行排序
+        // 初始最接近的和设为数组前三个数的和
+        int closestSum = nums[0] + nums[1] + nums[2]; 
+
+        // 遍历数组，注意这里只需要遍历到倒数第三个数即可，因为我们是要找三个数的组合
+        for (int i = 0; i < nums.length - 2; i++) { 
+            int left = i + 1, right = nums.length - 1; // 初始化左指针和右指针
+            while (left < right) { // 当左指针小于右指针时，执行以下操作
+                int tempSum = nums[i] + nums[left] + nums[right]; // 计算当前三个数的和
+                // 如果当前的和与目标值的差值的绝对值小于之前最接近的和与目标值的差值的绝对值
+                if (Math.abs(tempSum - target) < Math.abs(closestSum - target)) { 
+                    closestSum = tempSum; // 更新最接近的和
+                }
+                // 根据当前的和与目标值的大小关系，移动左指针或右指针，或者直接返回当前和
+                if (tempSum < target) {
+                    left++;
+                } else if (tempSum > target) {
+                    right--;
+                } else {
+                    return tempSum;
+                }
+            }
+        }
+        return closestSum; // 返回最接近的和
+    }
+}
+
