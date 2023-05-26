@@ -1,0 +1,92 @@
+Given two strings needle and haystack, return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
+
+ 
+
+Example 1:
+
+Input: haystack = "sadbutsad", needle = "sad"
+Output: 0
+Explanation: "sad" occurs at index 0 and 6.
+The first occurrence is at index 0, so we return 0.
+Example 2:
+
+Input: haystack = "leetcode", needle = "leeto"
+Output: -1
+Explanation: "leeto" did not occur in "leetcode", so we return -1.
+ 
+
+Constraints:
+
+1 <= haystack.length, needle.length <= 10^4
+haystack and needle consist of only lowercase English characters.
+
+这个问题是一个经典的字符串匹配问题。你有两个字符串：needle和haystack。你需要返回needle在haystack中首次出现的索引。如果needle不是haystack的一部分，就返回-1。
+
+举个例子：
+例1：
+输入：haystack = "sadbutsad", needle = "sad"
+输出：0
+解释："sad" 在索引0和6处出现。首次出现是在索引0，所以我们返回0。
+
+例2：
+输入：haystack = "leetcode", needle = "leeto"
+输出：-1
+解释："leeto" 没有在 "leetcode" 中出现，所以我们返回-1。
+
+约束条件是：
+1 <= haystack.length, needle.length <= 10^4
+haystack和needle只包含小写英文字母。
+
+class Solution {
+    public int strStr(String haystack, String needle) {
+        if (needle.length() == 0) //如果needle是空字符串，则返回0
+            return 0;
+        for (int i = 0; i <= haystack.length() - needle.length(); i++) { //遍历haystack
+            if (haystack.substring(i, i + needle.length()).equals(needle)) //如果在haystack中找到了needle
+                return i; //返回首次出现的位置
+        }
+        return -1; //如果没有找到，返回-1
+    }
+}
+这个解决方案是采用的简单的线性扫描的方式，从haystack的第一个字符开始，检查每一个长度为needle.length()的子字符串，看它是否等于needle。如果找到了等于needle的子字符串，就返回当前的索引。如果遍历完了整个haystack都没有找到等于needle的子字符串，那就返回-1。
+
+这种方法的时间复杂度是O(n*m)，其中n是haystack的长度，m是needle的长度。因为对于haystack中的每一个字符，我们都可能需要比较长度为m的子字符串。这在最坏的情况下可能需要很多时间，但在实践中通常效率还不错。
+
+best answer
+
+class Solution { 
+    // 定义一个名为Solution的类
+
+    public int strStr(String haystack, String needle) {
+        // 定义一个公共方法strStr，输入是两个字符串haystack和needle，输出是一个整数
+
+        int n=needle.length();
+        // 定义整数n，n等于needle字符串的长度
+
+        int m=haystack.length();
+        // 定义整数m，m等于haystack字符串的长度
+
+        for(int i=0;i<=m-n;i++){
+            // 从0开始遍历haystack字符串，因为haystack中可能存在needle，所以遍历的终止位置是m-n
+
+            String str=haystack.substring(i,i+n);
+            // 截取haystack字符串中从i开始，长度为n的子字符串
+
+            if(str.equals(needle)){
+                // 如果截取的子字符串等于needle，返回当前的索引i
+                return i;
+            }
+        }    
+        // 如果遍历了整个haystack字符串都没有找到needle，那么返回-1
+
+        return -1;
+    }
+}
+
+这个算法是一个基于滑动窗口的方法，每次从haystack中截取长度为n的子串，然后和needle进行比较。窗口每次右移一位，如果窗口内的子串和needle相等，就返回当前的起始位置。如果窗口移动到无法再取长度为n的子串时，都没有找到相等的子串，就返回-1。这个算法的时间复杂度为O((m-n)*n)，m是haystack的长度，n是needle的长度。
+
+这段代码是在解决一个经典的字符串匹配问题，即在一个主字符串(haystack)中查找一个子字符串(needle)首次出现的位置。我们使用Java的substring和equals方法进行匹配，如果找不到则返回-1。
+
+
+
+
