@@ -1,0 +1,92 @@
+Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target.
+
+Each number in candidates may only be used once in the combination.
+
+Note: The solution set must not contain duplicate combinations.
+
+ 
+
+Example 1:
+
+Input: candidates = [10,1,2,7,6,1,5], target = 8
+Output: 
+[
+[1,1,6],
+[1,2,5],
+[1,7],
+[2,6]
+]
+Example 2:
+
+Input: candidates = [2,5,2,1,2], target = 5
+Output: 
+[
+[1,2,2],
+[5]
+]
+ 
+
+Constraints:
+
+1 <= candidates.length <= 100
+1 <= candidates[i] <= 50
+1 <= target <= 30
+
+首先，让我们逐句翻译题目：
+
+给定一个候选数的集合（candidates）和一个目标数（target），找出candidates中所有候选数之和等于target的唯一组合。
+
+每个数在组合中只能使用一次。
+
+注意：解决方案集不能包含重复的组合。
+
+约束：
+
+candidates.length范围在1到100之间
+candidates[i]范围在1到50之间
+target范围在1到30之间
+
+
+best answer:
+class Solution {
+    // 主函数，返回结果
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        // res用来存储所有满足条件的组合
+        List<List<Integer>> res = new ArrayList<>();
+        // 先将candidates排序，方便后续处理重复元素
+        Arrays.sort(candidates);
+        // 调用helper函数进行回溯搜索
+        helper(candidates, 0, target, new ArrayList(), res);
+        // 返回结果
+        return res;
+    }
+
+    // 辅助函数，进行回溯搜索
+    void helper(int[] candidates, int index,int target,  List<Integer> temp , List<List<Integer>> res){
+        // 如果target等于0，说明已经找到了一个满足条件的组合，将其添加到结果集中
+        if(target == 0){
+            res.add(new ArrayList<>(temp));
+            return;
+        }
+
+        // 遍历candidates数组，从index开始，进行回溯
+        for(int i=index; i<candidates.length; i++){
+            // 如果candidates[i]大于target，由于candidates是有序的，所以后面的元素都不需要再遍历了，直接跳出循环
+            if (candidates[i] > target) break;
+            // 如果当前元素和前一个元素相同，为了避免重复的组合，跳过这个元素
+            if(i>index && candidates[i] == candidates[i-1]) continue;
+            // 否则将当前元素添加到当前组合中
+            temp.add(candidates[i]);
+            // 继续递归搜索，注意这里的start变为i+1，因为每个元素只能用一次
+            helper(candidates, i+1, target-candidates[i],temp, res);
+            // 回溯，将当前元素从当前组合中移除，以便进行下一次尝试
+            temp.remove(temp.size()-1);
+        }
+    }
+}
+
+这个代码是使用回溯算法解决这个问题。对于回溯算法，我们首先需要确定搜索起点和终点，然后在满足条件（如和等于目标值）时进行一次深度优先搜索，每一次深度优先搜索结束后，我们需要将状态回溯（例如将最后一个添加到temp的元素移除），然后进行下一次搜索。
+
+这个问题中，搜索起点为candidates数组中的每一个元素，搜索终点为满足和等于目标值的temp列表。对于每一个元素，我们有两种选择：要么添加到temp，然后进行深度优先搜索；要么不添加，直接进行下一次搜索。这样就能保证找到所有满足条件的组合。
+
+从算法的层面看，由于需要枚举数组中所有的可能组合，所以时间复杂度为O(2^n)，n为candidates数组的长度。
