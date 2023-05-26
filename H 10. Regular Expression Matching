@@ -1,0 +1,115 @@
+Given an input string s and a pattern p, implement regular expression matching with support for '.' and '*' where:
+
+'.' Matches any single character.
+'*' Matches zero or more of the preceding element.
+The matching should cover the entire input string (not partial).
+
+ 
+
+Example 1:
+
+Input: s = "aa", p = "a"
+Output: false
+Explanation: "a" does not match the entire string "aa".
+Example 2:
+
+Input: s = "aa", p = "a*"
+Output: true
+Explanation: '*' means zero or more of the preceding element, 'a'. Therefore, by repeating 'a' once, it becomes "aa".
+Example 3:
+
+Input: s = "ab", p = ".*"
+Output: true
+Explanation: ".*" means "zero or more (*) of any character (.)".
+ 
+
+Constraints:
+
+1 <= s.length <= 20
+1 <= p.length <= 20
+s contains only lowercase English letters.
+p contains only lowercase English letters, '.', and '*'.
+It is guaranteed for each appearance of the character '*', there will be a previous valid character to match.
+
+这个题目的要求是实现一个支持'.'和'*'的正则表达式匹配。
+
+其中，'.'可以匹配任意单一字符，而'*'可以匹配零个或多个前面的元素。
+
+匹配需要覆盖整个输入字符串，而非部分匹配。
+
+这个题目给出了几个示例：
+
+示例1：
+
+输入：s = "aa", p = "a"
+
+输出：false
+
+解释："a"并不能匹配整个字符串"aa"。
+
+示例2：
+
+输入：s = "aa", p = "a*"
+
+输出：true
+
+解释：'*'表示零个或多个前面的元素，也就是'a'。所以，通过重复'a'一次，就变成了"aa"。
+
+示例3：
+
+输入：s = "ab", p = ".*"
+
+输出：true
+
+解释："."可以匹配任意字符，''可以匹配零个或多个前面的元素。因此，"."可以匹配"ab"。
+
+此外，这个题目也给出了一些约束条件：
+
+s和p的长度都在1到20之间。
+s只包含小写英文字符。
+p只包含小写英文字符，'.'和'*'。
+每次'*'出现时，都会有一个有效的前面的字符与之配对。
+你的任务是编写一个函数，接受两个字符串s和p作为输入，返回一个布尔值，表示s和p是否匹配。
+
+class Solution {
+    public boolean isMatch(String s, String p) {
+        // 构建一个二维布尔数组，长度为s长度加1和p长度加1，因为需要考虑空字符串的情况
+        boolean[][] dp = new boolean[s.length()+1][p.length()+1];
+        // dp[0][0]表示两个空字符串是匹配的
+        dp[0][0] = true;
+        // 初始化第一行，p为空字符串时，s不为空，所以不匹配，为false
+        for(int i = 1; i <= s.length(); i++){
+            dp[i][0] = false;
+        }
+        // 初始化第一列，p不为空，s为空，只有当p为"x*"形式时，才能匹配空字符串，其中x为任意字符
+        for(int i = 1; i <= p.length(); i++){
+            dp[0][i] = i > 1 && p.charAt(i-1) == '*' && dp[0][i-2];
+        }
+        // 对数组进行遍历，填充dp数组
+        for(int i = 1; i <= s.length(); i++){
+            for(int j = 1; j <= p.length(); j++){
+                // 当p[j-1]为"*"时，表示0或多个前面的元素，考虑0个或多个情况
+                if(p.charAt(j-1) == '*'){
+                    // "*"表示0个前面的元素时，dp[i][j] = dp[i][j-2]
+                    dp[i][j] = dp[i][j-2];
+                    // "*"表示1个或多个前面的元素时，需要看s[i-1]是否与p[j-2]匹配
+                    if(j > 1 && (s.charAt(i-1) == p.charAt(j-2) || p.charAt(j-2) == '.')){
+                        dp[i][j] = dp[i][j] || dp[i-1][j];
+                    }
+                }else{
+                    // 当p[j-1]不为"*"时，需要看s[i-1]是否与p[j-1]匹配
+                    dp[i][j] = i > 0 && dp[i-1][j-1] && (s.charAt(i-1) == p.charAt(j-1) || p.charAt(j-1) == '.');
+                }
+            }
+        }
+        // 最后返回s和p是否完全匹配的结果
+        return dp[s.length()][p.length()];
+    }
+}
+
+这是一个经典的动态规划问题。我们可以使用动态规划的方法来解决这个问题，通过建立一个二维的dp数组，dp[i][j]表示s的前i个字符和p的前j个字符是否匹配。接下来我将提供一个Java解决方案，并且对每一行代码进行详细解释：
+这个题目的主要难点在于处理''的情况。''可以匹配前面的元素0次或者多次，所以我们需要分别处理这两种情况。除此之外，还需要处理'.'匹配任意字符的情况。这个题目需要一些对动态规划的理解，理解了这个题目的解法，对理解动态规划应该会有帮助。
+
+
+
+
