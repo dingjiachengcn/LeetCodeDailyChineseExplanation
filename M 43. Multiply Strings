@@ -1,0 +1,60 @@
+Given two non-negative integers num1 and num2 represented as strings, return the product of num1 and num2, also represented as a string.
+
+Note: You must not use any built-in BigInteger library or convert the inputs to integer directly.
+
+ 
+
+Example 1:
+
+Input: num1 = "2", num2 = "3"
+Output: "6"
+Example 2:
+
+Input: num1 = "123", num2 = "456"
+Output: "56088"
+ 
+
+Constraints:
+
+1 <= num1.length, num2.length <= 200
+num1 and num2 consist of digits only.
+Both num1 and num2 do not contain any leading zero, except the number 0 itself.
+
+这道题目的目标是计算两个非负整数（表示为字符串）的乘积，同时乘积也要以字符串的形式表示。另外，题目规定不能使用内建的BigInteger库，也不能直接将输入转化为整数。
+
+在实际的计算过程中，我们可以采用类似于小学时学的手工计算乘法的方式。我们首先创建一个数组，数组的长度等于两个输入字符串的长度之和。然后我们逐位相乘，并把结果存储在数组的相应位置上。最后我们处理进位，把数组转化为字符串。
+
+class Solution {
+    public String multiply(String num1, String num2) {
+        // 初始化一个数组，长度为两个字符串长度之和
+        int[] result = new int[num1.length() + num2.length()];
+
+        // 从后向前遍历第一个字符串（数字）
+        for (int i = num1.length() - 1; i >= 0; i--) {
+            // 从后向前遍历第二个字符串（数字）
+            for (int j = num2.length() - 1; j >= 0; j--) {
+                // 计算两位数字的乘积
+                int product = (num1.charAt(i) - '0') * (num2.charAt(j) - '0');
+                // 将乘积加上之前计算的结果
+                int temp = product + result[i + j + 1];
+                // 将结果存储在数组中，处理进位
+                result[i + j + 1] = temp % 10;
+                result[i + j] += temp / 10;
+            }
+        }
+
+        // 把结果数组转化为字符串
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < result.length; i++) {
+            // 跳过最前面的0
+            if (sb.length() == 0 && result[i] == 0)
+                continue;
+            sb.append(result[i]);
+        }
+
+        // 如果结果为空（可能输入是0），返回"0"
+        return (sb.length() == 0) ? "0" : sb.toString();
+    }
+}
+
+以上就是解题的思路和代码。这道题目的难点在于处理进位和最后的结果转化。但只要理解了手工乘法的原理，代码就不难写了。整体来看，这道题目的时间复杂度和空间复杂度都是O(mn)，其中m和n分别是两个输入字符串的长度。
