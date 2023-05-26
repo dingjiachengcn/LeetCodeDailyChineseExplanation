@@ -1,0 +1,65 @@
+You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0].
+
+Each element nums[i] represents the maximum length of a forward jump from index i. In other words, if you are at nums[i], you can jump to any nums[i + j] where:
+
+0 <= j <= nums[i] and
+i + j < n
+Return the minimum number of jumps to reach nums[n - 1]. The test cases are generated such that you can reach nums[n - 1].
+
+ 
+
+Example 1:
+
+Input: nums = [2,3,1,1,4]
+Output: 2
+Explanation: The minimum number of jumps to reach the last index is 2. Jump 1 step from index 0 to 1, then 3 steps to the last index.
+Example 2:
+
+Input: nums = [2,3,0,1,4]
+Output: 2
+ 
+
+Constraints:
+
+1 <= nums.length <= 10^4
+0 <= nums[i] <= 1000
+It's guaranteed that you can reach nums[n - 1]. 
+
+这道题目的要求是：给定一个从0开始索引的整数数组nums，长度为n。你最初位于nums[0]。
+
+每个元素nums[i]代表从索引i向前跳跃的最大长度。换句话说，如果你在nums[i]，你可以跳跃到任何nums[i + j]，其中：
+
+0 <= j <= nums[i] 并且
+i + j < n
+返回到达nums[n - 1]所需的最小跳跃次数。测试用例是这样生成的，你可以到达nums[n - 1]。
+
+best answer:
+
+class Solution {
+    public int jump(int[] nums) {
+        // 跳跃次数
+        int jumps = 0;
+        // 当前能跳到的最远距离
+        int end = 0;
+        // 下一步能跳到的最远距离
+        int farthest = 0;
+        for (int i = 0; i < nums.length - 1; i++) {
+            // 如果当前位置能跳到更远的位置，更新下一步能跳到的最远距离
+            farthest = Math.max(nums[i] + i, farthest);
+            // 如果已经跳到当前能跳到的最远距离，更新当前能跳到的最远距离，并增加跳跃次数
+            if (i == end) {
+                end = farthest;
+                jumps++;
+            }
+        }
+        return jumps;
+    }
+}
+
+注释已经写在代码中了。这个问题的关键在于理解我们可以预先知道从当前位置跳到哪个位置会得到最远的跳跃距离。然后我们只需要跳到这个位置，并将这个位置设置为我们的当前位置，然后重复这个过程，直到我们到达数组的末尾。每次我们到达一个新的位置，我们就增加跳跃的次数。这就是我们如何解决这个问题的。
+
+
+
+
+
+
