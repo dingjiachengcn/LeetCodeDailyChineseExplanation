@@ -1,0 +1,108 @@
+There are several cards arranged in a row, and each card has an associated number of points. The points are given in the integer array cardPoints.
+
+In one step, you can take one card from the beginning or from the end of the row. You have to take exactly k cards.
+
+Your score is the sum of the points of the cards you have taken.
+
+Given the integer array cardPoints and the integer k, return the maximum score you can obtain.
+
+ 
+
+Example 1:
+
+Input: cardPoints = [1,2,3,4,5,6,1], k = 3
+Output: 12
+Explanation: After the first step, your score will always be 1. However, choosing the rightmost card first will maximize your total score. The optimal strategy is to take the three cards on the right, giving a final score of 1 + 6 + 5 = 12.
+Example 2:
+
+Input: cardPoints = [2,2,2], k = 2
+Output: 4
+Explanation: Regardless of which two cards you take, your score will always be 4.
+Example 3:
+
+Input: cardPoints = [9,7,7,9,7,7,9], k = 7
+Output: 55
+Explanation: You have to take all the cards. Your score is the sum of points of all cards.
+ 
+
+Constraints:
+
+1 <= cardPoints.length <= 10^5
+1 <= cardPoints[i] <= 10^4
+1 <= k <= cardPoints.length
+
+有一排卡片，每张卡片都有相应的点数。点数在整数数组 cardPoints 中给出。
+
+每一步，你可以从行的开始或结束取走一张卡片。你必须正好取走 k 张卡片。
+
+你的得分是你取走的卡片的点数之和。
+
+给定整数数组 cardPoints 和整数 k，请返回你可以得到的最大分数。
+
+示例 1：
+
+输入：cardPoints = [1,2,3,4,5,6,1], k = 3
+输出：12
+解释：第一步之后，你的得分总是 1。但是，首先选择最右边的卡片将使你的总得分最大。最优策略是取右边的三张卡片，最后得分为 1 + 6 + 5 = 12。
+
+示例 2：
+
+输入：cardPoints = [2,2,2], k = 2
+输出：4
+解释：无论你取哪两张卡片，你的得分总是 4。
+
+示例 3：
+
+输入：cardPoints = [9,7,7,9,7,7,9], k = 7
+输出：55
+解释：你必须取所有卡片。你的得分是所有卡片的点数之和。
+
+约束：
+
+1 <= cardPoints.length <= 10^5
+1 <= cardPoints[i] <= 10^4
+1 <= k <= cardPoints.length
+
+算法解释：
+
+这道题目的关键在于理解我们只能从数组的头部和尾部取卡片。给定我们需要取 k 张卡片，所以实际上我们可以转换思路，问题可以等价于求在连续子数组中找到长度为 len(cardPoints) - k 的最小子序列。然后我们用数组所有元素的和减去这个最小的子序列和，就能得到我们的答案。
+
+具体来说，我们可以维持一个固定长度为 len(cardPoints) - k 的滑动窗口，窗口内为我们需要求和的连续子数组。然后我们移动这个窗口，每次移动我们都可以计算新的窗口内元素的和，同时更新我们找到的最小的子序列和。
+
+best answer
+
+// 创建一个解决问题的类，方法的返回值为最大得分
+class Solution {
+    public int maxScore(int[] cardPoints, int k) {
+        // 初始化变量 sum 用来记录数组中所有元素的和
+        int sum = 0, n = cardPoints.length;
+
+        // 遍历数组，计算所有元素的和
+        for (int card : cardPoints)
+        sum += card;
+
+        // 初始化变量 ans 为最小值，用来记录最大得分，初始化窗口大小为 n-k，窗口和 windowSum 为 0
+        int ans = Integer.MIN_VALUE, window = n - k, windowSum = 0;
+
+        // 初始化窗口和 windowSum
+        for (int i = 0; i < window; i++) {
+            windowSum += cardPoints[i];
+        }
+
+        // 更新最大得分
+        ans = Math.max(ans, sum - windowSum);
+
+        // 开始移动窗口，并更新窗口和以及最大得分
+        for (int i = window; i < n; i++) {
+            // 新的窗口和等于旧的窗口和加上新元素的值减去窗口中移除的元素的值
+            windowSum += cardPoints[i] - cardPoints[i - window];
+            // 更新最大得分
+            ans = Math.max(ans, sum - windowSum);
+        }
+
+        // 返回最大得分
+        return ans;
+    }
+}
+
+这个解决方案的算法思路是找到数组中的一个连续子数组，使得其和最小，而且长度等于总长度减去 k（也就是我们需要取的卡片数）。我们可以利用滑动窗口的技术，通过一次遍历，找到这样一个最小和的子数组。然后，将所有卡片的总和减去这个最小和，就得到了我们需要的最大得分。这是一个巧妙的思路，转化了问题的角度，实际上是求最大得分变成求最小子数组和，这样就可以通过滑动窗口的技术来解决问题了。
